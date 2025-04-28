@@ -20,15 +20,9 @@
     "noUnusedParameters": true,
     "baseUrl": "./",
     "paths": {
-      "@pcpb/*": [
-        "./node_modules/@robustmq/grpc-web-services/protos/placement_center/*"
-      ],
-      "@jspb/*": [
-        "./node_modules/@robustmq/grpc-web-services/protos/journal_server/*"
-      ],
-      "@mbpb/*": [
-        "./node_modules/@robustmq/grpc-web-services/protos/broker_mqtt/*"
-      ],
+      "@pcpb/*": ["./node_modules/@robustmq/grpc-web-services/protos/placement_center/*"],
+      "@jspb/*": ["./node_modules/@robustmq/grpc-web-services/protos/journal_server/*"],
+      "@mbpb/*": ["./node_modules/@robustmq/grpc-web-services/protos/broker_mqtt/*"],
       "@/*": ["src/*"]
     }
   },

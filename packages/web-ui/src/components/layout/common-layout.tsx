@@ -1,7 +1,7 @@
-import { Header } from "@/components/layout/header";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { Main } from "./main";
+import { Header } from '@/components/layout/header';
+import { ProfileDropdown } from '@/components/profile-dropdown';
+import { ThemeSwitch } from '@/components/theme-switch';
+import { Main } from './main';
 
 interface CommonLayoutProps {
   children: React.ReactNode;
@@ -22,4 +22,4 @@ export function CommonLayout(props: CommonLayoutProps) {
   );
 }
 
-CommonLayout.displayName = "CommonLayout";
+CommonLayout.displayName = 'CommonLayout';

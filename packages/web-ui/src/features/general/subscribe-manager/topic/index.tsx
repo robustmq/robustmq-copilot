@@ -1,27 +1,27 @@
-import { DataTable } from "@/components/table";
-import { useQuery } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import { fetchTopicList } from "./service";
+import { DataTable } from '@/components/table';
+import { useQuery } from '@tanstack/react-query';
+import { ColumnDef } from '@tanstack/react-table';
+import { fetchTopicList } from './service';
 
 export default function TopicList() {
   const columns: ColumnDef<any>[] = [
     {
-      id: "topicId",
-      accessorKey: "topicId",
-      header: "TopicId",
+      id: 'topicId',
+      accessorKey: 'topicId',
+      header: 'TopicId',
     },
     {
-      accessorKey: "topicName",
-      header: "TopicName",
+      accessorKey: 'topicName',
+      header: 'TopicName',
     },
     {
-      accessorKey: "clusterName",
-      header: "Node",
+      accessorKey: 'clusterName',
+      header: 'Node',
     },
   ];
 
   const { data } = useQuery({
-    queryKey: ["QueryTopicData"],
+    queryKey: ['QueryTopicData'],
     queryFn: fetchTopicList,
   });
 

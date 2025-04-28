@@ -1,10 +1,6 @@
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { APP_CONFIG } from "@/config/constant";
-import Logo from "@/assets/logo.png";
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { APP_CONFIG } from '@/config/constant';
+import Logo from '@/assets/logo.png';
 
 export function TeamSwitcher() {
   return (
@@ -15,9 +11,7 @@ export function TeamSwitcher() {
             <img src={Logo} className="size-6" />
           </div>
           <div className="flex-1 text-left">
-            <span className="truncate text-base font-semibold">
-              {APP_CONFIG.NAME}
-            </span>
+            <span className="truncate text-base font-semibold">{APP_CONFIG.NAME}</span>
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>

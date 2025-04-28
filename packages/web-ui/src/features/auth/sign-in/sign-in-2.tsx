@@ -1,5 +1,5 @@
-import ViteLogo from "@/assets/logo.png";
-import { UserAuthForm } from "./components/user-auth-form";
+import ViteLogo from '@/assets/logo.png';
+import { UserAuthForm } from './components/user-auth-form';
 
 export default function SignIn2() {
   return (
@@ -22,20 +22,13 @@ export default function SignIn2() {
           Shadcn Admin
         </div>
 
-        <img
-          src={ViteLogo}
-          className="relative m-auto"
-          width={301}
-          height={60}
-          alt="Vite"
-        />
+        <img src={ViteLogo} className="relative m-auto" width={301} height={60} alt="Vite" />
 
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;This template has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
+              &ldquo;This template has saved me countless hours of work and helped me deliver stunning designs to my
+              clients faster than ever before.&rdquo;
             </p>
             <footer className="text-sm">John Doe</footer>
           </blockquote>
@@ -52,18 +45,12 @@ export default function SignIn2() {
           </div>
           <UserAuthForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
-            By clicking login, you agree to our{" "}
-            <a
-              href="/terms"
-              className="underline underline-offset-4 hover:text-primary"
-            >
+            By clicking login, you agree to our{' '}
+            <a href="/terms" className="underline underline-offset-4 hover:text-primary">
               Terms of Service
-            </a>{" "}
-            and{" "}
-            <a
-              href="/privacy"
-              className="underline underline-offset-4 hover:text-primary"
-            >
+            </a>{' '}
+            and{' '}
+            <a href="/privacy" className="underline underline-offset-4 hover:text-primary">
               Privacy Policy
             </a>
             .

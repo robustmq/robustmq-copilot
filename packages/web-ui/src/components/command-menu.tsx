@@ -1,13 +1,8 @@
-import React from "react";
-import { useNavigate } from "@tanstack/react-router";
-import {
-  IconArrowRightDashed,
-  IconDeviceLaptop,
-  IconMoon,
-  IconSun,
-} from "@tabler/icons-react";
-import { useSearch } from "@/context/search-context";
-import { useTheme } from "@/context/theme-context";
+import React from 'react';
+import { useNavigate } from '@tanstack/react-router';
+import { IconArrowRightDashed, IconDeviceLaptop, IconMoon, IconSun } from '@tabler/icons-react';
+import { useSearch } from '@/context/search-context';
+import { useTheme } from '@/context/theme-context';
 import {
   CommandDialog,
   CommandEmpty,
@@ -16,9 +11,9 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
-} from "@/components/ui/command";
-import { sidebarData } from "@/config/menu";
-import { ScrollArea } from "./ui/scroll-area";
+} from '@/components/ui/command';
+import { sidebarData } from '@/config/menu';
+import { ScrollArea } from './ui/scroll-area';
 
 export function CommandMenu() {
   const navigate = useNavigate();
@@ -39,7 +34,7 @@ export function CommandMenu() {
       <CommandList>
         <ScrollArea type="hover" className="h-72 pr-1">
           <CommandEmpty>No results found.</CommandEmpty>
-          {sidebarData.navGroups.map((group) => (
+          {sidebarData.navGroups.map(group => (
             <CommandGroup key={group.title} heading={group.title}>
               {group.items.map((navItem, i) => {
                 if (navItem.url)
@@ -77,14 +72,14 @@ export function CommandMenu() {
           ))}
           <CommandSeparator />
           <CommandGroup heading="Theme">
-            <CommandItem onSelect={() => runCommand(() => setTheme("light"))}>
+            <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
               <IconSun /> <span>Light</span>
             </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => setTheme("dark"))}>
+            <CommandItem onSelect={() => runCommand(() => setTheme('dark'))}>
               <IconMoon className="scale-90" />
               <span>Dark</span>
             </CommandItem>
-            <CommandItem onSelect={() => runCommand(() => setTheme("system"))}>
+            <CommandItem onSelect={() => runCommand(() => setTheme('system'))}>
               <IconDeviceLaptop />
               <span>System</span>
             </CommandItem>

@@ -5,6 +5,7 @@ The one-stop RobustMQ operation and maintenance management platform
 ## Start
 
 1. You need to install node and pnpm.
+
 - Node >= 20.0
 - pnpm >= 10.0
 

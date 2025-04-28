@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { IconMailPlus, IconSend } from "@tabler/icons-react";
-import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconMailPlus, IconSend } from '@tabler/icons-react';
+import { toast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -12,26 +12,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { SelectDropdown } from "@/components/select-dropdown";
-import { userTypes } from "../data/data";
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { SelectDropdown } from '@/components/select-dropdown';
+import { userTypes } from '../data/data';
 
 const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Email is required." })
-    .email({ message: "Email is invalid." }),
-  role: z.string().min(1, { message: "Role is required." }),
+  email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Email is invalid.' }),
+  role: z.string().min(1, { message: 'Role is required.' }),
   desc: z.string().optional(),
 });
 type UserInviteForm = z.infer<typeof formSchema>;
@@ -44,13 +34,13 @@ interface Props {
 export function UsersInviteDialog({ open, onOpenChange }: Props) {
   const form = useForm<UserInviteForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: "", role: "", desc: "" },
+    defaultValues: { email: '', role: '', desc: '' },
   });
 
   const onSubmit = (values: UserInviteForm) => {
     form.reset();
     toast({
-      title: "You submitted the following values:",
+      title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>
@@ -63,7 +53,7 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
   return (
     <Dialog
       open={open}
-      onOpenChange={(state) => {
+      onOpenChange={state => {
         form.reset();
         onOpenChange(state);
       }}
@@ -74,16 +64,12 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
             <IconMailPlus /> Invite User
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            Invite new user to join your team by sending them an email invitation. Assign a role to define their access
+            level.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form
-            id="user-invite-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
+          <form id="user-invite-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="email"
@@ -91,11 +77,7 @@ export function UsersInviteDialog({ open, onOpenChange }: Props) {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="eg: john.doe@gmail.com"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="eg: john.doe@gmail.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

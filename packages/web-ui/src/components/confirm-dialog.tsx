@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -7,8 +7,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -50,15 +50,13 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         </AlertDialogHeader>
         {children}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>
-            {cancelBtnText ?? "Cancel"}
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{cancelBtnText ?? 'Cancel'}</AlertDialogCancel>
           <Button
-            variant={destructive ? "destructive" : "default"}
+            variant={destructive ? 'destructive' : 'default'}
             onClick={handleConfirm}
             disabled={disabled || isLoading}
           >
-            {confirmText ?? "Continue"}
+            {confirmText ?? 'Continue'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

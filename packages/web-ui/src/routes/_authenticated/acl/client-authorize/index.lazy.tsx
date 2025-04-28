@@ -1,8 +1,6 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute } from '@tanstack/react-router';
 
-export const Route = createLazyFileRoute(
-  "/_authenticated/acl/client-authorize/",
-)({
+export const Route = createLazyFileRoute('/_authenticated/acl/client-authorize/')({
   component: RouteComponent,
 });
 

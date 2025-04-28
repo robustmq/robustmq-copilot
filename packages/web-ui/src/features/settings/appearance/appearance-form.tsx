@@ -1,31 +1,23 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { fonts } from "@/config/fonts";
-import { cn } from "@/lib/utils";
-import { useFont } from "@/context/font-context";
-import { useTheme } from "@/context/theme-context";
-import { toast } from "@/hooks/use-toast";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { ChevronDownIcon } from '@radix-ui/react-icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { fonts } from '@/config/fonts';
+import { cn } from '@/lib/utils';
+import { useFont } from '@/context/font-context';
+import { useTheme } from '@/context/theme-context';
+import { toast } from '@/hooks/use-toast';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const appearanceFormSchema = z.object({
-  theme: z.enum(["light", "dark"], {
-    required_error: "Please select a theme.",
+  theme: z.enum(['light', 'dark'], {
+    required_error: 'Please select a theme.',
   }),
   font: z.enum(fonts, {
-    invalid_type_error: "Select a font",
-    required_error: "Please select a font.",
+    invalid_type_error: 'Select a font',
+    required_error: 'Please select a font.',
   }),
 });
 
@@ -37,7 +29,7 @@ export function AppearanceForm() {
 
   // This can come from your database or API.
   const defaultValues: Partial<AppearanceFormValues> = {
-    theme: theme as "light" | "dark",
+    theme: theme as 'light' | 'dark',
     font,
   };
 
@@ -51,7 +43,7 @@ export function AppearanceForm() {
     if (data.theme != theme) setTheme(data.theme);
 
     toast({
-      title: "You submitted the following values:",
+      title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -73,12 +65,12 @@ export function AppearanceForm() {
                 <FormControl>
                   <select
                     className={cn(
-                      buttonVariants({ variant: "outline" }),
-                      "w-[200px] appearance-none font-normal capitalize",
+                      buttonVariants({ variant: 'outline' }),
+                      'w-[200px] appearance-none font-normal capitalize',
                     )}
                     {...field}
                   >
-                    {fonts.map((font) => (
+                    {fonts.map(font => (
                       <option key={font} value={font}>
                         {font}
                       </option>
@@ -87,9 +79,7 @@ export function AppearanceForm() {
                 </FormControl>
                 <ChevronDownIcon className="absolute right-3 top-2.5 h-4 w-4 opacity-50" />
               </div>
-              <FormDescription className="font-manrope">
-                Set the font you want to use in the dashboard.
-              </FormDescription>
+              <FormDescription className="font-manrope">Set the font you want to use in the dashboard.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -100,9 +90,7 @@ export function AppearanceForm() {
           render={({ field }) => (
             <FormItem className="space-y-1">
               <FormLabel>Theme</FormLabel>
-              <FormDescription>
-                Select the theme for the dashboard.
-              </FormDescription>
+              <FormDescription>Select the theme for the dashboard.</FormDescription>
               <FormMessage />
               <RadioGroup
                 onValueChange={field.onChange}
@@ -130,9 +118,7 @@ export function AppearanceForm() {
                         </div>
                       </div>
                     </div>
-                    <span className="block w-full p-2 text-center font-normal">
-                      Light
-                    </span>
+                    <span className="block w-full p-2 text-center font-normal">Light</span>
                   </FormLabel>
                 </FormItem>
                 <FormItem>
@@ -156,9 +142,7 @@ export function AppearanceForm() {
                         </div>
                       </div>
                     </div>
-                    <span className="block w-full p-2 text-center font-normal">
-                      Dark
-                    </span>
+                    <span className="block w-full p-2 text-center font-normal">Dark</span>
                   </FormLabel>
                 </FormItem>
               </RadioGroup>

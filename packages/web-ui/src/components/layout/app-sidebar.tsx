@@ -1,12 +1,7 @@
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarRail,
-} from "@/components/ui/sidebar";
-import { NavGroup } from "@/components/layout/nav-group";
-import { TeamSwitcher } from "@/components/layout/team-switcher";
-import { sidebarData } from "@/config/menu";
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
+import { NavGroup } from '@/components/layout/nav-group';
+import { TeamSwitcher } from '@/components/layout/team-switcher';
+import { sidebarData } from '@/config/menu';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -15,7 +10,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        {sidebarData.navGroups.map((props) => (
+        {sidebarData.navGroups.map(props => (
           <NavGroup key={props.title} {...props} />
         ))}
       </SidebarContent>

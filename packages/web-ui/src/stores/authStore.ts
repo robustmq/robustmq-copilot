@@ -1,7 +1,7 @@
-import Cookies from "js-cookie";
-import { create } from "zustand";
+import Cookies from 'js-cookie';
+import { create } from 'zustand';
 
-const ACCESS_TOKEN = "thisisjustarandomstring";
+const ACCESS_TOKEN = 'thisisjustarandomstring';
 
 interface AuthUser {
   accountNo: string;
@@ -21,31 +21,30 @@ interface AuthState {
   };
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
+export const useAuthStore = create<AuthState>()(set => {
   const cookieState = Cookies.get(ACCESS_TOKEN);
-  const initToken = cookieState ? JSON.parse(cookieState) : "";
+  const initToken = cookieState ? JSON.parse(cookieState) : '';
   return {
     auth: {
       user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
+      setUser: user => set(state => ({ ...state, auth: { ...state.auth, user } })),
       accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
+      setAccessToken: accessToken =>
+        set(state => {
           Cookies.set(ACCESS_TOKEN, JSON.stringify(accessToken));
           return { ...state, auth: { ...state.auth, accessToken } };
         }),
       resetAccessToken: () =>
-        set((state) => {
+        set(state => {
           Cookies.remove(ACCESS_TOKEN);
-          return { ...state, auth: { ...state.auth, accessToken: "" } };
+          return { ...state, auth: { ...state.auth, accessToken: '' } };
         }),
       reset: () =>
-        set((state) => {
+        set(state => {
           Cookies.remove(ACCESS_TOKEN);
           return {
             ...state,
-            auth: { ...state.auth, user: null, accessToken: "" },
+            auth: { ...state.auth, user: null, accessToken: '' },
           };
         }),
     },

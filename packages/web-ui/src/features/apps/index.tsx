@@ -1,72 +1,44 @@
-import { useState } from "react";
-import {
-  IconAdjustmentsHorizontal,
-  IconSortAscendingLetters,
-  IconSortDescendingLetters,
-} from "@tabler/icons-react";
-import { PlacementCenterServiceClient } from "@pcpb/InnerServiceClientPb";
-import * as innerApi from "@pcpb/inner_pb";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { Header } from "@/components/layout/header";
-import { Main } from "@/components/layout/main";
-import { ProfileDropdown } from "@/components/profile-dropdown";
-import { Search } from "@/components/search";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { apps } from "./data/apps";
+import { useState } from 'react';
+import { IconAdjustmentsHorizontal, IconSortAscendingLetters, IconSortDescendingLetters } from '@tabler/icons-react';
+import { PlacementCenterServiceClient } from '@pcpb/InnerServiceClientPb';
+import * as innerApi from '@pcpb/inner_pb';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { Header } from '@/components/layout/header';
+import { Main } from '@/components/layout/main';
+import { ProfileDropdown } from '@/components/profile-dropdown';
+import { Search } from '@/components/search';
+import { ThemeSwitch } from '@/components/theme-switch';
+import { apps } from './data/apps';
 
 const appText = new Map<string, string>([
-  ["all", "All Apps"],
-  ["connected", "Connected"],
-  ["notConnected", "Not Connected"],
+  ['all', 'All Apps'],
+  ['connected', 'Connected'],
+  ['notConnected', 'Not Connected'],
 ]);
 
 export default function Apps() {
-  const [sort, setSort] = useState("ascending");
-  const [appType, setAppType] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [sort, setSort] = useState('ascending');
+  const [appType, setAppType] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const filteredApps = apps
-    .sort((a, b) =>
-      sort === "ascending"
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name),
-    )
-    .filter((app) =>
-      appType === "connected"
-        ? app.connected
-        : appType === "notConnected"
-          ? !app.connected
-          : true,
-    )
-    .filter((app) => app.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    .sort((a, b) => (sort === 'ascending' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)))
+    .filter(app => (appType === 'connected' ? app.connected : appType === 'notConnected' ? !app.connected : true))
+    .filter(app => app.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
-  const service = new PlacementCenterServiceClient(
-    "http://127.0.0.1:1228",
-    null,
-    null,
-  );
+  const service = new PlacementCenterServiceClient('http://127.0.0.1:1228', null, null);
 
-  service.clusterStatus(
-    new innerApi.ClusterStatusRequest(),
-    null,
-    (err, response) => {
-      if (err) {
-        console.log(err);
-      } else {
-        const ret = response.getContent();
-        console.log(JSON.parse(ret));
-      }
-    },
-  );
+  service.clusterStatus(new innerApi.ClusterStatusRequest(), null, (err, response) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const ret = response.getContent();
+      console.log(JSON.parse(ret));
+    }
+  });
 
   return (
     <>
@@ -82,12 +54,8 @@ export default function Apps() {
       {/* ===== Content ===== */}
       <Main fixed>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            App Integrations
-          </h1>
-          <p className="text-muted-foreground">
-            Here&apos;s a list of your apps for the integration!
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">App Integrations</h1>
+          <p className="text-muted-foreground">Here&apos;s a list of your apps for the integration!</p>
         </div>
         <div className="my-4 flex items-end justify-between sm:my-0 sm:items-center">
           <div className="flex flex-col gap-4 sm:my-4 sm:flex-row">
@@ -95,7 +63,7 @@ export default function Apps() {
               placeholder="Filter apps..."
               className="h-9 w-40 lg:w-[250px]"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
             />
             <Select value={appType} onValueChange={setAppType}>
               <SelectTrigger className="w-36">
@@ -133,23 +101,16 @@ export default function Apps() {
         </div>
         <Separator className="shadow" />
         <ul className="faded-bottom no-scrollbar grid gap-4 overflow-auto pb-16 pt-4 md:grid-cols-2 lg:grid-cols-3">
-          {filteredApps.map((app) => (
-            <li
-              key={app.name}
-              className="rounded-lg border p-4 hover:shadow-md"
-            >
+          {filteredApps.map(app => (
+            <li key={app.name} className="rounded-lg border p-4 hover:shadow-md">
               <div className="mb-8 flex items-center justify-between">
-                <div
-                  className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2`}
-                >
-                  {app.logo}
-                </div>
+                <div className={`flex size-10 items-center justify-center rounded-lg bg-muted p-2`}>{app.logo}</div>
                 <Button
                   variant="outline"
                   size="sm"
-                  className={`${app.connected ? "border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900" : ""}`}
+                  className={`${app.connected ? 'border border-blue-300 bg-blue-50 hover:bg-blue-100 dark:border-blue-700 dark:bg-blue-950 dark:hover:bg-blue-900' : ''}`}
                 >
-                  {app.connected ? "Connected" : "Connect"}
+                  {app.connected ? 'Connected' : 'Connect'}
                 </Button>
               </div>
               <div>

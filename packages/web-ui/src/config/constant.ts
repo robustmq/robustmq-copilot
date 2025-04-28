@@ -1,3 +1,3 @@
 export const APP_CONFIG = {
-  NAME: "RobustMQ",
+  NAME: 'RobustMQ',
 };

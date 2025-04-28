@@ -1,32 +1,24 @@
-import { toast } from "@/hooks/use-toast";
-import { ConfirmDialog } from "@/components/confirm-dialog";
-import { useTasks } from "../context/tasks-context";
-import { TasksImportDialog } from "./tasks-import-dialog";
-import { TasksMutateDrawer } from "./tasks-mutate-drawer";
+import { toast } from '@/hooks/use-toast';
+import { ConfirmDialog } from '@/components/confirm-dialog';
+import { useTasks } from '../context/tasks-context';
+import { TasksImportDialog } from './tasks-import-dialog';
+import { TasksMutateDrawer } from './tasks-mutate-drawer';
 
 export function TasksDialogs() {
   const { open, setOpen, currentRow, setCurrentRow } = useTasks();
   return (
     <>
-      <TasksMutateDrawer
-        key="task-create"
-        open={open === "create"}
-        onOpenChange={() => setOpen("create")}
-      />
+      <TasksMutateDrawer key="task-create" open={open === 'create'} onOpenChange={() => setOpen('create')} />
 
-      <TasksImportDialog
-        key="tasks-import"
-        open={open === "import"}
-        onOpenChange={() => setOpen("import")}
-      />
+      <TasksImportDialog key="tasks-import" open={open === 'import'} onOpenChange={() => setOpen('import')} />
 
       {currentRow && (
         <>
           <TasksMutateDrawer
             key={`task-update-${currentRow.id}`}
-            open={open === "update"}
+            open={open === 'update'}
             onOpenChange={() => {
-              setOpen("update");
+              setOpen('update');
               setTimeout(() => {
                 setCurrentRow(null);
               }, 500);
@@ -37,9 +29,9 @@ export function TasksDialogs() {
           <ConfirmDialog
             key="task-delete"
             destructive
-            open={open === "delete"}
+            open={open === 'delete'}
             onOpenChange={() => {
-              setOpen("delete");
+              setOpen('delete');
               setTimeout(() => {
                 setCurrentRow(null);
               }, 500);
@@ -50,12 +42,10 @@ export function TasksDialogs() {
                 setCurrentRow(null);
               }, 500);
               toast({
-                title: "The following task has been deleted:",
+                title: 'The following task has been deleted:',
                 description: (
                   <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">
-                      {JSON.stringify(currentRow, null, 2)}
-                    </code>
+                    <code className="text-white">{JSON.stringify(currentRow, null, 2)}</code>
                   </pre>
                 ),
               });
@@ -64,8 +54,7 @@ export function TasksDialogs() {
             title={`Delete this task: ${currentRow.id} ?`}
             desc={
               <>
-                You are about to delete a task with the ID{" "}
-                <strong>{currentRow.id}</strong>. <br />
+                You are about to delete a task with the ID <strong>{currentRow.id}</strong>. <br />
                 This action cannot be undone.
               </>
             }

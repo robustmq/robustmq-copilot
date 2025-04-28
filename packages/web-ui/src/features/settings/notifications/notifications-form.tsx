@@ -1,25 +1,17 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "@tanstack/react-router";
-import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Switch } from "@/components/ui/switch";
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Link } from '@tanstack/react-router';
+import { toast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Switch } from '@/components/ui/switch';
 
 const notificationsFormSchema = z.object({
-  type: z.enum(["all", "mentions", "none"], {
-    required_error: "You need to select a notification type.",
+  type: z.enum(['all', 'mentions', 'none'], {
+    required_error: 'You need to select a notification type.',
   }),
   mobile: z.boolean().default(false).optional(),
   communication_emails: z.boolean().default(false).optional(),
@@ -46,7 +38,7 @@ export function NotificationsForm() {
 
   function onSubmit(data: NotificationsFormValues) {
     toast({
-      title: "You submitted the following values:",
+      title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -74,17 +66,13 @@ export function NotificationsForm() {
                     <FormControl>
                       <RadioGroupItem value="all" />
                     </FormControl>
-                    <FormLabel className="font-normal">
-                      All new messages
-                    </FormLabel>
+                    <FormLabel className="font-normal">All new messages</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
                       <RadioGroupItem value="mentions" />
                     </FormControl>
-                    <FormLabel className="font-normal">
-                      Direct messages and mentions
-                    </FormLabel>
+                    <FormLabel className="font-normal">Direct messages and mentions</FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center space-x-3 space-y-0">
                     <FormControl>
@@ -107,18 +95,11 @@ export function NotificationsForm() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Communication emails
-                    </FormLabel>
-                    <FormDescription>
-                      Receive emails about your account activity.
-                    </FormDescription>
+                    <FormLabel className="text-base">Communication emails</FormLabel>
+                    <FormDescription>Receive emails about your account activity.</FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
@@ -129,18 +110,11 @@ export function NotificationsForm() {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Marketing emails
-                    </FormLabel>
-                    <FormDescription>
-                      Receive emails about new products, features, and more.
-                    </FormDescription>
+                    <FormLabel className="text-base">Marketing emails</FormLabel>
+                    <FormDescription>Receive emails about new products, features, and more.</FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
@@ -152,15 +126,10 @@ export function NotificationsForm() {
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Social emails</FormLabel>
-                    <FormDescription>
-                      Receive emails for friend requests, follows, and more.
-                    </FormDescription>
+                    <FormDescription>Receive emails for friend requests, follows, and more.</FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                 </FormItem>
               )}
@@ -172,17 +141,10 @@ export function NotificationsForm() {
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">Security emails</FormLabel>
-                    <FormDescription>
-                      Receive emails about your account activity and security.
-                    </FormDescription>
+                    <FormDescription>Receive emails about your account activity and security.</FormDescription>
                   </div>
                   <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled
-                      aria-readonly
-                    />
+                    <Switch checked={field.value} onCheckedChange={field.onChange} disabled aria-readonly />
                   </FormControl>
                 </FormItem>
               )}
@@ -195,23 +157,18 @@ export function NotificationsForm() {
           render={({ field }) => (
             <FormItem className="relative flex flex-row items-start space-x-3 space-y-0">
               <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
               </FormControl>
               <div className="space-y-1 leading-none">
-                <FormLabel>
-                  Use different settings for my mobile devices
-                </FormLabel>
+                <FormLabel>Use different settings for my mobile devices</FormLabel>
                 <FormDescription>
-                  You can manage your mobile notifications in the{" "}
+                  You can manage your mobile notifications in the{' '}
                   <Link
                     to="/settings"
                     className="underline decoration-dashed underline-offset-4 hover:decoration-solid"
                   >
                     mobile settings
-                  </Link>{" "}
+                  </Link>{' '}
                   page.
                 </FormDescription>
               </div>

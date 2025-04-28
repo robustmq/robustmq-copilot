@@ -1,16 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface Props {
   children: React.ReactNode;
@@ -18,11 +9,7 @@ interface Props {
   contentClassName?: string;
 }
 
-export default function LongText({
-  children,
-  className = "",
-  contentClassName = "",
-}: Props) {
+export default function LongText({ children, className = '', contentClassName = '' }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isOverflown, setIsOverflown] = useState(false);
 
@@ -37,7 +24,7 @@ export default function LongText({
 
   if (!isOverflown)
     return (
-      <div ref={ref} className={cn("truncate", className)}>
+      <div ref={ref} className={cn('truncate', className)}>
         {children}
       </div>
     );
@@ -48,7 +35,7 @@ export default function LongText({
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div ref={ref} className={cn("truncate", className)}>
+              <div ref={ref} className={cn('truncate', className)}>
                 {children}
               </div>
             </TooltipTrigger>
@@ -61,11 +48,11 @@ export default function LongText({
       <div className="sm:hidden">
         <Popover>
           <PopoverTrigger asChild>
-            <div ref={ref} className={cn("truncate", className)}>
+            <div ref={ref} className={cn('truncate', className)}>
               {children}
             </div>
           </PopoverTrigger>
-          <PopoverContent className={cn("w-fit", contentClassName)}>
+          <PopoverContent className={cn('w-fit', contentClassName)}>
             <p>{children}</p>
           </PopoverContent>
         </Popover>
@@ -77,8 +64,7 @@ export default function LongText({
 const checkOverflow = (textContainer: HTMLDivElement | null) => {
   if (textContainer) {
     return (
-      textContainer.offsetHeight < textContainer.scrollHeight ||
-      textContainer.offsetWidth < textContainer.scrollWidth
+      textContainer.offsetHeight < textContainer.scrollHeight || textContainer.offsetWidth < textContainer.scrollWidth
     );
   }
   return false;

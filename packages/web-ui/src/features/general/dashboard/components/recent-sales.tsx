@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 export function RecentSales() {
   return (
@@ -11,9 +11,7 @@ export function RecentSales() {
         <div className="flex flex-1 flex-wrap items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">Olivia Martin</p>
-            <p className="text-sm text-muted-foreground">
-              olivia.martin@email.com
-            </p>
+            <p className="text-sm text-muted-foreground">olivia.martin@email.com</p>
           </div>
           <div className="font-medium">+$1,999.00</div>
         </div>
@@ -26,9 +24,7 @@ export function RecentSales() {
         <div className="flex flex-1 flex-wrap items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">Jackson Lee</p>
-            <p className="text-sm text-muted-foreground">
-              jackson.lee@email.com
-            </p>
+            <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
           </div>
           <div className="font-medium">+$39.00</div>
         </div>
@@ -41,9 +37,7 @@ export function RecentSales() {
         <div className="flex flex-1 flex-wrap items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
-            <p className="text-sm text-muted-foreground">
-              isabella.nguyen@email.com
-            </p>
+            <p className="text-sm text-muted-foreground">isabella.nguyen@email.com</p>
           </div>
           <div className="font-medium">+$299.00</div>
         </div>
@@ -71,9 +65,7 @@ export function RecentSales() {
         <div className="flex flex-1 flex-wrap items-center justify-between">
           <div className="space-y-1">
             <p className="text-sm font-medium leading-none">Sofia Davis</p>
-            <p className="text-sm text-muted-foreground">
-              sofia.davis@email.com
-            </p>
+            <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
           </div>
           <div className="font-medium">+$39.00</div>
         </div>

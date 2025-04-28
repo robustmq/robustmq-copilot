@@ -1,26 +1,20 @@
-import { HTMLAttributes, useState } from "react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
-import { toast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { PinInput, PinInputField } from "@/components/pin-input";
+import { HTMLAttributes, useState } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from '@tanstack/react-router';
+import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { PinInput, PinInputField } from '@/components/pin-input';
 
 type OtpFormProps = HTMLAttributes<HTMLDivElement>;
 
 const formSchema = z.object({
-  otp: z.string().min(1, { message: "Please enter your otp code." }),
+  otp: z.string().min(1, { message: 'Please enter your otp code.' }),
 });
 
 export function OtpForm({ className, ...props }: OtpFormProps) {
@@ -30,13 +24,13 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { otp: "" },
+    defaultValues: { otp: '' },
   });
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     setIsLoading(true);
     toast({
-      title: "You submitted the following values:",
+      title: 'You submitted the following values:',
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -46,12 +40,12 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
 
     setTimeout(() => {
       setIsLoading(false);
-      navigate({ to: "/" });
+      navigate({ to: '/' });
     }, 1000);
   }
 
   return (
-    <div className={cn("grid gap-6", className)} {...props}>
+    <div className={cn('grid gap-6', className)} {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-2">
@@ -68,13 +62,12 @@ export function OtpForm({ className, ...props }: OtpFormProps) {
                       onIncomplete={() => setDisabledBtn(true)}
                     >
                       {Array.from({ length: 7 }, (_, i) => {
-                        if (i === 3)
-                          return <Separator key={i} orientation="vertical" />;
+                        if (i === 3) return <Separator key={i} orientation="vertical" />;
                         return (
                           <PinInputField
                             key={i}
                             component={Input}
-                            className={`${form.getFieldState("otp").invalid ? "border-red-500" : ""}`}
+                            className={`${form.getFieldState('otp').invalid ? 'border-red-500' : ''}`}
                           />
                         );
                       })}

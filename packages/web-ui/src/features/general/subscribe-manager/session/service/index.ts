@@ -1,12 +1,8 @@
-import { MQTTBrokerAdminServiceClient } from "@mbpb/AdminServiceClientPb";
-import * as adminApi from "@mbpb/admin_pb";
-import { SERVER_CONFIG } from "@/config/server";
+import { MQTTBrokerAdminServiceClient } from '@mbpb/AdminServiceClientPb';
+import * as adminApi from '@mbpb/admin_pb';
+import { SERVER_CONFIG } from '@/config/server';
 
-const service = new MQTTBrokerAdminServiceClient(
-  SERVER_CONFIG.MQTT_SERVER,
-  null,
-  null
-);
+const service = new MQTTBrokerAdminServiceClient(SERVER_CONFIG.MQTT_SERVER, null, null);
 
 interface ConnectionInfo {
   client_id: string;
@@ -24,12 +20,12 @@ export const fetchConnectionList = async (): Promise<ConnectionInfo[]> => {
       } else {
         const ret = response.toObject();
         s(
-          ret.listConnectionRawList.map((i) => {
+          ret.listConnectionRawList.map(i => {
             return {
               ...JSON.parse(i.info),
               protocol: i.protocol,
             };
-          })
+          }),
         );
       }
     });

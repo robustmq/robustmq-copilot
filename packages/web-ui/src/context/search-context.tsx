@@ -1,5 +1,5 @@
-import React from "react";
-import { CommandMenu } from "@/components/command-menu";
+import React from 'react';
+import { CommandMenu } from '@/components/command-menu';
 
 interface SearchContextType {
   open: boolean;
@@ -17,13 +17,13 @@ export function SearchProvider({ children }: Props) {
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setOpen((open) => !open);
+        setOpen(open => !open);
       }
     };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
   }, []);
 
   return (
@@ -39,7 +39,7 @@ export const useSearch = () => {
   const searchContext = React.useContext(SearchContext);
 
   if (!searchContext) {
-    throw new Error("useSearch has to be used within <SearchContext.Provider>");
+    throw new Error('useSearch has to be used within <SearchContext.Provider>');
   }
 
   return searchContext;

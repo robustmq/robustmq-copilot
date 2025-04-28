@@ -1,10 +1,8 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface PinInputProps {
-  children:
-    | React.ReactElement<typeof PinInputField>
-    | React.ReactElement<typeof PinInputField>[];
+  children: React.ReactElement<typeof PinInputField> | React.ReactElement<typeof PinInputField>[];
   /**
    * className for the input container
    */
@@ -57,7 +55,7 @@ interface PinInputProps {
   /**
    * The type of value pin input should allow, `alphanumeric` by default
    */
-  type?: "numeric" | "alphanumeric";
+  type?: 'numeric' | 'alphanumeric';
   /**
    * Placeholder for input fields, `○` by default
    */
@@ -82,8 +80,8 @@ const PinInput = ({ className, children, ref, ...props }: PinInputProps) => {
     onChange,
     onComplete,
     onIncomplete,
-    placeholder = "○",
-    type = "alphanumeric",
+    placeholder = '○',
+    type = 'alphanumeric',
     name,
     form,
     otp = false,
@@ -91,7 +89,7 @@ const PinInput = ({ className, children, ref, ...props }: PinInputProps) => {
     disabled = false,
     readOnly = false,
     autoFocus = false,
-    ariaLabel = "",
+    ariaLabel = '',
     ...rest
   } = props;
 
@@ -139,32 +137,26 @@ const PinInput = ({ className, children, ref, ...props }: PinInputProps) => {
 
   const skipRef = React.useRef(0);
   let counter = 0;
-  const clones = validChildren.map((child) => {
+  const clones = validChildren.map(child => {
     if (child.type === PinInputField) {
       const pinIndex = counter;
       counter = counter + 1;
       return React.cloneElement(child, {
         name,
         inputKey: `input-${pinIndex}`,
-        value: length > pinIndex ? pins[pinIndex] : "",
-        onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-          handlers.handleChange(e, pinIndex),
-        onFocus: (e: React.FocusEvent<HTMLInputElement>) =>
-          handlers.handleFocus(e, pinIndex),
+        value: length > pinIndex ? pins[pinIndex] : '',
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => handlers.handleChange(e, pinIndex),
+        onFocus: (e: React.FocusEvent<HTMLInputElement>) => handlers.handleFocus(e, pinIndex),
         onBlur: () => handlers.handleBlur(pinIndex),
-        onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) =>
-          handlers.handleKeyDown(e, pinIndex),
-        onPaste: (e: React.ClipboardEvent<HTMLInputElement>) =>
-          handlers.handlePaste(e),
+        onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => handlers.handleKeyDown(e, pinIndex),
+        onPaste: (e: React.ClipboardEvent<HTMLInputElement>) => handlers.handlePaste(e),
         placeholder: placeholder,
         type: type,
         mask: mask,
-        autoComplete: otp ? "one-time-code" : "off",
+        autoComplete: otp ? 'one-time-code' : 'off',
         disabled: disabled,
         readOnly: readOnly,
-        "aria-label": ariaLabel
-          ? ariaLabel
-          : `Pin input ${counter} of ${length}`,
+        'aria-label': ariaLabel ? ariaLabel : `Pin input ${counter} of ${length}`,
         ref: (node: HTMLInputElement | null) => {
           if (node) {
             refMap?.set(pinIndex, node);
@@ -187,51 +179,41 @@ const PinInput = ({ className, children, ref, ...props }: PinInputProps) => {
     </PinInputContext.Provider>
   );
 };
-PinInput.displayName = "PinInput";
+PinInput.displayName = 'PinInput';
 
 /* ========== PinInputField ========== */
 
 interface _PinInputFieldProps {
   mask: boolean;
   inputKey: string;
-  type: "numeric" | "alphanumeric";
+  type: 'numeric' | 'alphanumeric';
 }
 
-interface PinInputFieldProps<T>
-  extends Omit<
-    React.ComponentPropsWithoutRef<"input">,
-    keyof _PinInputFieldProps
-  > {
+interface PinInputFieldProps<T> extends Omit<React.ComponentPropsWithoutRef<'input'>, keyof _PinInputFieldProps> {
   component?: T;
 }
 
-const PinInputField = <T extends React.ElementType = "input">({
+const PinInputField = <T extends React.ElementType = 'input'>({
   className,
   component,
   ...props
-}: PinInputFieldProps<T> &
-  (React.ComponentType<T> extends undefined
-    ? never
-    : React.ComponentProps<T>)) => {
-  const { mask, type, inputKey, ...rest } = props as _PinInputFieldProps &
-    React.ComponentProps<T>;
+}: PinInputFieldProps<T> & (React.ComponentType<T> extends undefined ? never : React.ComponentProps<T>)) => {
+  const { mask, type, inputKey, ...rest } = props as _PinInputFieldProps & React.ComponentProps<T>;
 
   // Check if PinInputField is used within PinInput
   const isInsidePinInput = React.useContext(PinInputContext);
   if (!isInsidePinInput) {
-    throw new Error(
-      `PinInputField must be used within ${PinInput.displayName}.`,
-    );
+    throw new Error(`PinInputField must be used within ${PinInput.displayName}.`);
   }
 
-  const Element = component || "input";
+  const Element = component || 'input';
 
   return (
     <Element
       key={inputKey}
-      type={mask ? "password" : type === "numeric" ? "tel" : "text"}
-      inputMode={type === "numeric" ? "numeric" : "text"}
-      className={cn("size-10 text-center", className)}
+      type={mask ? 'password' : type === 'numeric' ? 'tel' : 'text'}
+      inputMode={type === 'numeric' ? 'numeric' : 'text'}
+      className={cn('size-10 text-center', className)}
       {...rest}
     />
   );
@@ -243,33 +225,22 @@ interface UsePinInputProps {
   value: string | undefined;
   defaultValue: string | undefined;
   placeholder: string;
-  type: "numeric" | "alphanumeric";
+  type: 'numeric' | 'alphanumeric';
   length: number;
   readOnly: boolean;
 }
 
-const usePinInput = ({
-  value,
-  defaultValue,
-  placeholder,
-  type,
-  length,
-  readOnly,
-}: UsePinInputProps) => {
+const usePinInput = ({ value, defaultValue, placeholder, type, length, readOnly }: UsePinInputProps) => {
   const pinInputs = React.useMemo(
     () =>
       Array.from({ length }, (_, index) =>
-        defaultValue
-          ? defaultValue.charAt(index)
-          : value
-            ? value.charAt(index)
-            : "",
+        defaultValue ? defaultValue.charAt(index) : value ? value.charAt(index) : '',
       ),
     [defaultValue, length, value],
   );
 
   const [pins, setPins] = React.useState(pinInputs);
-  const pinValue = pins.join("").trim();
+  const pinValue = pins.join('').trim();
 
   /**
    * Update pins when values change programmatically.
@@ -299,14 +270,11 @@ const usePinInput = ({
     const node = getNode(itemId);
     if (node) {
       node.focus();
-      node.placeholder = "";
+      node.placeholder = '';
     }
   }
 
-  function handleFocus(
-    event: React.FocusEvent<HTMLInputElement>,
-    index: number,
-  ) {
+  function handleFocus(event: React.FocusEvent<HTMLInputElement>, index: number) {
     event.target.select();
     focusInput(index);
   }
@@ -325,7 +293,7 @@ const usePinInput = ({
       node.value = val;
     }
 
-    setPins((prev) =>
+    setPins(prev =>
       prev.map((p, i) => {
         if (i === index) {
           return val;
@@ -339,7 +307,7 @@ const usePinInput = ({
   function validate(value: string) {
     const NUMERIC_REGEX = /^[0-9]+$/;
     const ALPHA_NUMERIC_REGEX = /^[a-zA-Z0-9]+$/i;
-    const regex = type === "alphanumeric" ? ALPHA_NUMERIC_REGEX : NUMERIC_REGEX;
+    const regex = type === 'alphanumeric' ? ALPHA_NUMERIC_REGEX : NUMERIC_REGEX;
     return regex.test(value);
   }
 
@@ -348,9 +316,7 @@ const usePinInput = ({
     const inputValue = e.target.value;
     const pastedValue = pastedVal.current;
     const inputChar =
-      pastedValue && pastedValue.length === length
-        ? pastedValue.charAt(length - 1)
-        : inputValue.slice(-1);
+      pastedValue && pastedValue.length === length ? pastedValue.charAt(length - 1) : inputValue.slice(-1);
 
     if (validate(inputChar)) {
       updateInputField(inputChar, index);
@@ -363,12 +329,10 @@ const usePinInput = ({
 
   function handlePaste(event: React.ClipboardEvent<HTMLInputElement>) {
     event.preventDefault();
-    const copyValue = event.clipboardData
-      .getData("text/plain")
-      .replace(/[\n\r\s]+/g, "");
-    const copyArr = copyValue.split("").slice(0, length);
+    const copyValue = event.clipboardData.getData('text/plain').replace(/[\n\r\s]+/g, '');
+    const copyArr = copyValue.split('').slice(0, length);
 
-    const isValid = copyArr.every((c) => validate(c));
+    const isValid = copyArr.every(c => validate(c));
 
     if (!isValid) return;
 
@@ -382,20 +346,17 @@ const usePinInput = ({
     focusInput(copyArr.length < length ? copyArr.length : length - 1);
   }
 
-  function handleKeyDown(
-    event: React.KeyboardEvent<HTMLInputElement>,
-    index: number,
-  ) {
+  function handleKeyDown(event: React.KeyboardEvent<HTMLInputElement>, index: number) {
     const { ctrlKey, key, shiftKey, metaKey } = event;
 
-    if (type === "numeric") {
+    if (type === 'numeric') {
       const canTypeSign =
-        key === "Backspace" ||
-        key === "Tab" ||
-        key === "Control" ||
-        key === "Delete" ||
-        (ctrlKey && key === "v") ||
-        (metaKey && key === "v")
+        key === 'Backspace' ||
+        key === 'Tab' ||
+        key === 'Control' ||
+        key === 'Delete' ||
+        (ctrlKey && key === 'v') ||
+        (metaKey && key === 'v')
           ? true
           : !Number.isNaN(Number(key));
 
@@ -404,18 +365,18 @@ const usePinInput = ({
       }
     }
 
-    if (key === "ArrowLeft" || (shiftKey && key === "Tab")) {
+    if (key === 'ArrowLeft' || (shiftKey && key === 'Tab')) {
       event.preventDefault();
       focusInput(index - 1);
-    } else if (key === "ArrowRight" || key === "Tab" || key === " ") {
+    } else if (key === 'ArrowRight' || key === 'Tab' || key === ' ') {
       event.preventDefault();
       focusInput(index + 1);
-    } else if (key === "Delete") {
+    } else if (key === 'Delete') {
       event.preventDefault();
-    } else if (key === "Backspace") {
+    } else if (key === 'Backspace') {
       event.preventDefault();
-      updateInputField("", index);
-      if ((event.target as HTMLInputElement).value === "") {
+      updateInputField('', index);
+      if ((event.target as HTMLInputElement).value === '') {
         focusInput(index - 1);
       }
     }
@@ -436,7 +397,7 @@ const usePinInput = ({
 /* ========== Util Func ========== */
 
 const getValidChildren = (children: React.ReactNode) =>
-  React.Children.toArray(children).filter((child) => {
+  React.Children.toArray(children).filter(child => {
     if (React.isValidElement(child)) {
       return React.isValidElement(child);
     }
@@ -445,7 +406,7 @@ const getValidChildren = (children: React.ReactNode) =>
   }) as React.ReactElement<any>[];
 
 const getInputFieldCount = (children: React.ReactNode) =>
-  React.Children.toArray(children).filter((child) => {
+  React.Children.toArray(children).filter(child => {
     if (React.isValidElement(child) && child.type === PinInputField) {
       return React.isValidElement(child);
     }
