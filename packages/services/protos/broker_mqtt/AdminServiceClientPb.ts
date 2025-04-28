@@ -39,6 +39,92 @@ export class MQTTBrokerAdminServiceClient {
     this.options_ = options;
   }
 
+  methodDescriptormqtt_broker_set_cluster_config = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_cluster_config',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.SetClusterConfigRequest,
+    admin_pb.SetClusterConfigReply,
+    (request: admin_pb.SetClusterConfigRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.SetClusterConfigReply.deserializeBinary
+  );
+
+  mqtt_broker_set_cluster_config(
+    request: admin_pb.SetClusterConfigRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.SetClusterConfigReply>;
+
+  mqtt_broker_set_cluster_config(
+    request: admin_pb.SetClusterConfigRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.SetClusterConfigReply) => void): grpcWeb.ClientReadableStream<admin_pb.SetClusterConfigReply>;
+
+  mqtt_broker_set_cluster_config(
+    request: admin_pb.SetClusterConfigRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.SetClusterConfigReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_cluster_config',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_set_cluster_config,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_cluster_config',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_set_cluster_config);
+  }
+
+  methodDescriptormqtt_broker_get_cluster_config = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_cluster_config',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.GetClusterConfigRequest,
+    admin_pb.GetClusterConfigReply,
+    (request: admin_pb.GetClusterConfigRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.GetClusterConfigReply.deserializeBinary
+  );
+
+  mqtt_broker_get_cluster_config(
+    request: admin_pb.GetClusterConfigRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.GetClusterConfigReply>;
+
+  mqtt_broker_get_cluster_config(
+    request: admin_pb.GetClusterConfigRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.GetClusterConfigReply) => void): grpcWeb.ClientReadableStream<admin_pb.GetClusterConfigReply>;
+
+  mqtt_broker_get_cluster_config(
+    request: admin_pb.GetClusterConfigRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.GetClusterConfigReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_cluster_config',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_get_cluster_config,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_cluster_config',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_get_cluster_config);
+  }
+
   methodDescriptorcluster_status = new grpcWeb.MethodDescriptor(
     '/broker.mqtt.admin.MQTTBrokerAdminService/cluster_status',
     grpcWeb.MethodType.UNARY,
@@ -209,6 +295,92 @@ export class MQTTBrokerAdminServiceClient {
     request,
     metadata || {},
     this.methodDescriptormqtt_broker_list_user);
+  }
+
+  methodDescriptormqtt_broker_list_client = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_client',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ListClientRequest,
+    admin_pb.ListClientReply,
+    (request: admin_pb.ListClientRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ListClientReply.deserializeBinary
+  );
+
+  mqtt_broker_list_client(
+    request: admin_pb.ListClientRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ListClientReply>;
+
+  mqtt_broker_list_client(
+    request: admin_pb.ListClientRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ListClientReply) => void): grpcWeb.ClientReadableStream<admin_pb.ListClientReply>;
+
+  mqtt_broker_list_client(
+    request: admin_pb.ListClientRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ListClientReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_client',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_list_client,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_client',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_list_client);
+  }
+
+  methodDescriptormqtt_broker_list_session = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_session',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ListSessionRequest,
+    admin_pb.ListSessionReply,
+    (request: admin_pb.ListSessionRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ListSessionReply.deserializeBinary
+  );
+
+  mqtt_broker_list_session(
+    request: admin_pb.ListSessionRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ListSessionReply>;
+
+  mqtt_broker_list_session(
+    request: admin_pb.ListSessionRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSessionReply) => void): grpcWeb.ClientReadableStream<admin_pb.ListSessionReply>;
+
+  mqtt_broker_list_session(
+    request: admin_pb.ListSessionRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSessionReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_session',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_list_session,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_session',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_list_session);
   }
 
   methodDescriptormqtt_broker_list_acl = new grpcWeb.MethodDescriptor(
@@ -553,49 +725,6 @@ export class MQTTBrokerAdminServiceClient {
     request,
     metadata || {},
     this.methodDescriptormqtt_broker_list_connection);
-  }
-
-  methodDescriptormqtt_broker_enable_slow_subscribe = new grpcWeb.MethodDescriptor(
-    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_enable_slow_subscribe',
-    grpcWeb.MethodType.UNARY,
-    admin_pb.EnableSlowSubscribeRequest,
-    admin_pb.EnableSlowSubScribeReply,
-    (request: admin_pb.EnableSlowSubscribeRequest) => {
-      return request.serializeBinary();
-    },
-    admin_pb.EnableSlowSubScribeReply.deserializeBinary
-  );
-
-  mqtt_broker_enable_slow_subscribe(
-    request: admin_pb.EnableSlowSubscribeRequest,
-    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.EnableSlowSubScribeReply>;
-
-  mqtt_broker_enable_slow_subscribe(
-    request: admin_pb.EnableSlowSubscribeRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.RpcError,
-               response: admin_pb.EnableSlowSubScribeReply) => void): grpcWeb.ClientReadableStream<admin_pb.EnableSlowSubScribeReply>;
-
-  mqtt_broker_enable_slow_subscribe(
-    request: admin_pb.EnableSlowSubscribeRequest,
-    metadata?: grpcWeb.Metadata | null,
-    callback?: (err: grpcWeb.RpcError,
-               response: admin_pb.EnableSlowSubScribeReply) => void) {
-    if (callback !== undefined) {
-      return this.client_.rpcCall(
-        this.hostname_ +
-          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_enable_slow_subscribe',
-        request,
-        metadata || {},
-        this.methodDescriptormqtt_broker_enable_slow_subscribe,
-        callback);
-    }
-    return this.client_.unaryCall(
-    this.hostname_ +
-      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_enable_slow_subscribe',
-    request,
-    metadata || {},
-    this.methodDescriptormqtt_broker_enable_slow_subscribe);
   }
 
   methodDescriptormqtt_broker_list_slow_subscribe = new grpcWeb.MethodDescriptor(

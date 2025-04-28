@@ -2,6 +2,233 @@ import * as jspb from 'google-protobuf'
 
 
 
+export class Pagination extends jspb.Message {
+  getLimit(): number;
+  setLimit(value: number): Pagination;
+  hasLimit(): boolean;
+  clearLimit(): Pagination;
+
+  getOffset(): number;
+  setOffset(value: number): Pagination;
+  hasOffset(): boolean;
+  clearOffset(): Pagination;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Pagination.AsObject;
+  static toObject(includeInstance: boolean, msg: Pagination): Pagination.AsObject;
+  static serializeBinaryToWriter(message: Pagination, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Pagination;
+  static deserializeBinaryFromReader(message: Pagination, reader: jspb.BinaryReader): Pagination;
+}
+
+export namespace Pagination {
+  export type AsObject = {
+    limit?: number,
+    offset?: number,
+  }
+
+  export enum LimitCase { 
+    _LIMIT_NOT_SET = 0,
+    LIMIT = 1,
+  }
+
+  export enum OffsetCase { 
+    _OFFSET_NOT_SET = 0,
+    OFFSET = 2,
+  }
+}
+
+export class Filter extends jspb.Message {
+  getField(): string;
+  setField(value: string): Filter;
+
+  getValuesList(): Array<string>;
+  setValuesList(value: Array<string>): Filter;
+  clearValuesList(): Filter;
+  addValues(value: string, index?: number): Filter;
+
+  getExactMatch(): MatchMode;
+  setExactMatch(value: MatchMode): Filter;
+  hasExactMatch(): boolean;
+  clearExactMatch(): Filter;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Filter.AsObject;
+  static toObject(includeInstance: boolean, msg: Filter): Filter.AsObject;
+  static serializeBinaryToWriter(message: Filter, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Filter;
+  static deserializeBinaryFromReader(message: Filter, reader: jspb.BinaryReader): Filter;
+}
+
+export namespace Filter {
+  export type AsObject = {
+    field: string,
+    valuesList: Array<string>,
+    exactMatch?: MatchMode,
+  }
+
+  export enum ExactMatchCase { 
+    _EXACT_MATCH_NOT_SET = 0,
+    EXACT_MATCH = 3,
+  }
+}
+
+export class Sorting extends jspb.Message {
+  getOrderBy(): string;
+  setOrderBy(value: string): Sorting;
+  hasOrderBy(): boolean;
+  clearOrderBy(): Sorting;
+
+  getDirection(): OrderDirection;
+  setDirection(value: OrderDirection): Sorting;
+  hasDirection(): boolean;
+  clearDirection(): Sorting;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Sorting.AsObject;
+  static toObject(includeInstance: boolean, msg: Sorting): Sorting.AsObject;
+  static serializeBinaryToWriter(message: Sorting, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Sorting;
+  static deserializeBinaryFromReader(message: Sorting, reader: jspb.BinaryReader): Sorting;
+}
+
+export namespace Sorting {
+  export type AsObject = {
+    orderBy?: string,
+    direction?: OrderDirection,
+  }
+
+  export enum OrderByCase { 
+    _ORDER_BY_NOT_SET = 0,
+    ORDER_BY = 1,
+  }
+
+  export enum DirectionCase { 
+    _DIRECTION_NOT_SET = 0,
+    DIRECTION = 2,
+  }
+}
+
+export class QueryOptions extends jspb.Message {
+  getPagination(): Pagination | undefined;
+  setPagination(value?: Pagination): QueryOptions;
+  hasPagination(): boolean;
+  clearPagination(): QueryOptions;
+
+  getFiltersList(): Array<Filter>;
+  setFiltersList(value: Array<Filter>): QueryOptions;
+  clearFiltersList(): QueryOptions;
+  addFilters(value?: Filter, index?: number): Filter;
+
+  getSorting(): Sorting | undefined;
+  setSorting(value?: Sorting): QueryOptions;
+  hasSorting(): boolean;
+  clearSorting(): QueryOptions;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): QueryOptions.AsObject;
+  static toObject(includeInstance: boolean, msg: QueryOptions): QueryOptions.AsObject;
+  static serializeBinaryToWriter(message: QueryOptions, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): QueryOptions;
+  static deserializeBinaryFromReader(message: QueryOptions, reader: jspb.BinaryReader): QueryOptions;
+}
+
+export namespace QueryOptions {
+  export type AsObject = {
+    pagination?: Pagination.AsObject,
+    filtersList: Array<Filter.AsObject>,
+    sorting?: Sorting.AsObject,
+  }
+
+  export enum PaginationCase { 
+    _PAGINATION_NOT_SET = 0,
+    PAGINATION = 1,
+  }
+
+  export enum SortingCase { 
+    _SORTING_NOT_SET = 0,
+    SORTING = 3,
+  }
+}
+
+export class SetClusterConfigRequest extends jspb.Message {
+  getFeatureName(): string;
+  setFeatureName(value: string): SetClusterConfigRequest;
+
+  getIsEnable(): boolean;
+  setIsEnable(value: boolean): SetClusterConfigRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetClusterConfigRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SetClusterConfigRequest): SetClusterConfigRequest.AsObject;
+  static serializeBinaryToWriter(message: SetClusterConfigRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetClusterConfigRequest;
+  static deserializeBinaryFromReader(message: SetClusterConfigRequest, reader: jspb.BinaryReader): SetClusterConfigRequest;
+}
+
+export namespace SetClusterConfigRequest {
+  export type AsObject = {
+    featureName: string,
+    isEnable: boolean,
+  }
+}
+
+export class SetClusterConfigReply extends jspb.Message {
+  getFeatureName(): string;
+  setFeatureName(value: string): SetClusterConfigReply;
+
+  getIsEnable(): boolean;
+  setIsEnable(value: boolean): SetClusterConfigReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetClusterConfigReply.AsObject;
+  static toObject(includeInstance: boolean, msg: SetClusterConfigReply): SetClusterConfigReply.AsObject;
+  static serializeBinaryToWriter(message: SetClusterConfigReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetClusterConfigReply;
+  static deserializeBinaryFromReader(message: SetClusterConfigReply, reader: jspb.BinaryReader): SetClusterConfigReply;
+}
+
+export namespace SetClusterConfigReply {
+  export type AsObject = {
+    featureName: string,
+    isEnable: boolean,
+  }
+}
+
+export class GetClusterConfigRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetClusterConfigRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: GetClusterConfigRequest): GetClusterConfigRequest.AsObject;
+  static serializeBinaryToWriter(message: GetClusterConfigRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetClusterConfigRequest;
+  static deserializeBinaryFromReader(message: GetClusterConfigRequest, reader: jspb.BinaryReader): GetClusterConfigRequest;
+}
+
+export namespace GetClusterConfigRequest {
+  export type AsObject = {
+  }
+}
+
+export class GetClusterConfigReply extends jspb.Message {
+  getMqttBrokerClusterDynamicConfig(): Uint8Array | string;
+  getMqttBrokerClusterDynamicConfig_asU8(): Uint8Array;
+  getMqttBrokerClusterDynamicConfig_asB64(): string;
+  setMqttBrokerClusterDynamicConfig(value: Uint8Array | string): GetClusterConfigReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): GetClusterConfigReply.AsObject;
+  static toObject(includeInstance: boolean, msg: GetClusterConfigReply): GetClusterConfigReply.AsObject;
+  static serializeBinaryToWriter(message: GetClusterConfigReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): GetClusterConfigReply;
+  static deserializeBinaryFromReader(message: GetClusterConfigReply, reader: jspb.BinaryReader): GetClusterConfigReply;
+}
+
+export namespace GetClusterConfigReply {
+  export type AsObject = {
+    mqttBrokerClusterDynamicConfig: Uint8Array | string,
+  }
+}
+
 export class ClusterStatusRequest extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ClusterStatusRequest.AsObject;
@@ -37,6 +264,249 @@ export namespace ClusterStatusReply {
   export type AsObject = {
     clusterName: string,
     nodesList: Array<string>,
+  }
+}
+
+export class ListClientRequest extends jspb.Message {
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListClientRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListClientRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListClientRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListClientRequest): ListClientRequest.AsObject;
+  static serializeBinaryToWriter(message: ListClientRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListClientRequest;
+  static deserializeBinaryFromReader(message: ListClientRequest, reader: jspb.BinaryReader): ListClientRequest;
+}
+
+export namespace ListClientRequest {
+  export type AsObject = {
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 1,
+  }
+}
+
+export class ListClientReply extends jspb.Message {
+  getClientsList(): Array<ClientRaw>;
+  setClientsList(value: Array<ClientRaw>): ListClientReply;
+  clearClientsList(): ListClientReply;
+  addClients(value?: ClientRaw, index?: number): ClientRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListClientReply;
+  hasTotalCount(): boolean;
+  clearTotalCount(): ListClientReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListClientReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ListClientReply): ListClientReply.AsObject;
+  static serializeBinaryToWriter(message: ListClientReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListClientReply;
+  static deserializeBinaryFromReader(message: ListClientReply, reader: jspb.BinaryReader): ListClientReply;
+}
+
+export namespace ListClientReply {
+  export type AsObject = {
+    clientsList: Array<ClientRaw.AsObject>,
+    totalCount?: number,
+  }
+
+  export enum TotalCountCase { 
+    _TOTAL_COUNT_NOT_SET = 0,
+    TOTAL_COUNT = 2,
+  }
+}
+
+export class ClientRaw extends jspb.Message {
+  getClientId(): string;
+  setClientId(value: string): ClientRaw;
+
+  getUsername(): string;
+  setUsername(value: string): ClientRaw;
+
+  getIsOnline(): boolean;
+  setIsOnline(value: boolean): ClientRaw;
+
+  getSourceIp(): string;
+  setSourceIp(value: string): ClientRaw;
+
+  getConnectedAt(): number;
+  setConnectedAt(value: number): ClientRaw;
+
+  getKeepAlive(): number;
+  setKeepAlive(value: number): ClientRaw;
+
+  getCleanSession(): boolean;
+  setCleanSession(value: boolean): ClientRaw;
+
+  getSessionExpiryInterval(): number;
+  setSessionExpiryInterval(value: number): ClientRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClientRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: ClientRaw): ClientRaw.AsObject;
+  static serializeBinaryToWriter(message: ClientRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClientRaw;
+  static deserializeBinaryFromReader(message: ClientRaw, reader: jspb.BinaryReader): ClientRaw;
+}
+
+export namespace ClientRaw {
+  export type AsObject = {
+    clientId: string,
+    username: string,
+    isOnline: boolean,
+    sourceIp: string,
+    connectedAt: number,
+    keepAlive: number,
+    cleanSession: boolean,
+    sessionExpiryInterval: number,
+  }
+}
+
+export class ListSessionRequest extends jspb.Message {
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListSessionRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListSessionRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSessionRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSessionRequest): ListSessionRequest.AsObject;
+  static serializeBinaryToWriter(message: ListSessionRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSessionRequest;
+  static deserializeBinaryFromReader(message: ListSessionRequest, reader: jspb.BinaryReader): ListSessionRequest;
+}
+
+export namespace ListSessionRequest {
+  export type AsObject = {
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 1,
+  }
+}
+
+export class ListSessionReply extends jspb.Message {
+  getSessionsList(): Array<SessionRaw>;
+  setSessionsList(value: Array<SessionRaw>): ListSessionReply;
+  clearSessionsList(): ListSessionReply;
+  addSessions(value?: SessionRaw, index?: number): SessionRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListSessionReply;
+  hasTotalCount(): boolean;
+  clearTotalCount(): ListSessionReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSessionReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSessionReply): ListSessionReply.AsObject;
+  static serializeBinaryToWriter(message: ListSessionReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSessionReply;
+  static deserializeBinaryFromReader(message: ListSessionReply, reader: jspb.BinaryReader): ListSessionReply;
+}
+
+export namespace ListSessionReply {
+  export type AsObject = {
+    sessionsList: Array<SessionRaw.AsObject>,
+    totalCount?: number,
+  }
+
+  export enum TotalCountCase { 
+    _TOTAL_COUNT_NOT_SET = 0,
+    TOTAL_COUNT = 2,
+  }
+}
+
+export class SessionRaw extends jspb.Message {
+  getClientId(): string;
+  setClientId(value: string): SessionRaw;
+
+  getSessionExpiry(): number;
+  setSessionExpiry(value: number): SessionRaw;
+
+  getIsContainLastWill(): boolean;
+  setIsContainLastWill(value: boolean): SessionRaw;
+
+  getLastWillDelayInterval(): number;
+  setLastWillDelayInterval(value: number): SessionRaw;
+  hasLastWillDelayInterval(): boolean;
+  clearLastWillDelayInterval(): SessionRaw;
+
+  getCreateTime(): number;
+  setCreateTime(value: number): SessionRaw;
+
+  getConnectionId(): number;
+  setConnectionId(value: number): SessionRaw;
+  hasConnectionId(): boolean;
+  clearConnectionId(): SessionRaw;
+
+  getBrokerId(): number;
+  setBrokerId(value: number): SessionRaw;
+  hasBrokerId(): boolean;
+  clearBrokerId(): SessionRaw;
+
+  getReconnectTime(): number;
+  setReconnectTime(value: number): SessionRaw;
+  hasReconnectTime(): boolean;
+  clearReconnectTime(): SessionRaw;
+
+  getDistinctTime(): number;
+  setDistinctTime(value: number): SessionRaw;
+  hasDistinctTime(): boolean;
+  clearDistinctTime(): SessionRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SessionRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: SessionRaw): SessionRaw.AsObject;
+  static serializeBinaryToWriter(message: SessionRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SessionRaw;
+  static deserializeBinaryFromReader(message: SessionRaw, reader: jspb.BinaryReader): SessionRaw;
+}
+
+export namespace SessionRaw {
+  export type AsObject = {
+    clientId: string,
+    sessionExpiry: number,
+    isContainLastWill: boolean,
+    lastWillDelayInterval?: number,
+    createTime: number,
+    connectionId?: number,
+    brokerId?: number,
+    reconnectTime?: number,
+    distinctTime?: number,
+  }
+
+  export enum LastWillDelayIntervalCase { 
+    _LAST_WILL_DELAY_INTERVAL_NOT_SET = 0,
+    LAST_WILL_DELAY_INTERVAL = 4,
+  }
+
+  export enum ConnectionIdCase { 
+    _CONNECTION_ID_NOT_SET = 0,
+    CONNECTION_ID = 6,
+  }
+
+  export enum BrokerIdCase { 
+    _BROKER_ID_NOT_SET = 0,
+    BROKER_ID = 7,
+  }
+
+  export enum ReconnectTimeCase { 
+    _RECONNECT_TIME_NOT_SET = 0,
+    RECONNECT_TIME = 8,
+  }
+
+  export enum DistinctTimeCase { 
+    _DISTINCT_TIME_NOT_SET = 0,
+    DISTINCT_TIME = 9,
   }
 }
 
@@ -492,51 +962,15 @@ export namespace EnableFlappingDetectReply {
   }
 }
 
-export class EnableSlowSubscribeRequest extends jspb.Message {
-  getIsEnable(): boolean;
-  setIsEnable(value: boolean): EnableSlowSubscribeRequest;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): EnableSlowSubscribeRequest.AsObject;
-  static toObject(includeInstance: boolean, msg: EnableSlowSubscribeRequest): EnableSlowSubscribeRequest.AsObject;
-  static serializeBinaryToWriter(message: EnableSlowSubscribeRequest, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): EnableSlowSubscribeRequest;
-  static deserializeBinaryFromReader(message: EnableSlowSubscribeRequest, reader: jspb.BinaryReader): EnableSlowSubscribeRequest;
-}
-
-export namespace EnableSlowSubscribeRequest {
-  export type AsObject = {
-    isEnable: boolean,
-  }
-}
-
-export class EnableSlowSubScribeReply extends jspb.Message {
-  getIsEnable(): boolean;
-  setIsEnable(value: boolean): EnableSlowSubScribeReply;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): EnableSlowSubScribeReply.AsObject;
-  static toObject(includeInstance: boolean, msg: EnableSlowSubScribeReply): EnableSlowSubScribeReply.AsObject;
-  static serializeBinaryToWriter(message: EnableSlowSubScribeReply, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): EnableSlowSubScribeReply;
-  static deserializeBinaryFromReader(message: EnableSlowSubScribeReply, reader: jspb.BinaryReader): EnableSlowSubScribeReply;
-}
-
-export namespace EnableSlowSubScribeReply {
-  export type AsObject = {
-    isEnable: boolean,
-  }
-}
-
 export class ListSlowSubscribeRequest extends jspb.Message {
   getList(): number;
   setList(value: number): ListSlowSubscribeRequest;
 
-  getSubName(): string;
-  setSubName(value: string): ListSlowSubscribeRequest;
-
   getTopic(): string;
   setTopic(value: string): ListSlowSubscribeRequest;
+
+  getSubName(): string;
+  setSubName(value: string): ListSlowSubscribeRequest;
 
   getClientId(): string;
   setClientId(value: string): ListSlowSubscribeRequest;
@@ -555,8 +989,8 @@ export class ListSlowSubscribeRequest extends jspb.Message {
 export namespace ListSlowSubscribeRequest {
   export type AsObject = {
     list: number,
-    subName: string,
     topic: string,
+    subName: string,
     clientId: string,
     sort: string,
   }
@@ -1306,6 +1740,14 @@ export namespace DeleteAutoSubscribeRuleReply {
   }
 }
 
+export enum MatchMode { 
+  EXACT = 0,
+  FUZZY = 1,
+}
+export enum OrderDirection { 
+  ASC = 0,
+  DESC = 1,
+}
 export enum MatchOption { 
   E = 0,
   P = 1,
