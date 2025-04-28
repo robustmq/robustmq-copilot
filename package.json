@@ -4,6 +4,8 @@
   "private": true,
   "description": "The one-stop RobustMQ operation and maintenance management platform",
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.1",
     "oxlint": "^0.16.2",
     "prettier": "^3.5.3"
   },
@@ -12,11 +14,18 @@
     "ui:build": "pnpm -r --filter=web-ui run build",
     "ui:preview": "pnpm -r --filter=web-ui run preview",
     "lint": "oxlint",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "workspaces": [
     "packages/*"
   ],
+  "lint-staged": {
+    "*.{ts,js,css,md}": [
+      "prettier --write",
+      "npm run lint:fix"
+    ]
+  },
   "keywords": [
     "MQ",
     "RobustMQ"
