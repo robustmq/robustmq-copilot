@@ -56,6 +56,13 @@ export default defineConfig({
   tools: {
     rspack: {
       plugins: [TanStackRouterRspack()],
+      module: {
+        parser: {
+          javascript: {
+            exportsPresence: false,
+          },
+        },
+      },
     },
   },
 });
