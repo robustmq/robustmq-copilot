@@ -1,7 +1,7 @@
 import { MQTTBrokerAdminServiceClient } from '@mbpb/AdminServiceClientPb';
 import * as adminApi from '@mbpb/admin_pb';
 
-const service = new MQTTBrokerAdminServiceClient(process.env.MQTT_SERVER, null, null);
+const service = new MQTTBrokerAdminServiceClient(process.env.PUBLIC_MQTT_SERVER, null, null);
 
 interface ConnectionInfo {
   client_id: string;

@@ -1,7 +1,7 @@
 import { PlacementCenterServiceClient } from '@pcpb/InnerServiceClientPb';
 import * as innerApi from '@pcpb/inner_pb';
 
-const service = new PlacementCenterServiceClient(process.env.PLACEMENT_CENTER, null, null);
+const service = new PlacementCenterServiceClient(process.env.PUBLIC_PLACEMENT_CENTER, null, null);
 
 export const fetchClusterStatus = async (): Promise<innerApi.ClusterStatusReply> => {
   return new Promise((s, j) => {

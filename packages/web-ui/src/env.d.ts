@@ -3,9 +3,9 @@
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      MQTT_SERVER: string;
-      PLACEMENT_CENTER: string;
-      JOURNAL_SERVER: string;
+      PUBLIC_MQTT_SERVER: string;
+      PUBLIC_PLACEMENT_CENTER: string;
+      PUBLIC_JOURNAL_SERVER: string;
     }
   }
 }
