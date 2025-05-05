@@ -20,11 +20,11 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Client',
-          url: '/general/placement-center',
+          url: '/general/client',
         },
         {
           title: 'Session',
-          url: '/general/placement-center',
+          url: '/general/session',
         },
         {
           title: 'Subscription Management',
@@ -32,11 +32,11 @@ export const sidebarData: SidebarData = {
         },
         {
           title: 'Retained Message',
-          url: '/general/subscribe-manager',
+          url: '/general/retained-message',
         },
         {
           title: 'Will Message',
-          url: '/general/subscribe-manager',
+          url: '/general/will-message',
         },
       ],
     },

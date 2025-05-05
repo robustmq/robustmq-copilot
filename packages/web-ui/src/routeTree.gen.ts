@@ -39,12 +39,15 @@ const AuthenticatedSettingsNotificationsLazyImport = createFileRoute('/_authenti
 const AuthenticatedSettingsDisplayLazyImport = createFileRoute('/_authenticated/settings/display')();
 const AuthenticatedSettingsAppearanceLazyImport = createFileRoute('/_authenticated/settings/appearance')();
 const AuthenticatedSettingsAccountLazyImport = createFileRoute('/_authenticated/settings/account')();
+const AuthenticatedGeneralWillMessageIndexLazyImport = createFileRoute('/_authenticated/general/will-message/')();
 const AuthenticatedGeneralSubscribeManagerIndexLazyImport = createFileRoute(
   '/_authenticated/general/subscribe-manager/',
 )();
-const AuthenticatedGeneralPlacementCenterIndexLazyImport = createFileRoute(
-  '/_authenticated/general/placement-center/',
+const AuthenticatedGeneralSessionIndexLazyImport = createFileRoute('/_authenticated/general/session/')();
+const AuthenticatedGeneralRetainedMessageIndexLazyImport = createFileRoute(
+  '/_authenticated/general/retained-message/',
 )();
+const AuthenticatedGeneralClientIndexLazyImport = createFileRoute('/_authenticated/general/client/')();
 const AuthenticatedAclClientCertificationIndexLazyImport = createFileRoute(
   '/_authenticated/acl/client-certification/',
 )();
@@ -205,17 +208,35 @@ const AuthenticatedSettingsAccountLazyRoute = AuthenticatedSettingsAccountLazyIm
   getParentRoute: () => AuthenticatedSettingsRouteLazyRoute,
 } as any).lazy(() => import('./routes/_authenticated/settings/account.lazy').then(d => d.Route));
 
+const AuthenticatedGeneralWillMessageIndexLazyRoute = AuthenticatedGeneralWillMessageIndexLazyImport.update({
+  id: '/general/will-message/',
+  path: '/general/will-message/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any).lazy(() => import('./routes/_authenticated/general/will-message/index.lazy').then(d => d.Route));
+
 const AuthenticatedGeneralSubscribeManagerIndexLazyRoute = AuthenticatedGeneralSubscribeManagerIndexLazyImport.update({
   id: '/general/subscribe-manager/',
   path: '/general/subscribe-manager/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any).lazy(() => import('./routes/_authenticated/general/subscribe-manager/index.lazy').then(d => d.Route));
 
-const AuthenticatedGeneralPlacementCenterIndexLazyRoute = AuthenticatedGeneralPlacementCenterIndexLazyImport.update({
-  id: '/general/placement-center/',
-  path: '/general/placement-center/',
+const AuthenticatedGeneralSessionIndexLazyRoute = AuthenticatedGeneralSessionIndexLazyImport.update({
+  id: '/general/session/',
+  path: '/general/session/',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/general/placement-center/index.lazy').then(d => d.Route));
+} as any).lazy(() => import('./routes/_authenticated/general/session/index.lazy').then(d => d.Route));
+
+const AuthenticatedGeneralRetainedMessageIndexLazyRoute = AuthenticatedGeneralRetainedMessageIndexLazyImport.update({
+  id: '/general/retained-message/',
+  path: '/general/retained-message/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any).lazy(() => import('./routes/_authenticated/general/retained-message/index.lazy').then(d => d.Route));
+
+const AuthenticatedGeneralClientIndexLazyRoute = AuthenticatedGeneralClientIndexLazyImport.update({
+  id: '/general/client/',
+  path: '/general/client/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any).lazy(() => import('./routes/_authenticated/general/client/index.lazy').then(d => d.Route));
 
 const AuthenticatedAclClientCertificationIndexLazyRoute = AuthenticatedAclClientCertificationIndexLazyImport.update({
   id: '/acl/client-certification/',
@@ -408,11 +429,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAclClientCertificationIndexLazyImport;
       parentRoute: typeof AuthenticatedRouteImport;
     };
-    '/_authenticated/general/placement-center/': {
-      id: '/_authenticated/general/placement-center/';
-      path: '/general/placement-center';
-      fullPath: '/general/placement-center';
-      preLoaderRoute: typeof AuthenticatedGeneralPlacementCenterIndexLazyImport;
+    '/_authenticated/general/client/': {
+      id: '/_authenticated/general/client/';
+      path: '/general/client';
+      fullPath: '/general/client';
+      preLoaderRoute: typeof AuthenticatedGeneralClientIndexLazyImport;
+      parentRoute: typeof AuthenticatedRouteImport;
+    };
+    '/_authenticated/general/retained-message/': {
+      id: '/_authenticated/general/retained-message/';
+      path: '/general/retained-message';
+      fullPath: '/general/retained-message';
+      preLoaderRoute: typeof AuthenticatedGeneralRetainedMessageIndexLazyImport;
+      parentRoute: typeof AuthenticatedRouteImport;
+    };
+    '/_authenticated/general/session/': {
+      id: '/_authenticated/general/session/';
+      path: '/general/session';
+      fullPath: '/general/session';
+      preLoaderRoute: typeof AuthenticatedGeneralSessionIndexLazyImport;
       parentRoute: typeof AuthenticatedRouteImport;
     };
     '/_authenticated/general/subscribe-manager/': {
@@ -420,6 +455,13 @@ declare module '@tanstack/react-router' {
       path: '/general/subscribe-manager';
       fullPath: '/general/subscribe-manager';
       preLoaderRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyImport;
+      parentRoute: typeof AuthenticatedRouteImport;
+    };
+    '/_authenticated/general/will-message/': {
+      id: '/_authenticated/general/will-message/';
+      path: '/general/will-message';
+      fullPath: '/general/will-message';
+      preLoaderRoute: typeof AuthenticatedGeneralWillMessageIndexLazyImport;
       parentRoute: typeof AuthenticatedRouteImport;
     };
   }
@@ -456,8 +498,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedUsersIndexLazyRoute: typeof AuthenticatedUsersIndexLazyRoute;
   AuthenticatedAclClientAuthorizeIndexLazyRoute: typeof AuthenticatedAclClientAuthorizeIndexLazyRoute;
   AuthenticatedAclClientCertificationIndexLazyRoute: typeof AuthenticatedAclClientCertificationIndexLazyRoute;
-  AuthenticatedGeneralPlacementCenterIndexLazyRoute: typeof AuthenticatedGeneralPlacementCenterIndexLazyRoute;
+  AuthenticatedGeneralClientIndexLazyRoute: typeof AuthenticatedGeneralClientIndexLazyRoute;
+  AuthenticatedGeneralRetainedMessageIndexLazyRoute: typeof AuthenticatedGeneralRetainedMessageIndexLazyRoute;
+  AuthenticatedGeneralSessionIndexLazyRoute: typeof AuthenticatedGeneralSessionIndexLazyRoute;
   AuthenticatedGeneralSubscribeManagerIndexLazyRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
+  AuthenticatedGeneralWillMessageIndexLazyRoute: typeof AuthenticatedGeneralWillMessageIndexLazyRoute;
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -469,8 +514,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedUsersIndexLazyRoute: AuthenticatedUsersIndexLazyRoute,
   AuthenticatedAclClientAuthorizeIndexLazyRoute: AuthenticatedAclClientAuthorizeIndexLazyRoute,
   AuthenticatedAclClientCertificationIndexLazyRoute: AuthenticatedAclClientCertificationIndexLazyRoute,
-  AuthenticatedGeneralPlacementCenterIndexLazyRoute: AuthenticatedGeneralPlacementCenterIndexLazyRoute,
+  AuthenticatedGeneralClientIndexLazyRoute: AuthenticatedGeneralClientIndexLazyRoute,
+  AuthenticatedGeneralRetainedMessageIndexLazyRoute: AuthenticatedGeneralRetainedMessageIndexLazyRoute,
+  AuthenticatedGeneralSessionIndexLazyRoute: AuthenticatedGeneralSessionIndexLazyRoute,
   AuthenticatedGeneralSubscribeManagerIndexLazyRoute: AuthenticatedGeneralSubscribeManagerIndexLazyRoute,
+  AuthenticatedGeneralWillMessageIndexLazyRoute: AuthenticatedGeneralWillMessageIndexLazyRoute,
 };
 
 const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren);
@@ -500,8 +548,11 @@ export interface FileRoutesByFullPath {
   '/users': typeof AuthenticatedUsersIndexLazyRoute;
   '/acl/client-authorize': typeof AuthenticatedAclClientAuthorizeIndexLazyRoute;
   '/acl/client-certification': typeof AuthenticatedAclClientCertificationIndexLazyRoute;
-  '/general/placement-center': typeof AuthenticatedGeneralPlacementCenterIndexLazyRoute;
+  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute;
+  '/general/retained-message': typeof AuthenticatedGeneralRetainedMessageIndexLazyRoute;
+  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute;
   '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
+  '/general/will-message': typeof AuthenticatedGeneralWillMessageIndexLazyRoute;
 }
 
 export interface FileRoutesByTo {
@@ -527,8 +578,11 @@ export interface FileRoutesByTo {
   '/users': typeof AuthenticatedUsersIndexLazyRoute;
   '/acl/client-authorize': typeof AuthenticatedAclClientAuthorizeIndexLazyRoute;
   '/acl/client-certification': typeof AuthenticatedAclClientCertificationIndexLazyRoute;
-  '/general/placement-center': typeof AuthenticatedGeneralPlacementCenterIndexLazyRoute;
+  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute;
+  '/general/retained-message': typeof AuthenticatedGeneralRetainedMessageIndexLazyRoute;
+  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute;
   '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
+  '/general/will-message': typeof AuthenticatedGeneralWillMessageIndexLazyRoute;
 }
 
 export interface FileRoutesById {
@@ -558,8 +612,11 @@ export interface FileRoutesById {
   '/_authenticated/users/': typeof AuthenticatedUsersIndexLazyRoute;
   '/_authenticated/acl/client-authorize/': typeof AuthenticatedAclClientAuthorizeIndexLazyRoute;
   '/_authenticated/acl/client-certification/': typeof AuthenticatedAclClientCertificationIndexLazyRoute;
-  '/_authenticated/general/placement-center/': typeof AuthenticatedGeneralPlacementCenterIndexLazyRoute;
+  '/_authenticated/general/client/': typeof AuthenticatedGeneralClientIndexLazyRoute;
+  '/_authenticated/general/retained-message/': typeof AuthenticatedGeneralRetainedMessageIndexLazyRoute;
+  '/_authenticated/general/session/': typeof AuthenticatedGeneralSessionIndexLazyRoute;
   '/_authenticated/general/subscribe-manager/': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
+  '/_authenticated/general/will-message/': typeof AuthenticatedGeneralWillMessageIndexLazyRoute;
 }
 
 export interface FileRouteTypes {
@@ -589,8 +646,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/acl/client-authorize'
     | '/acl/client-certification'
-    | '/general/placement-center'
-    | '/general/subscribe-manager';
+    | '/general/client'
+    | '/general/retained-message'
+    | '/general/session'
+    | '/general/subscribe-manager'
+    | '/general/will-message';
   fileRoutesByTo: FileRoutesByTo;
   to:
     | '/500'
@@ -615,8 +675,11 @@ export interface FileRouteTypes {
     | '/users'
     | '/acl/client-authorize'
     | '/acl/client-certification'
-    | '/general/placement-center'
-    | '/general/subscribe-manager';
+    | '/general/client'
+    | '/general/retained-message'
+    | '/general/session'
+    | '/general/subscribe-manager'
+    | '/general/will-message';
   id:
     | '__root__'
     | '/_authenticated'
@@ -644,8 +707,11 @@ export interface FileRouteTypes {
     | '/_authenticated/users/'
     | '/_authenticated/acl/client-authorize/'
     | '/_authenticated/acl/client-certification/'
-    | '/_authenticated/general/placement-center/'
-    | '/_authenticated/general/subscribe-manager/';
+    | '/_authenticated/general/client/'
+    | '/_authenticated/general/retained-message/'
+    | '/_authenticated/general/session/'
+    | '/_authenticated/general/subscribe-manager/'
+    | '/_authenticated/general/will-message/';
   fileRoutesById: FileRoutesById;
 }
 
@@ -712,8 +778,11 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/_authenticated/users/",
         "/_authenticated/acl/client-authorize/",
         "/_authenticated/acl/client-certification/",
-        "/_authenticated/general/placement-center/",
-        "/_authenticated/general/subscribe-manager/"
+        "/_authenticated/general/client/",
+        "/_authenticated/general/retained-message/",
+        "/_authenticated/general/session/",
+        "/_authenticated/general/subscribe-manager/",
+        "/_authenticated/general/will-message/"
       ]
     },
     "/(auth)/500": {
@@ -808,12 +877,24 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
       "filePath": "_authenticated/acl/client-certification/index.lazy.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/general/placement-center/": {
-      "filePath": "_authenticated/general/placement-center/index.lazy.tsx",
+    "/_authenticated/general/client/": {
+      "filePath": "_authenticated/general/client/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/general/retained-message/": {
+      "filePath": "_authenticated/general/retained-message/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/general/session/": {
+      "filePath": "_authenticated/general/session/index.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/general/subscribe-manager/": {
       "filePath": "_authenticated/general/subscribe-manager/index.lazy.tsx",
+      "parent": "/_authenticated"
+    },
+    "/_authenticated/general/will-message/": {
+      "filePath": "_authenticated/general/will-message/index.lazy.tsx",
       "parent": "/_authenticated"
     }
   }
