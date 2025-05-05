@@ -2,7 +2,8 @@ import { format } from 'date-fns';
 import { DataTable } from '@/components/table';
 import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
-import { getSessionList } from '@/services/mqtt';
+import { getClientList } from '@/services/mqtt';
+import StatusBadge from '@/components/status-badge';
 
 export default function SessionList() {
   const columns: ColumnDef<any>[] = [
@@ -18,7 +19,7 @@ export default function SessionList() {
     {
       accessorKey: 'isOnline',
       header: 'Status',
-      cell: ({ row }) => (row.original.isOnline ? 'Online' : 'Offline'),
+      cell: ({ row }) => <StatusBadge status={row.original.isOnline ? 'online' : 'offline'} />,
     },
     {
       accessorKey: 'sourceIp',
@@ -51,10 +52,11 @@ export default function SessionList() {
   ];
 
   const query = useQuery({
-    queryKey: ['QuerySessionListData'],
+    queryKey: ['QueryClientListData'],
     queryFn: async () => {
-      const ret = await getSessionList();
-      return ret.sessionsList;
+      const ret = await getClientList();
+      console.log(ret);
+      return ret.clientsList;
     },
   });
 

@@ -8,51 +8,48 @@ export default function SessionList() {
   const columns: ColumnDef<any>[] = [
     {
       id: 'clientId',
-      accessorKey: 'client_id',
+      accessorKey: 'clientId',
       header: 'Client ID',
     },
     {
-      accessorKey: 'session_expiry',
-      header: 'Session Expiry (s)',
-      cell: ({ row }) => row.original.session_expiry || '-',
-    },
-    {
-      accessorKey: 'is_contain_last_will',
-      header: 'Has Last Will',
-      cell: ({ row }) => (row.original.is_contain_last_will ? 'Yes' : 'No'),
-    },
-    {
-      accessorKey: 'last_will_delay_interval',
-      header: 'Last Will Delay (s)',
-      cell: ({ row }) => row.original.last_will_delay_interval || '-',
-    },
-    {
-      accessorKey: 'create_time',
-      header: 'Created At',
-      cell: ({ row }) =>
-        row.original.create_time ? format(new Date(row.original.create_time * 1000), 'yyyy-MM-dd HH:mm:ss') : '-',
-    },
-    {
-      accessorKey: 'connection_id',
+      accessorKey: 'connectionId',
       header: 'Connection ID',
-      cell: ({ row }) => row.original.connection_id || '-',
+      cell: ({ row }) => row.original.connectionId || '-',
     },
     {
-      accessorKey: 'broker_id',
+      accessorKey: 'brokerId',
       header: 'Broker ID',
-      cell: ({ row }) => row.original.broker_id || '-',
+      cell: ({ row }) => row.original.brokerId || '-',
     },
     {
-      accessorKey: 'reconnect_time',
+      accessorKey: 'sessionExpiry',
+      header: 'Session Expiry (s)',
+      cell: ({ row }) => row.original.sessionExpiry || '-',
+    },
+    {
+      accessorKey: 'isContainLastWill',
+      header: 'Has Last Will',
+      cell: ({ row }) => (row.original.isContainLastWill ? 'Yes' : 'No'),
+    },
+    {
+      accessorKey: 'lastWillDelayInterval',
+      header: 'Last Will Delay (s)',
+      cell: ({ row }) => row.original.lastWillDelayInterval || '-',
+    },
+    {
+      accessorKey: 'createTime',
+      header: 'Created At',
+      cell: ({ row }) => (row.original.createTime ? format(row.original.createTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
+    },
+    {
+      accessorKey: 'reconnectTime',
       header: 'Reconnected At',
-      cell: ({ row }) =>
-        row.original.reconnect_time ? format(new Date(row.original.reconnect_time * 1000), 'yyyy-MM-dd HH:mm:ss') : '-',
+      cell: ({ row }) => (row.original.reconnectTime ? format(row.original.reconnectTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
     },
     {
-      accessorKey: 'distinct_time',
+      accessorKey: 'distinctTime',
       header: 'Disconnect Time',
-      cell: ({ row }) =>
-        row.original.distinct_time ? format(new Date(row.original.distinct_time * 1000), 'yyyy-MM-dd HH:mm:ss') : '-',
+      cell: ({ row }) => (row.original.distinctTime ? format(row.original.distinctTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
     },
   ];
 
