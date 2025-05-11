@@ -32,23 +32,37 @@ mkdir -p "$GENERATE_BASE_PATH"
 
 
 generate_proto_files() {
-  local target_dir="$BASE_PATH/$1/proto"
+  local service_name="$1"
+  local target_dir=""
   local proto_files=""
   
-  local common_proto_folder="$BASE_PATH/prost_validation_types/proto"
-  local generate_path="$GENERATE_BASE_PATH/$1"
+  local common_proto_folder="$BASE_PATH"
+  local generate_path="$GENERATE_BASE_PATH/$service_name"
 
   mkdir -p "$generate_path"
 
-  while IFS= read -r file; do
-  # get all `proto` directories
-  if [[ "$file" == *"/proto/"* ]]; then
-    relative_file_name=$(echo "$file" | sed -E 's/.*\/proto\/(.*)/\1/')
-
-    if [[ "$proto_files" != *"$relative_file_name"* ]]; then
-      proto_files="$proto_files $relative_file_name"
-    fi
+  # Set target directory based on service type
+  if [[ "$service_name" == "vendor" ]]; then
+    target_dir="$BASE_PATH/$service_name/validate"
+  else
+    target_dir="$BASE_PATH/$service_name/proto"
   fi
+
+  while IFS= read -r file; do
+    # Handle both /proto/ and vendor/validate/ directory files
+    if [[ "$file" == *"/proto/"* ]] || [[ "$file" == *"/vendor/validate/"* ]]; then
+      # For /proto/ files, extract the relative path after /proto/
+      # For vendor/validate files, keep the validate/ prefix
+      if [[ "$file" == *"/proto/"* ]]; then
+        relative_file_name=$(echo "$file" | sed -E 's/.*\/proto\/(.*)/\1/')
+      else
+        relative_file_name=$(echo "$file" | sed -E 's/.*\/validate\/(.*)/\1/')
+      fi
+
+      if [[ "$proto_files" != *"$relative_file_name"* ]]; then
+        proto_files="$proto_files $relative_file_name"
+      fi
+    fi
   done < <(find "$target_dir" -type f -name "*.proto")
   
   protoc -I="$target_dir" -I="$common_proto_folder" $proto_files \
@@ -59,7 +73,7 @@ generate_proto_files() {
 generate_proto_files "broker_mqtt"
 generate_proto_files "journal_server"
 generate_proto_files "placement_center"
-generate_proto_files "prost_validation_types"
+generate_proto_files "vendor"
 
 
 update_imports() {
@@ -79,15 +93,15 @@ update_imports() {
   find "$GENERATE_BASE_PATH" -type f -name "*.js" | while read -r file; do
     perform_sed "$file" \
       "var validate_validate_pb = require('./validate/validate_pb.js');" \
-      "var validate_validate_pb = require('../prost_validation_types/validate/validate_pb.js');"
+      "var validate_validate_pb = require('../vendor/validate/validate_pb.js');"
   done
 
   find "$GENERATE_BASE_PATH" -type f -name "*.d.ts" | while read -r file; do
     
     if [[ "$OSTYPE" == "darwin"* ]]; then
-      sed -i '' 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../prost_validation_types/validate/validate_pb'\'';\1|g' "$file"
+      sed -i '' 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../vendor/validate/validate_pb'\'';\1|g' "$file"
     else
-      sed -i 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../prost_validation_types/validate/validate_pb'\'';\1|g' "$file"
+      sed -i 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../vendor/validate/validate_pb'\'';\1|g' "$file"
     fi
   done
 }

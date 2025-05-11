@@ -1,4 +1,4 @@
-// source: validate/validate.proto
+// source: validate.proto
 /**
  * @fileoverview
  * @enhanceable

@@ -5,13 +5,9 @@ import * as jspb from 'google-protobuf'
 export class Pagination extends jspb.Message {
   getLimit(): number;
   setLimit(value: number): Pagination;
-  hasLimit(): boolean;
-  clearLimit(): Pagination;
 
   getOffset(): number;
   setOffset(value: number): Pagination;
-  hasOffset(): boolean;
-  clearOffset(): Pagination;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Pagination.AsObject;
@@ -23,18 +19,8 @@ export class Pagination extends jspb.Message {
 
 export namespace Pagination {
   export type AsObject = {
-    limit?: number,
-    offset?: number,
-  }
-
-  export enum LimitCase { 
-    _LIMIT_NOT_SET = 0,
-    LIMIT = 1,
-  }
-
-  export enum OffsetCase { 
-    _OFFSET_NOT_SET = 0,
-    OFFSET = 2,
+    limit: number,
+    offset: number,
   }
 }
 
@@ -76,13 +62,9 @@ export namespace Filter {
 export class Sorting extends jspb.Message {
   getOrderBy(): string;
   setOrderBy(value: string): Sorting;
-  hasOrderBy(): boolean;
-  clearOrderBy(): Sorting;
 
   getDirection(): OrderDirection;
   setDirection(value: OrderDirection): Sorting;
-  hasDirection(): boolean;
-  clearDirection(): Sorting;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Sorting.AsObject;
@@ -94,18 +76,8 @@ export class Sorting extends jspb.Message {
 
 export namespace Sorting {
   export type AsObject = {
-    orderBy?: string,
-    direction?: OrderDirection,
-  }
-
-  export enum OrderByCase { 
-    _ORDER_BY_NOT_SET = 0,
-    ORDER_BY = 1,
-  }
-
-  export enum DirectionCase { 
-    _DIRECTION_NOT_SET = 0,
-    DIRECTION = 2,
+    orderBy: string,
+    direction: OrderDirection,
   }
 }
 
@@ -300,8 +272,6 @@ export class ListClientReply extends jspb.Message {
 
   getTotalCount(): number;
   setTotalCount(value: number): ListClientReply;
-  hasTotalCount(): boolean;
-  clearTotalCount(): ListClientReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListClientReply.AsObject;
@@ -314,12 +284,7 @@ export class ListClientReply extends jspb.Message {
 export namespace ListClientReply {
   export type AsObject = {
     clientsList: Array<ClientRaw.AsObject>,
-    totalCount?: number,
-  }
-
-  export enum TotalCountCase { 
-    _TOTAL_COUNT_NOT_SET = 0,
-    TOTAL_COUNT = 2,
+    totalCount: number,
   }
 }
 
@@ -402,8 +367,6 @@ export class ListSessionReply extends jspb.Message {
 
   getTotalCount(): number;
   setTotalCount(value: number): ListSessionReply;
-  hasTotalCount(): boolean;
-  clearTotalCount(): ListSessionReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListSessionReply.AsObject;
@@ -416,12 +379,7 @@ export class ListSessionReply extends jspb.Message {
 export namespace ListSessionReply {
   export type AsObject = {
     sessionsList: Array<SessionRaw.AsObject>,
-    totalCount?: number,
-  }
-
-  export enum TotalCountCase { 
-    _TOTAL_COUNT_NOT_SET = 0,
-    TOTAL_COUNT = 2,
+    totalCount: number,
   }
 }
 
@@ -511,6 +469,11 @@ export namespace SessionRaw {
 }
 
 export class ListUserRequest extends jspb.Message {
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListUserRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListUserRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListUserRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListUserRequest): ListUserRequest.AsObject;
@@ -521,14 +484,23 @@ export class ListUserRequest extends jspb.Message {
 
 export namespace ListUserRequest {
   export type AsObject = {
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 1,
   }
 }
 
 export class ListUserReply extends jspb.Message {
-  getUsersList(): Array<Uint8Array | string>;
-  setUsersList(value: Array<Uint8Array | string>): ListUserReply;
+  getUsersList(): Array<UserRaw>;
+  setUsersList(value: Array<UserRaw>): ListUserReply;
   clearUsersList(): ListUserReply;
-  addUsers(value: Uint8Array | string, index?: number): ListUserReply;
+  addUsers(value?: UserRaw, index?: number): UserRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListUserReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListUserReply.AsObject;
@@ -540,7 +512,30 @@ export class ListUserReply extends jspb.Message {
 
 export namespace ListUserReply {
   export type AsObject = {
-    usersList: Array<Uint8Array | string>,
+    usersList: Array<UserRaw.AsObject>,
+    totalCount: number,
+  }
+}
+
+export class UserRaw extends jspb.Message {
+  getUsername(): string;
+  setUsername(value: string): UserRaw;
+
+  getIsSuperuser(): boolean;
+  setIsSuperuser(value: boolean): UserRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): UserRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: UserRaw): UserRaw.AsObject;
+  static serializeBinaryToWriter(message: UserRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): UserRaw;
+  static deserializeBinaryFromReader(message: UserRaw, reader: jspb.BinaryReader): UserRaw;
+}
+
+export namespace UserRaw {
+  export type AsObject = {
+    username: string,
+    isSuperuser: boolean,
   }
 }
 
@@ -620,6 +615,11 @@ export class ListAclRequest extends jspb.Message {
   getClusterName(): string;
   setClusterName(value: string): ListAclRequest;
 
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListAclRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListAclRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListAclRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListAclRequest): ListAclRequest.AsObject;
@@ -631,6 +631,12 @@ export class ListAclRequest extends jspb.Message {
 export namespace ListAclRequest {
   export type AsObject = {
     clusterName: string,
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 2,
   }
 }
 
@@ -639,6 +645,11 @@ export class ListAclReply extends jspb.Message {
   setAclsList(value: Array<Uint8Array | string>): ListAclReply;
   clearAclsList(): ListAclReply;
   addAcls(value: Uint8Array | string, index?: number): ListAclReply;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListAclReply;
+  hasTotalCount(): boolean;
+  clearTotalCount(): ListAclReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListAclReply.AsObject;
@@ -651,6 +662,12 @@ export class ListAclReply extends jspb.Message {
 export namespace ListAclReply {
   export type AsObject = {
     aclsList: Array<Uint8Array | string>,
+    totalCount?: number,
+  }
+
+  export enum TotalCountCase { 
+    _TOTAL_COUNT_NOT_SET = 0,
+    TOTAL_COUNT = 2,
   }
 }
 
@@ -734,6 +751,11 @@ export class ListBlacklistRequest extends jspb.Message {
   getClusterName(): string;
   setClusterName(value: string): ListBlacklistRequest;
 
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListBlacklistRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListBlacklistRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListBlacklistRequest.AsObject;
   static toObject(includeInstance: boolean, msg: ListBlacklistRequest): ListBlacklistRequest.AsObject;
@@ -745,14 +767,23 @@ export class ListBlacklistRequest extends jspb.Message {
 export namespace ListBlacklistRequest {
   export type AsObject = {
     clusterName: string,
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 2,
   }
 }
 
 export class ListBlacklistReply extends jspb.Message {
-  getBlacklistsList(): Array<Uint8Array | string>;
-  setBlacklistsList(value: Array<Uint8Array | string>): ListBlacklistReply;
+  getBlacklistsList(): Array<BlacklistRaw>;
+  setBlacklistsList(value: Array<BlacklistRaw>): ListBlacklistReply;
   clearBlacklistsList(): ListBlacklistReply;
-  addBlacklists(value: Uint8Array | string, index?: number): ListBlacklistReply;
+  addBlacklists(value?: BlacklistRaw, index?: number): BlacklistRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListBlacklistReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListBlacklistReply.AsObject;
@@ -764,7 +795,38 @@ export class ListBlacklistReply extends jspb.Message {
 
 export namespace ListBlacklistReply {
   export type AsObject = {
-    blacklistsList: Array<Uint8Array | string>,
+    blacklistsList: Array<BlacklistRaw.AsObject>,
+    totalCount: number,
+  }
+}
+
+export class BlacklistRaw extends jspb.Message {
+  getBlacklistType(): BlacklistType;
+  setBlacklistType(value: BlacklistType): BlacklistRaw;
+
+  getResourceName(): string;
+  setResourceName(value: string): BlacklistRaw;
+
+  getEndTime(): number;
+  setEndTime(value: number): BlacklistRaw;
+
+  getDesc(): string;
+  setDesc(value: string): BlacklistRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BlacklistRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: BlacklistRaw): BlacklistRaw.AsObject;
+  static serializeBinaryToWriter(message: BlacklistRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BlacklistRaw;
+  static deserializeBinaryFromReader(message: BlacklistRaw, reader: jspb.BinaryReader): BlacklistRaw;
+}
+
+export namespace BlacklistRaw {
+  export type AsObject = {
+    blacklistType: BlacklistType,
+    resourceName: string,
+    endTime: number,
+    desc: string,
   }
 }
 
@@ -1747,6 +1809,14 @@ export enum MatchMode {
 export enum OrderDirection { 
   ASC = 0,
   DESC = 1,
+}
+export enum BlacklistType { 
+  CLIENT_ID = 0,
+  USERNAME = 1,
+  IP_ADDRESS = 2,
+  CLIENT_ID_MATCH = 3,
+  USERNAME_MATCH = 4,
+  IP_CIDR = 5,
 }
 export enum MatchOption { 
   E = 0,

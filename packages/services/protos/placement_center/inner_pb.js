@@ -21,8 +21,8 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
-var validate_validate_pb = require('../prost_validation_types/validate/validate_pb.js');
-goog.object.extend(proto, validate_validate_pb);
+var vendor_validate_validate_pb = require('./vendor/validate/validate_pb.js');
+goog.object.extend(proto, vendor_validate_validate_pb);
 goog.exportSymbol('proto.placement.center.inner.BindSchemaReply', null, global);
 goog.exportSymbol('proto.placement.center.inner.BindSchemaRequest', null, global);
 goog.exportSymbol('proto.placement.center.inner.ClusterStatusReply', null, global);
