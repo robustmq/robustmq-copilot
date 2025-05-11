@@ -21,7 +21,7 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
-var vendor_validate_validate_pb = require('./vendor/validate/validate_pb.js');
+var vendor_validate_validate_pb = require('../vendor/validate_pb.js');
 goog.object.extend(proto, vendor_validate_validate_pb);
 goog.exportSymbol('proto.placement.center.inner.BindSchemaReply', null, global);
 goog.exportSymbol('proto.placement.center.inner.BindSchemaRequest', null, global);

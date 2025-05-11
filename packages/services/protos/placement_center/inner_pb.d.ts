@@ -1,6 +1,6 @@
 import * as jspb from 'google-protobuf'
 
-import * as vendor_validate_validate_pb from './vendor/validate/validate_pb'; // proto import: "vendor/validate/validate.proto"
+import * as vendor_validate_validate_pb from '../vendor/validate_pb'; // proto import: "vendor/validate/validate.proto"
 
 
 export class ClusterStatusRequest extends jspb.Message {

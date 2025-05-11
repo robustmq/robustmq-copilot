@@ -92,16 +92,16 @@ update_imports() {
   # Update JS files
   find "$GENERATE_BASE_PATH" -type f -name "*.js" | while read -r file; do
     perform_sed "$file" \
-      "var validate_validate_pb = require('./validate/validate_pb.js');" \
-      "var validate_validate_pb = require('../vendor/validate/validate_pb.js');"
+      "var vendor_validate_validate_pb = require('./vendor/validate/validate_pb.js');" \
+      "var vendor_validate_validate_pb = require('../vendor/validate_pb.js');"
   done
 
   find "$GENERATE_BASE_PATH" -type f -name "*.d.ts" | while read -r file; do
     
     if [[ "$OSTYPE" == "darwin"* ]]; then
-      sed -i '' 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../vendor/validate/validate_pb'\'';\1|g' "$file"
+      sed -i '' 's|import \* as vendor_validate_validate_pb from '\''./vendor/validate/validate_pb'\'';\(.*\)|import * as vendor_validate_validate_pb from '\''../vendor/validate_pb'\'';\1|g' "$file"
     else
-      sed -i 's|import \* as validate_validate_pb from '\''./validate/validate_pb'\'';\(.*\)|import * as validate_validate_pb from '\''../vendor/validate/validate_pb'\'';\1|g' "$file"
+      sed -i 's|import \* as vendor_validate_validate_pb from '\''./vendor/validate/validate_pb'\'';\(.*\)|import * as vendor_validate_validate_pb from '\''../vendor/validate_pb'\'';\1|g' "$file"
     fi
   done
 }
