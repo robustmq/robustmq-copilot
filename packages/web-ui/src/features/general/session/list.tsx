@@ -1,5 +1,4 @@
 import { DataTable } from '@/components/table';
-import { useQuery } from '@tanstack/react-query';
 import { ColumnDef } from '@tanstack/react-table';
 import { getSessionList } from '@/services/mqtt';
 import { format } from 'date-fns';
@@ -53,17 +52,22 @@ export default function SessionList() {
     },
   ];
 
-  const query = useQuery({
-    queryKey: ['QuerySessionListData'],
-    queryFn: async () => {
-      const ret = await getSessionList();
-      return ret.sessionsList;
-    },
-  });
+  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+    const ret = await getSessionList({
+      pagination: {
+        offset: pageIndex * pageSize,
+        limit: pageSize,
+      },
+    });
+    return {
+      data: ret.sessionsList,
+      totalCount: ret.totalCount,
+    };
+  };
 
   return (
     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-      <DataTable query={query} columns={columns} hideToolBar />
+      <DataTable columns={columns} fetchDataFn={fetchDataFn} queryKey="QuerySessionListData" />
     </div>
   );
 }

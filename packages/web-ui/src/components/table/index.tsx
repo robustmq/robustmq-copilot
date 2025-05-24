@@ -16,35 +16,62 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
-import { UseQueryResult } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-interface DataTableProps<TData, TValue, TError> {
+type FetchDataFn<TData> = (
+  pageIndex: number,
+  pageSize: number,
+) => Promise<{
+  data: TData[];
+  totalCount: number;
+}>;
+
+interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data?: TData[];
   hideToolBar?: boolean;
-  query?: UseQueryResult<TData[], TError>;
+  fetchDataFn: FetchDataFn<TData>;
+  queryKey: string;
 }
 
-export function DataTable<TData, TValue, TError>({
+export function DataTable<TData, TValue>({
   columns,
-  data,
   hideToolBar = false,
-  query,
-}: DataTableProps<TData, TValue, TError>) {
+  fetchDataFn,
+  queryKey,
+}: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+
+  const query = useQuery({
+    queryKey: [queryKey, pagination.pageIndex, pagination.pageSize],
+    queryFn: () => fetchDataFn(pagination.pageIndex, pagination.pageSize),
+  });
+
+  React.useEffect(() => {
+    if (query?.refetch) {
+      query.refetch();
+    }
+  }, [pagination.pageIndex, pagination.pageSize]);
 
   const table = useReactTable({
-    data: query?.data || data || [],
+    data: query?.data?.data || [],
+    pageCount: Math.ceil((query?.data?.totalCount || 0) / pagination.pageSize),
     columns,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
+      pagination,
     },
+    onPaginationChange: setPagination,
+    manualPagination: true,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -60,7 +87,7 @@ export function DataTable<TData, TValue, TError>({
 
   return (
     <div className="space-y-4">
-      {!hideToolBar && <DataTableToolbar table={table} />}
+      {!hideToolBar && <DataTableToolbar table={table} onRefresh={() => query.refetch()} />}
       <div className="rounded-md border">
         <Table>
           <TableHeader>

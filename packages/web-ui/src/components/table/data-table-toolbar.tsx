@@ -1,17 +1,32 @@
-import { Cross2Icon } from '@radix-ui/react-icons';
+import { Cross2Icon, ReloadIcon } from '@radix-ui/react-icons';
 import { Table } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DataTableViewOptions } from './data-table-view-options';
 import { priorities, statuses } from './data';
 import { DataTableFacetedFilter } from './data-table-faceted-filter';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  onRefresh?: () => void;
 }
 
-export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
+export function DataTableToolbar<TData>({ table, onRefresh }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+
+  const handleRefresh = () => {
+    if (onRefresh) {
+      onRefresh();
+    } else {
+      // 如果没有提供刷新函数，默认重置表格并重新获取数据
+      table.resetRowSelection();
+      // 如果表格有 refetch 方法（通常从 React Query 获取）
+      if ((table.options.meta as any)?.refetch) {
+        (table.options.meta as any).refetch();
+      }
+    }
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -37,7 +52,21 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <div className="flex items-center space-x-2">
+        <DataTableViewOptions table={table} />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="outline" size="sm" className="h-8 px-2 lg:px-3" onClick={handleRefresh}>
+                <ReloadIcon className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Refresh</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </div>
   );
 }
