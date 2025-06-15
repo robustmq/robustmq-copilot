@@ -15,7 +15,8 @@
     "ui:preview": "pnpm -r --filter=web-ui run preview",
     "lint": "oxlint",
     "format": "prettier --write .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "gen:grpc": "pnpm -r --filter=@robustmq/grpc-web-services run gen"
   },
   "workspaces": [
     "packages/*"

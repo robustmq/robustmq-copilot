@@ -1,6 +1,6 @@
-# robustmq-copilot
+# RobustMQ-Copilot
 
-The one-stop RobustMQ operation and maintenance management platform
+The one-step RobustMQ operation and maintenance management platform.
 
 ## Start
 
@@ -23,6 +23,8 @@ npm run ui:dev
 
 ## Development
 
+### Setup
+
 1. Clone the project.
 
 ```bash
@@ -38,3 +40,17 @@ git submodule update --init --recursive
 3. Install the recommend extensions for VSCode.
 
 4. Develop it.
+
+### Update GRPC interface
+
+1. Use git to update submodule with the following bash:
+
+```bash
+git submodule update --remote
+```
+
+2. Run generation command to generate code.
+
+```bash
+npm run gen:grpc
+```
