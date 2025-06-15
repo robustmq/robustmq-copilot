@@ -684,6 +684,92 @@ export class MQTTBrokerAdminServiceClient {
     this.methodDescriptormqtt_broker_enable_flapping_detect);
   }
 
+  methodDescriptormqtt_broker_set_system_alarm_config = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_system_alarm_config',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.SetSystemAlarmConfigRequest,
+    admin_pb.SetSystemAlarmConfigReply,
+    (request: admin_pb.SetSystemAlarmConfigRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.SetSystemAlarmConfigReply.deserializeBinary
+  );
+
+  mqtt_broker_set_system_alarm_config(
+    request: admin_pb.SetSystemAlarmConfigRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.SetSystemAlarmConfigReply>;
+
+  mqtt_broker_set_system_alarm_config(
+    request: admin_pb.SetSystemAlarmConfigRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.SetSystemAlarmConfigReply) => void): grpcWeb.ClientReadableStream<admin_pb.SetSystemAlarmConfigReply>;
+
+  mqtt_broker_set_system_alarm_config(
+    request: admin_pb.SetSystemAlarmConfigRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.SetSystemAlarmConfigReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_system_alarm_config',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_set_system_alarm_config,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_set_system_alarm_config',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_set_system_alarm_config);
+  }
+
+  methodDescriptormqtt_broker_list_system_alarm = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_system_alarm',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ListSystemAlarmRequest,
+    admin_pb.ListSystemAlarmReply,
+    (request: admin_pb.ListSystemAlarmRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ListSystemAlarmReply.deserializeBinary
+  );
+
+  mqtt_broker_list_system_alarm(
+    request: admin_pb.ListSystemAlarmRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ListSystemAlarmReply>;
+
+  mqtt_broker_list_system_alarm(
+    request: admin_pb.ListSystemAlarmRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSystemAlarmReply) => void): grpcWeb.ClientReadableStream<admin_pb.ListSystemAlarmReply>;
+
+  mqtt_broker_list_system_alarm(
+    request: admin_pb.ListSystemAlarmRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSystemAlarmReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_system_alarm',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_list_system_alarm,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_system_alarm',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_list_system_alarm);
+  }
+
   methodDescriptormqtt_broker_list_connection = new grpcWeb.MethodDescriptor(
     '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_connection',
     grpcWeb.MethodType.UNARY,

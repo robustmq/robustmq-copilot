@@ -158,4 +158,5 @@ export enum MQTTBrokerUpdateCacheResourceType {
   CONNECTOR = 4,
   SCHEMA = 5,
   SCHEMARESOURCE = 6,
+  CLUSTERRESOURCECONFIG = 7,
 }

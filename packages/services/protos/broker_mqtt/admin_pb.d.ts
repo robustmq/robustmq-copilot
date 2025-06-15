@@ -224,6 +224,9 @@ export class ClusterStatusReply extends jspb.Message {
   clearNodesList(): ClusterStatusReply;
   addNodes(value: string, index?: number): ClusterStatusReply;
 
+  getSubscribeInfo(): string;
+  setSubscribeInfo(value: string): ClusterStatusReply;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ClusterStatusReply.AsObject;
   static toObject(includeInstance: boolean, msg: ClusterStatusReply): ClusterStatusReply.AsObject;
@@ -236,6 +239,7 @@ export namespace ClusterStatusReply {
   export type AsObject = {
     clusterName: string,
     nodesList: Array<string>,
+    subscribeInfo: string,
   }
 }
 
@@ -648,8 +652,6 @@ export class ListAclReply extends jspb.Message {
 
   getTotalCount(): number;
   setTotalCount(value: number): ListAclReply;
-  hasTotalCount(): boolean;
-  clearTotalCount(): ListAclReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListAclReply.AsObject;
@@ -662,12 +664,7 @@ export class ListAclReply extends jspb.Message {
 export namespace ListAclReply {
   export type AsObject = {
     aclsList: Array<Uint8Array | string>,
-    totalCount?: number,
-  }
-
-  export enum TotalCountCase { 
-    _TOTAL_COUNT_NOT_SET = 0,
-    TOTAL_COUNT = 2,
+    totalCount: number,
   }
 }
 
@@ -1116,12 +1113,182 @@ export namespace ListSlowSubScribeRaw {
   }
 }
 
+export class SetSystemAlarmConfigRequest extends jspb.Message {
+  getEnable(): boolean;
+  setEnable(value: boolean): SetSystemAlarmConfigRequest;
+
+  getOsCpuHighWatermark(): number;
+  setOsCpuHighWatermark(value: number): SetSystemAlarmConfigRequest;
+  hasOsCpuHighWatermark(): boolean;
+  clearOsCpuHighWatermark(): SetSystemAlarmConfigRequest;
+
+  getOsCpuLowWatermark(): number;
+  setOsCpuLowWatermark(value: number): SetSystemAlarmConfigRequest;
+  hasOsCpuLowWatermark(): boolean;
+  clearOsCpuLowWatermark(): SetSystemAlarmConfigRequest;
+
+  getOsMemoryHighWatermark(): number;
+  setOsMemoryHighWatermark(value: number): SetSystemAlarmConfigRequest;
+  hasOsMemoryHighWatermark(): boolean;
+  clearOsMemoryHighWatermark(): SetSystemAlarmConfigRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetSystemAlarmConfigRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SetSystemAlarmConfigRequest): SetSystemAlarmConfigRequest.AsObject;
+  static serializeBinaryToWriter(message: SetSystemAlarmConfigRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetSystemAlarmConfigRequest;
+  static deserializeBinaryFromReader(message: SetSystemAlarmConfigRequest, reader: jspb.BinaryReader): SetSystemAlarmConfigRequest;
+}
+
+export namespace SetSystemAlarmConfigRequest {
+  export type AsObject = {
+    enable: boolean,
+    osCpuHighWatermark?: number,
+    osCpuLowWatermark?: number,
+    osMemoryHighWatermark?: number,
+  }
+
+  export enum OsCpuHighWatermarkCase { 
+    _OS_CPU_HIGH_WATERMARK_NOT_SET = 0,
+    OS_CPU_HIGH_WATERMARK = 2,
+  }
+
+  export enum OsCpuLowWatermarkCase { 
+    _OS_CPU_LOW_WATERMARK_NOT_SET = 0,
+    OS_CPU_LOW_WATERMARK = 3,
+  }
+
+  export enum OsMemoryHighWatermarkCase { 
+    _OS_MEMORY_HIGH_WATERMARK_NOT_SET = 0,
+    OS_MEMORY_HIGH_WATERMARK = 4,
+  }
+}
+
+export class SetSystemAlarmConfigReply extends jspb.Message {
+  getEnable(): boolean;
+  setEnable(value: boolean): SetSystemAlarmConfigReply;
+
+  getOsCpuHighWatermark(): number;
+  setOsCpuHighWatermark(value: number): SetSystemAlarmConfigReply;
+  hasOsCpuHighWatermark(): boolean;
+  clearOsCpuHighWatermark(): SetSystemAlarmConfigReply;
+
+  getOsCpuLowWatermark(): number;
+  setOsCpuLowWatermark(value: number): SetSystemAlarmConfigReply;
+  hasOsCpuLowWatermark(): boolean;
+  clearOsCpuLowWatermark(): SetSystemAlarmConfigReply;
+
+  getOsMemoryHighWatermark(): number;
+  setOsMemoryHighWatermark(value: number): SetSystemAlarmConfigReply;
+  hasOsMemoryHighWatermark(): boolean;
+  clearOsMemoryHighWatermark(): SetSystemAlarmConfigReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SetSystemAlarmConfigReply.AsObject;
+  static toObject(includeInstance: boolean, msg: SetSystemAlarmConfigReply): SetSystemAlarmConfigReply.AsObject;
+  static serializeBinaryToWriter(message: SetSystemAlarmConfigReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SetSystemAlarmConfigReply;
+  static deserializeBinaryFromReader(message: SetSystemAlarmConfigReply, reader: jspb.BinaryReader): SetSystemAlarmConfigReply;
+}
+
+export namespace SetSystemAlarmConfigReply {
+  export type AsObject = {
+    enable: boolean,
+    osCpuHighWatermark?: number,
+    osCpuLowWatermark?: number,
+    osMemoryHighWatermark?: number,
+  }
+
+  export enum OsCpuHighWatermarkCase { 
+    _OS_CPU_HIGH_WATERMARK_NOT_SET = 0,
+    OS_CPU_HIGH_WATERMARK = 2,
+  }
+
+  export enum OsCpuLowWatermarkCase { 
+    _OS_CPU_LOW_WATERMARK_NOT_SET = 0,
+    OS_CPU_LOW_WATERMARK = 3,
+  }
+
+  export enum OsMemoryHighWatermarkCase { 
+    _OS_MEMORY_HIGH_WATERMARK_NOT_SET = 0,
+    OS_MEMORY_HIGH_WATERMARK = 4,
+  }
+}
+
+export class ListSystemAlarmRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSystemAlarmRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSystemAlarmRequest): ListSystemAlarmRequest.AsObject;
+  static serializeBinaryToWriter(message: ListSystemAlarmRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSystemAlarmRequest;
+  static deserializeBinaryFromReader(message: ListSystemAlarmRequest, reader: jspb.BinaryReader): ListSystemAlarmRequest;
+}
+
+export namespace ListSystemAlarmRequest {
+  export type AsObject = {
+  }
+}
+
+export class ListSystemAlarmReply extends jspb.Message {
+  getListSystemAlarmRawList(): Array<ListSystemAlarmRaw>;
+  setListSystemAlarmRawList(value: Array<ListSystemAlarmRaw>): ListSystemAlarmReply;
+  clearListSystemAlarmRawList(): ListSystemAlarmReply;
+  addListSystemAlarmRaw(value?: ListSystemAlarmRaw, index?: number): ListSystemAlarmRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSystemAlarmReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSystemAlarmReply): ListSystemAlarmReply.AsObject;
+  static serializeBinaryToWriter(message: ListSystemAlarmReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSystemAlarmReply;
+  static deserializeBinaryFromReader(message: ListSystemAlarmReply, reader: jspb.BinaryReader): ListSystemAlarmReply;
+}
+
+export namespace ListSystemAlarmReply {
+  export type AsObject = {
+    listSystemAlarmRawList: Array<ListSystemAlarmRaw.AsObject>,
+  }
+}
+
+export class ListSystemAlarmRaw extends jspb.Message {
+  getName(): string;
+  setName(value: string): ListSystemAlarmRaw;
+
+  getMessage(): string;
+  setMessage(value: string): ListSystemAlarmRaw;
+
+  getActivateAt(): number;
+  setActivateAt(value: number): ListSystemAlarmRaw;
+
+  getActivated(): boolean;
+  setActivated(value: boolean): ListSystemAlarmRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSystemAlarmRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSystemAlarmRaw): ListSystemAlarmRaw.AsObject;
+  static serializeBinaryToWriter(message: ListSystemAlarmRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSystemAlarmRaw;
+  static deserializeBinaryFromReader(message: ListSystemAlarmRaw, reader: jspb.BinaryReader): ListSystemAlarmRaw;
+}
+
+export namespace ListSystemAlarmRaw {
+  export type AsObject = {
+    name: string,
+    message: string,
+    activateAt: number,
+    activated: boolean,
+  }
+}
+
 export class ListTopicRequest extends jspb.Message {
   getTopicName(): string;
   setTopicName(value: string): ListTopicRequest;
+  hasTopicName(): boolean;
+  clearTopicName(): ListTopicRequest;
 
-  getMatchOption(): MatchOption;
-  setMatchOption(value: MatchOption): ListTopicRequest;
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListTopicRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListTopicRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListTopicRequest.AsObject;
@@ -1133,16 +1300,29 @@ export class ListTopicRequest extends jspb.Message {
 
 export namespace ListTopicRequest {
   export type AsObject = {
-    topicName: string,
-    matchOption: MatchOption,
+    topicName?: string,
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum TopicNameCase { 
+    _TOPIC_NAME_NOT_SET = 0,
+    TOPIC_NAME = 1,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 2,
   }
 }
 
 export class ListTopicReply extends jspb.Message {
-  getTopicsList(): Array<MqttTopic>;
-  setTopicsList(value: Array<MqttTopic>): ListTopicReply;
+  getTopicsList(): Array<MqttTopicRaw>;
+  setTopicsList(value: Array<MqttTopicRaw>): ListTopicReply;
   clearTopicsList(): ListTopicReply;
-  addTopics(value?: MqttTopic, index?: number): MqttTopic;
+  addTopics(value?: MqttTopicRaw, index?: number): MqttTopicRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListTopicReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListTopicReply.AsObject;
@@ -1154,32 +1334,33 @@ export class ListTopicReply extends jspb.Message {
 
 export namespace ListTopicReply {
   export type AsObject = {
-    topicsList: Array<MqttTopic.AsObject>,
+    topicsList: Array<MqttTopicRaw.AsObject>,
+    totalCount: number,
   }
 }
 
-export class MqttTopic extends jspb.Message {
+export class MqttTopicRaw extends jspb.Message {
   getTopicId(): string;
-  setTopicId(value: string): MqttTopic;
+  setTopicId(value: string): MqttTopicRaw;
 
   getClusterName(): string;
-  setClusterName(value: string): MqttTopic;
+  setClusterName(value: string): MqttTopicRaw;
 
   getTopicName(): string;
-  setTopicName(value: string): MqttTopic;
+  setTopicName(value: string): MqttTopicRaw;
 
   getIsContainRetainMessage(): boolean;
-  setIsContainRetainMessage(value: boolean): MqttTopic;
+  setIsContainRetainMessage(value: boolean): MqttTopicRaw;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): MqttTopic.AsObject;
-  static toObject(includeInstance: boolean, msg: MqttTopic): MqttTopic.AsObject;
-  static serializeBinaryToWriter(message: MqttTopic, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): MqttTopic;
-  static deserializeBinaryFromReader(message: MqttTopic, reader: jspb.BinaryReader): MqttTopic;
+  toObject(includeInstance?: boolean): MqttTopicRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: MqttTopicRaw): MqttTopicRaw.AsObject;
+  static serializeBinaryToWriter(message: MqttTopicRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): MqttTopicRaw;
+  static deserializeBinaryFromReader(message: MqttTopicRaw, reader: jspb.BinaryReader): MqttTopicRaw;
 }
 
-export namespace MqttTopic {
+export namespace MqttTopicRaw {
   export type AsObject = {
     topicId: string,
     clusterName: string,
@@ -1817,11 +1998,6 @@ export enum BlacklistType {
   CLIENT_ID_MATCH = 3,
   USERNAME_MATCH = 4,
   IP_CIDR = 5,
-}
-export enum MatchOption { 
-  E = 0,
-  P = 1,
-  S = 2,
 }
 export enum MqttConnectorType { 
   FILE = 0,

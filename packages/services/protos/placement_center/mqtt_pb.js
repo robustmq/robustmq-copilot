@@ -21,6 +21,8 @@ var global =
     (function () { return this; }).call(null) ||
     Function('return this')();
 
+var vendor_validate_validate_pb = require('../vendor/validate_pb.js');
+goog.object.extend(proto, vendor_validate_validate_pb);
 goog.exportSymbol('proto.placement.center.mqtt.ConnectorHeartbeatRaw', null, global);
 goog.exportSymbol('proto.placement.center.mqtt.ConnectorHeartbeatReply', null, global);
 goog.exportSymbol('proto.placement.center.mqtt.ConnectorHeartbeatRequest', null, global);
@@ -1528,7 +1530,7 @@ proto.placement.center.mqtt.GetShareSubLeaderRequest.prototype.toObject = functi
 proto.placement.center.mqtt.GetShareSubLeaderRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
 groupName: jspb.Message.getFieldWithDefault(msg, 1, ""),
-clusterName: jspb.Message.getFieldWithDefault(msg, 3, "")
+clusterName: jspb.Message.getFieldWithDefault(msg, 2, "")
   };
 
   if (includeInstance) {
@@ -1569,7 +1571,7 @@ proto.placement.center.mqtt.GetShareSubLeaderRequest.deserializeBinaryFromReader
       var value = /** @type {string} */ (reader.readString());
       msg.setGroupName(value);
       break;
-    case 3:
+    case 2:
       var value = /** @type {string} */ (reader.readString());
       msg.setClusterName(value);
       break;
@@ -1612,7 +1614,7 @@ proto.placement.center.mqtt.GetShareSubLeaderRequest.serializeBinaryToWriter = f
   f = message.getClusterName();
   if (f.length > 0) {
     writer.writeString(
-      3,
+      2,
       f
     );
   }
@@ -1638,11 +1640,11 @@ proto.placement.center.mqtt.GetShareSubLeaderRequest.prototype.setGroupName = fu
 
 
 /**
- * optional string cluster_name = 3;
+ * optional string cluster_name = 2;
  * @return {string}
  */
 proto.placement.center.mqtt.GetShareSubLeaderRequest.prototype.getClusterName = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
 };
 
 
@@ -1651,7 +1653,7 @@ proto.placement.center.mqtt.GetShareSubLeaderRequest.prototype.getClusterName = 
  * @return {!proto.placement.center.mqtt.GetShareSubLeaderRequest} returns this
  */
 proto.placement.center.mqtt.GetShareSubLeaderRequest.prototype.setClusterName = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 

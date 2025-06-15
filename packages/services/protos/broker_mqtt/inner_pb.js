@@ -1243,7 +1243,8 @@ proto.broker.mqtt.inner.MQTTBrokerUpdateCacheResourceType = {
   TOPIC: 3,
   CONNECTOR: 4,
   SCHEMA: 5,
-  SCHEMARESOURCE: 6
+  SCHEMARESOURCE: 6,
+  CLUSTERRESOURCECONFIG: 7
 };
 
 goog.object.extend(exports, proto.broker.mqtt.inner);
