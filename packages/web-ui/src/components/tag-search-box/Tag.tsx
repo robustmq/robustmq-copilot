@@ -1,18 +1,10 @@
-import React, { Component, createRef } from "react";
-import { TagInput } from "@/components/tag-search-box/TagInput";
-import { FocusPosType } from "@/components/tag-search-box/TagSearchBox";
-import { X } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
-import {
-  Value,
-  AttributeValue,
-} from "@/components/tag-search-box/AttributeSelect";
+import React, { Component, createRef } from 'react';
+import { TagInput } from '@/components/tag-search-box/TagInput';
+import { FocusPosType } from '@/components/tag-search-box/TagSearchBox';
+import { X } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { cn } from '@/lib/utils';
+import { Value, AttributeValue } from '@/components/tag-search-box/AttributeSelect';
 
 export interface TagValue {
   /**
@@ -72,18 +64,15 @@ interface TagRef {
 }
 
 const keys: Record<string, string> = {
-  "8": "backspace",
-  "13": "enter",
-  "37": "left",
-  "38": "up",
-  "39": "right",
-  "40": "down",
+  '8': 'backspace',
+  '13': 'enter',
+  '37': 'left',
+  '38': 'up',
+  '39': 'right',
+  '40': 'down',
 };
 
-export class Tag
-  extends Component<TagProps, { inEditing: boolean }>
-  implements TagRef
-{
+export class Tag extends Component<TagProps, { inEditing: boolean }> implements TagRef {
   private contentRef = createRef<HTMLDivElement>();
   private inputInsideRef: any = null;
   private inputRef: any = null;
@@ -97,12 +86,12 @@ export class Tag
 
   handleTagClick = (e: React.MouseEvent, pos?: string) => {
     e.stopPropagation();
-    this.props.dispatchTagEvent?.("click", pos);
+    this.props.dispatchTagEvent?.('click', pos);
   };
 
   handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    this.props.dispatchTagEvent?.("del");
+    this.props.dispatchTagEvent?.('del');
   };
 
   handleKeyDown = (e: React.KeyboardEvent) => {
@@ -111,12 +100,12 @@ export class Tag
     e.preventDefault();
 
     switch (keys[e.keyCode]) {
-      case "tab":
-      case "enter":
-        this.props.dispatchTagEvent?.("click", "value");
+      case 'tab':
+      case 'enter':
+        this.props.dispatchTagEvent?.('click', 'value');
         break;
-      case "backspace":
-        this.props.dispatchTagEvent?.("del", "keyboard");
+      case 'backspace':
+        this.props.dispatchTagEvent?.('del', 'keyboard');
         break;
     }
   };
@@ -168,7 +157,7 @@ export class Tag
     this.setState({ inEditing: true });
     const input = this.inputInsideRef;
     input?.setInfo(this.getInfo(), () => {
-      if (pos === "attr") {
+      if (pos === 'attr') {
         return input.selectAttr();
       }
       return input.selectValue();
@@ -180,47 +169,35 @@ export class Tag
   };
 
   render() {
-    const {
-      attr,
-      values,
-      dispatchTagEvent,
-      attributes,
-      focused,
-      maxWidth,
-      active,
-    } = this.props;
+    const { attr, values, dispatchTagEvent, attributes, focused, maxWidth, active } = this.props;
     const { inEditing } = this.state;
 
-    const formattedAttrStr = attr && attr.name ? `${attr.name}: ` : "";
-    const valueStr = (values || []).map((item) => item.name).join(" | ");
-    const removeable = attr && "removeable" in attr ? attr.removeable : true;
+    const formattedAttrStr = attr && attr.name ? `${attr.name}: ` : '';
+    const valueStr = (values || []).map(item => item.name).join(' | ');
+    const removeable = attr && 'removeable' in attr ? attr.removeable : true;
 
     return (
-      <div
-        onClick={(e) => this.handleTagClick(e)}
-        tabIndex={0}
-        role="button"
-        ref={this.contentRef}
-      >
+      <div onClick={e => this.handleTagClick(e)} tabIndex={0} role="button" ref={this.contentRef}>
         <div
           className={cn(
-            "group relative inline-flex items-center gap-1",
-            "rounded-md border border-input bg-background px-2 py-1",
-            "text-sm transition-colors",
-            "hover:bg-accent hover:text-accent-foreground",
-            "cursor-text",
-            "focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+            'group relative inline-flex items-center gap-1',
+            'rounded-md border border-input bg-background px-2 py-1',
+            'text-sm transition-colors',
+            'hover:bg-accent hover:text-accent-foreground',
+            'cursor-text',
+            'focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1',
+            'mt-[3px] mr-[3px]',
           )}
           style={{
-            display: inEditing ? "none" : undefined,
+            display: inEditing ? 'none' : undefined,
           }}
         >
           {attr && (
             <span
               className="text-muted-foreground/80 text-xs"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
-                this.handleTagClick(e, "attr");
+                this.handleTagClick(e, 'attr');
               }}
             >
               {formattedAttrStr}
@@ -228,9 +205,9 @@ export class Tag
           )}
           <span
             className="font-medium text-xs"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
-              this.handleTagClick(e, "value");
+              this.handleTagClick(e, 'value');
             }}
           >
             {valueStr}
@@ -241,10 +218,10 @@ export class Tag
                 <TooltipTrigger asChild>
                   <button
                     className={cn(
-                      "ml-1 rounded-sm opacity-70 ring-offset-background",
-                      "transition-opacity hover:opacity-100",
-                      "focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1",
-                      "disabled:pointer-events-none disabled:opacity-50"
+                      'ml-1 rounded-sm opacity-70 ring-offset-background',
+                      'transition-opacity hover:opacity-100',
+                      'focus:outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1',
+                      'disabled:pointer-events-none disabled:opacity-50',
                     )}
                     onClick={this.handleDelete}
                     disabled={!active}
@@ -279,7 +256,7 @@ export class Tag
           maxWidth={maxWidth!}
           handleKeyDown={this.handleKeyDown}
           active={active}
-          ref={(input) => (this.inputInsideRef = input) as any}
+          ref={(input: any) => (this.inputInsideRef = input) as any}
           attributes={attributes}
           dispatchTagEvent={dispatchTagEvent!}
           isFocused={focused === FocusPosType.INPUT_EDIT}

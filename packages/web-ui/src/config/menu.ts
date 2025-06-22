@@ -27,16 +27,12 @@ export const sidebarData: SidebarData = {
           url: '/general/session',
         },
         {
+          title: 'Topic',
+          url: '/general/topic',
+        },
+        {
           title: 'Subscription Management',
           url: '/general/subscribe-manager',
-        },
-        {
-          title: 'Retained Message',
-          url: '/general/retained-message',
-        },
-        {
-          title: 'Will Message',
-          url: '/general/will-message',
         },
       ],
     },
@@ -45,40 +41,15 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'User Management',
-          url: '/acl/client-authorize',
+          url: '/acl/user-management',
         },
         {
           title: 'ACL Management',
-          url: '/acl/client-authorize',
+          url: '/acl/acl-management',
         },
         {
           title: 'Blacklist Management',
-          url: '/acl/client-certification',
-        },
-        {
-          title: 'Connection Jitter',
-          url: '/acl/client-certification',
-        },
-      ],
-    },
-    {
-      title: 'Advanced',
-      items: [
-        {
-          title: 'Topic Rewrite',
-          url: '/acl/client-certification',
-        },
-        {
-          title: 'Auto Subscription',
-          url: '/acl/client-certification',
-        },
-        {
-          title: 'Slow Subscription',
-          url: '/acl/client-certification',
-        },
-        {
-          title: 'Delayed Message',
-          url: '/acl/client-certification',
+          url: '/acl/blacklist-management',
         },
       ],
     },
@@ -87,11 +58,11 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Connector',
-          url: '/acl/client-certification',
+          url: '/data-integration/connector',
         },
         {
           title: 'Schema',
-          url: '/acl/client-certification',
+          url: '/data-integration/schema',
         },
       ],
     },
@@ -100,36 +71,44 @@ export const sidebarData: SidebarData = {
       items: [
         {
           title: 'Cluster',
-          url: '/acl/client-certification',
+          url: '/monitoring/cluster',
         },
         {
           title: 'Topic',
-          url: '/acl/client-certification',
+          url: '/monitoring/topic',
         },
       ],
     },
     {
-      title: 'Setting',
+      title: 'Advanced',
       items: [
         {
-          title: 'Overview',
-          url: '/acl/client-certification',
+          title: 'Auto Subscription',
+          url: '/advanced/auto-subscription',
         },
         {
           title: 'Slow Subscription',
-          url: '/acl/client-certification',
+          url: '/advanced/slow-subscription',
         },
         {
-          title: 'Exclusive Subscription',
-          url: '/acl/client-certification',
+          title: 'Topic Rewrite',
+          url: '/advanced/topic-rewrite',
         },
         {
-          title: 'Monitoring',
-          url: '/acl/client-certification',
+          title: 'Delayed Message',
+          url: '/advanced/delayed-message',
         },
         {
-          title: 'Delayed Messages',
-          url: '/acl/client-certification',
+          title: 'Connection Jitter',
+          url: '/advanced/connection-jitter',
+        },
+      ],
+    },
+    {
+      items: [
+        {
+          title: 'Setting',
+          url: '/system-setting',
         },
       ],
     },

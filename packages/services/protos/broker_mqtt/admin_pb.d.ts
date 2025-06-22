@@ -1116,6 +1116,8 @@ export namespace ListSlowSubScribeRaw {
 export class SetSystemAlarmConfigRequest extends jspb.Message {
   getEnable(): boolean;
   setEnable(value: boolean): SetSystemAlarmConfigRequest;
+  hasEnable(): boolean;
+  clearEnable(): SetSystemAlarmConfigRequest;
 
   getOsCpuHighWatermark(): number;
   setOsCpuHighWatermark(value: number): SetSystemAlarmConfigRequest;
@@ -1132,6 +1134,11 @@ export class SetSystemAlarmConfigRequest extends jspb.Message {
   hasOsMemoryHighWatermark(): boolean;
   clearOsMemoryHighWatermark(): SetSystemAlarmConfigRequest;
 
+  getOsCpuCheckIntervalMs(): number;
+  setOsCpuCheckIntervalMs(value: number): SetSystemAlarmConfigRequest;
+  hasOsCpuCheckIntervalMs(): boolean;
+  clearOsCpuCheckIntervalMs(): SetSystemAlarmConfigRequest;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SetSystemAlarmConfigRequest.AsObject;
   static toObject(includeInstance: boolean, msg: SetSystemAlarmConfigRequest): SetSystemAlarmConfigRequest.AsObject;
@@ -1142,10 +1149,16 @@ export class SetSystemAlarmConfigRequest extends jspb.Message {
 
 export namespace SetSystemAlarmConfigRequest {
   export type AsObject = {
-    enable: boolean,
+    enable?: boolean,
     osCpuHighWatermark?: number,
     osCpuLowWatermark?: number,
     osMemoryHighWatermark?: number,
+    osCpuCheckIntervalMs?: number,
+  }
+
+  export enum EnableCase { 
+    _ENABLE_NOT_SET = 0,
+    ENABLE = 1,
   }
 
   export enum OsCpuHighWatermarkCase { 
@@ -1161,6 +1174,11 @@ export namespace SetSystemAlarmConfigRequest {
   export enum OsMemoryHighWatermarkCase { 
     _OS_MEMORY_HIGH_WATERMARK_NOT_SET = 0,
     OS_MEMORY_HIGH_WATERMARK = 4,
+  }
+
+  export enum OsCpuCheckIntervalMsCase { 
+    _OS_CPU_CHECK_INTERVAL_MS_NOT_SET = 0,
+    OS_CPU_CHECK_INTERVAL_MS = 5,
   }
 }
 
@@ -1183,6 +1201,11 @@ export class SetSystemAlarmConfigReply extends jspb.Message {
   hasOsMemoryHighWatermark(): boolean;
   clearOsMemoryHighWatermark(): SetSystemAlarmConfigReply;
 
+  getOsCpuCheckIntervalMs(): number;
+  setOsCpuCheckIntervalMs(value: number): SetSystemAlarmConfigReply;
+  hasOsCpuCheckIntervalMs(): boolean;
+  clearOsCpuCheckIntervalMs(): SetSystemAlarmConfigReply;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SetSystemAlarmConfigReply.AsObject;
   static toObject(includeInstance: boolean, msg: SetSystemAlarmConfigReply): SetSystemAlarmConfigReply.AsObject;
@@ -1197,6 +1220,7 @@ export namespace SetSystemAlarmConfigReply {
     osCpuHighWatermark?: number,
     osCpuLowWatermark?: number,
     osMemoryHighWatermark?: number,
+    osCpuCheckIntervalMs?: number,
   }
 
   export enum OsCpuHighWatermarkCase { 
@@ -1212,6 +1236,11 @@ export namespace SetSystemAlarmConfigReply {
   export enum OsMemoryHighWatermarkCase { 
     _OS_MEMORY_HIGH_WATERMARK_NOT_SET = 0,
     OS_MEMORY_HIGH_WATERMARK = 4,
+  }
+
+  export enum OsCpuCheckIntervalMsCase { 
+    _OS_CPU_CHECK_INTERVAL_MS_NOT_SET = 0,
+    OS_CPU_CHECK_INTERVAL_MS = 5,
   }
 }
 
@@ -1446,6 +1475,78 @@ export class CreateTopicRewriteRuleReply extends jspb.Message {
 
 export namespace CreateTopicRewriteRuleReply {
   export type AsObject = {
+  }
+}
+
+export class ListRewriteTopicRuleRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListRewriteTopicRuleRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListRewriteTopicRuleRequest): ListRewriteTopicRuleRequest.AsObject;
+  static serializeBinaryToWriter(message: ListRewriteTopicRuleRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListRewriteTopicRuleRequest;
+  static deserializeBinaryFromReader(message: ListRewriteTopicRuleRequest, reader: jspb.BinaryReader): ListRewriteTopicRuleRequest;
+}
+
+export namespace ListRewriteTopicRuleRequest {
+  export type AsObject = {
+  }
+}
+
+export class ListRewriteTopicRuleReply extends jspb.Message {
+  getRewriteTopicRulesList(): Array<MqttTopicRewriteRuleRaw>;
+  setRewriteTopicRulesList(value: Array<MqttTopicRewriteRuleRaw>): ListRewriteTopicRuleReply;
+  clearRewriteTopicRulesList(): ListRewriteTopicRuleReply;
+  addRewriteTopicRules(value?: MqttTopicRewriteRuleRaw, index?: number): MqttTopicRewriteRuleRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListRewriteTopicRuleReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListRewriteTopicRuleReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ListRewriteTopicRuleReply): ListRewriteTopicRuleReply.AsObject;
+  static serializeBinaryToWriter(message: ListRewriteTopicRuleReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListRewriteTopicRuleReply;
+  static deserializeBinaryFromReader(message: ListRewriteTopicRuleReply, reader: jspb.BinaryReader): ListRewriteTopicRuleReply;
+}
+
+export namespace ListRewriteTopicRuleReply {
+  export type AsObject = {
+    rewriteTopicRulesList: Array<MqttTopicRewriteRuleRaw.AsObject>,
+    totalCount: number,
+  }
+}
+
+export class MqttTopicRewriteRuleRaw extends jspb.Message {
+  getSourceTopic(): string;
+  setSourceTopic(value: string): MqttTopicRewriteRuleRaw;
+
+  getClusterName(): string;
+  setClusterName(value: string): MqttTopicRewriteRuleRaw;
+
+  getDestTopic(): string;
+  setDestTopic(value: string): MqttTopicRewriteRuleRaw;
+
+  getAction(): string;
+  setAction(value: string): MqttTopicRewriteRuleRaw;
+
+  getRegex(): string;
+  setRegex(value: string): MqttTopicRewriteRuleRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): MqttTopicRewriteRuleRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: MqttTopicRewriteRuleRaw): MqttTopicRewriteRuleRaw.AsObject;
+  static serializeBinaryToWriter(message: MqttTopicRewriteRuleRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): MqttTopicRewriteRuleRaw;
+  static deserializeBinaryFromReader(message: MqttTopicRewriteRuleRaw, reader: jspb.BinaryReader): MqttTopicRewriteRuleRaw;
+}
+
+export namespace MqttTopicRewriteRuleRaw {
+  export type AsObject = {
+    sourceTopic: string,
+    clusterName: string,
+    destTopic: string,
+    action: string,
+    regex: string,
   }
 }
 

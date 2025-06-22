@@ -23,7 +23,7 @@ import { X, Info, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AttributeValue } from "@/components/tag-search-box/AttributeSelect";
 
-export type { AttributeValue };
+export type { AttributeValue, TagValue };
 
 /**
  * 焦点所在位置类型
@@ -630,12 +630,12 @@ class ITagSearchBox extends Component<
       <div className="w-full">
         <div
           className={cn(
-            "flex w-full flex-wrap gap-2",
-            "rounded-md border border-input",
+            "w-full relative rounded-md border border-input",
             "pl-2 py-0",
-            "bg-background text-sm",
+            "bg-background text-sm leading-none",
             "disabled:cursor-not-allowed disabled:opacity-50",
-            !active && "overflow-hidden",
+            "box-border",
+            !active && ["overflow-hidden", "h-[34px]"],
             !disabled && [
               "cursor-text",
               active && "border-primary",
@@ -643,14 +643,11 @@ class ITagSearchBox extends Component<
             ]
           )}
           ref={mergeRefs(this.searchWrapRef, forwardRef)}
+          onClick={this.open}
         >
           <div
-            className={cn(
-              "flex flex-1 flex-wrap gap-x-1.5 gap-y-1",
-              "items-center"
-            )}
+            className="inline-flex align-top flex-wrap"
             ref={mergeRefs(this.searchBoxRef)}
-            onClick={this.open}
           >
             <TagSearchBoxContext.Provider
               value={{
@@ -659,20 +656,26 @@ class ITagSearchBox extends Component<
                 close: this.close,
               }}
             >
-              <React.Fragment>
-                {tagList}
-                <div
-                  className={cn(
-                    "pointer-events-none text-muted-foreground/70 text-sm whitespace-nowrap flex items-center"
-                  )}
-                >
-                  {tips}
-                </div>
-              </React.Fragment>
+              <React.Fragment>{tagList}</React.Fragment>
             </TagSearchBoxContext.Provider>
           </div>
 
-          <div className={cn("flex items-center gap-0.5", "bg-background")}>
+          <div
+            className={cn(
+              "inline-block overflow-hidden",
+              "pointer-events-none text-muted-foreground/70 text-sm whitespace-nowrap",
+              "h-8 leading-8"
+            )}
+          >
+            {tips}
+          </div>
+
+          <div
+            className={cn(
+              "inline-block absolute right-0 h-8",
+              "bg-transparent"
+            )}
+          >
             {!!active && tags.length > 0 && (
               <TooltipProvider>
                 <Tooltip>
@@ -680,7 +683,7 @@ class ITagSearchBox extends Component<
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-[30px] w-[30px] p-0 hover:bg-muted rounded-none"
+                      className="h-8 w-8 p-0 hover:bg-muted rounded-none"
                       onClick={this.handleClear}
                     >
                       <X className="h-4 w-4" />
@@ -701,7 +704,7 @@ class ITagSearchBox extends Component<
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-[30px] w-[30px] p-0 hover:bg-muted rounded-none"
+                      className="h-8 w-8 p-0 hover:bg-muted rounded-none"
                       onClick={this.handleHelp}
                     >
                       <Info className="h-4 w-4" />

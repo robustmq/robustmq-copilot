@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useMemo } from 'react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -17,17 +18,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { DataTablePagination } from './data-table-pagination';
 import { DataTableToolbar } from './data-table-toolbar';
 import { useQuery } from '@tanstack/react-query';
+import { AttributeValue, TagValue } from '@/components/tag-search-box';
+import { convertTagToSearchValue, FilterValue } from './filter';
 
 type FetchDataFn<TData> = (
   pageIndex: number,
   pageSize: number,
+  searchValue: FilterValue[],
 ) => Promise<{
   data: TData[];
   totalCount: number;
 }>;
 
+export type ColumnSetting<TData, TValue> = ColumnDef<TData, TValue> & {
+  // search by attribute
+  attr?: Partial<AttributeValue> | boolean;
+};
+
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+  columns: ColumnSetting<TData, TValue>[];
   hideToolBar?: boolean;
   fetchDataFn: FetchDataFn<TData>;
   queryKey: string;
@@ -47,10 +56,14 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   });
+  const [tagFilters, setTagFilters] = React.useState<TagValue[]>([]);
 
   const query = useQuery({
-    queryKey: [queryKey, pagination.pageIndex, pagination.pageSize],
-    queryFn: () => fetchDataFn(pagination.pageIndex, pagination.pageSize),
+    queryKey: [queryKey, pagination.pageIndex, pagination.pageSize, tagFilters],
+    queryFn: () => {
+      const searchValue = convertTagToSearchValue(tagFilters);
+      return fetchDataFn(pagination.pageIndex, pagination.pageSize, searchValue);
+    },
   });
 
   React.useEffect(() => {
@@ -85,9 +98,32 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const attrFilter = useMemo(() => {
+    return columns
+      .filter(c => c.attr)
+      .map(c => {
+        return {
+          // @ts-ignore
+          key: c?.accessorKey as string,
+          type: 'input',
+          // @ts-ignore
+          name: c?.accessorKey as string,
+          ...(typeof c.attr === 'object' ? c.attr : {}),
+        };
+      }) as AttributeValue[];
+  }, [columns]);
+
   return (
     <div className="space-y-4">
-      {!hideToolBar && <DataTableToolbar table={table} onRefresh={() => query.refetch()} />}
+      {!hideToolBar && (
+        <DataTableToolbar
+          table={table}
+          onRefresh={() => query.refetch()}
+          tagFilters={tagFilters}
+          onTagFilterChange={setTagFilters}
+          attrFilters={attrFilter}
+        />
+      )}
       <div className="rounded-md border">
         <Table>
           <TableHeader>

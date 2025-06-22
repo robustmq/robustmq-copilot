@@ -13,7 +13,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 const keys: Record<string | number, string> = {
   8: "backspace",
@@ -581,7 +580,7 @@ class TagInput extends Component<TagInputProps, TagInputState> {
         <Popover open={isOpen}>
           <PopoverTrigger asChild>
             <div
-              className={cn("relative flex items-center")}
+              className={cn("relative flex items-center text-sm")}
               style={{
                 width: hidden ? 0 : inputWidth + 6,
                 maxWidth: maxWidth ? maxWidth - 36 : 435,
@@ -606,7 +605,7 @@ class TagInput extends Component<TagInputProps, TagInputState> {
                     "shadow-none",
                     "flex items-center",
                     "resize-none",
-                    "h-7"
+                    "h-8"
                   )}
                   type="text"
                   style={{
@@ -629,8 +628,8 @@ class TagInput extends Component<TagInputProps, TagInputState> {
                       {fullInputValue}
                     </div>
                   </pre>
-                  <Textarea
-                    ref={this.inputRef as React.RefObject<HTMLTextAreaElement>}
+                  <Input
+                    ref={this.inputRef as React.RefObject<HTMLInputElement>}
                     value={inputValue}
                     onChange={this.handleInputChange}
                     onKeyDown={this.handleKeyDown}

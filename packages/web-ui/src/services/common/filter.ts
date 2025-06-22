@@ -1,5 +1,5 @@
 export interface FilterOption {
   field: string;
-  values: string[];
+  valueList: string[];
   exactMatch?: boolean;
 }

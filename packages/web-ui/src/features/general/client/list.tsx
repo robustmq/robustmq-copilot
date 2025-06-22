@@ -1,28 +1,32 @@
 import { format } from 'date-fns';
-import { DataTable } from '@/components/table';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnSetting, DataTable } from '@/components/table';
 import { getClientList } from '@/services/mqtt';
 import StatusBadge from '@/components/status-badge';
+import { FilterValue } from '@/components/table/filter';
 
 export default function SessionList() {
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnSetting<any, any>[] = [
     {
       id: 'clientId',
       accessorKey: 'clientId',
       header: 'Client ID',
+      attr: true,
     },
     {
       accessorKey: 'username',
       header: 'Username',
+      attr: true,
     },
     {
       accessorKey: 'isOnline',
       header: 'Status',
       cell: ({ row }) => <StatusBadge status={row.original.isOnline ? 'online' : 'offline'} />,
+      attr: true,
     },
     {
       accessorKey: 'sourceIp',
       header: 'Source IP',
+      attr: true,
     },
     {
       accessorKey: 'connectedAt',
@@ -32,30 +36,35 @@ export default function SessionList() {
         const date = new Date(row.original.connectedAt * 1000);
         return format(date, 'yyyy-MM-dd HH:mm:ss');
       },
+      attr: true,
     },
     {
       accessorKey: 'keepAlive',
       header: 'Keep Alive (s)',
       cell: ({ row }) => row.original.keepAlive || '-',
+      attr: true,
     },
     {
       accessorKey: 'cleanSession',
       header: 'Clean Session',
       cell: ({ row }) => (row.original.cleanSession ? 'Yes' : 'No'),
+      attr: true,
     },
     {
       accessorKey: 'sessionExpiryInterval',
       header: 'Session Expiry (s)',
       cell: ({ row }) => row.original.sessionExpiryInterval || '-',
+      attr: true,
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
     const ret = await getClientList({
       pagination: {
         offset: pageIndex * pageSize,
         limit: pageSize,
       },
+      filers: searchValue,
     });
     return {
       data: ret.clientsList,

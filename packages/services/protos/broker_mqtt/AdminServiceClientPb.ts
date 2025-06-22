@@ -985,6 +985,49 @@ export class MQTTBrokerAdminServiceClient {
     this.methodDescriptormqtt_broker_create_topic_rewrite_rule);
   }
 
+  methodDescriptormqtt_broker_get_all_topic_rewrite_rule = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_all_topic_rewrite_rule',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ListRewriteTopicRuleRequest,
+    admin_pb.ListRewriteTopicRuleReply,
+    (request: admin_pb.ListRewriteTopicRuleRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ListRewriteTopicRuleReply.deserializeBinary
+  );
+
+  mqtt_broker_get_all_topic_rewrite_rule(
+    request: admin_pb.ListRewriteTopicRuleRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ListRewriteTopicRuleReply>;
+
+  mqtt_broker_get_all_topic_rewrite_rule(
+    request: admin_pb.ListRewriteTopicRuleRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ListRewriteTopicRuleReply) => void): grpcWeb.ClientReadableStream<admin_pb.ListRewriteTopicRuleReply>;
+
+  mqtt_broker_get_all_topic_rewrite_rule(
+    request: admin_pb.ListRewriteTopicRuleRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ListRewriteTopicRuleReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_all_topic_rewrite_rule',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_get_all_topic_rewrite_rule,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_get_all_topic_rewrite_rule',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_get_all_topic_rewrite_rule);
+  }
+
   methodDescriptormqtt_broker_list_connector = new grpcWeb.MethodDescriptor(
     '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_connector',
     grpcWeb.MethodType.UNARY,
