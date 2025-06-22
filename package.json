@@ -5,8 +5,8 @@
   "description": "The one-stop RobustMQ operation and maintenance management platform",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^15.5.1",
-    "oxlint": "^0.16.2",
+    "lint-staged": "^15.5.2",
+    "oxlint": "^1.2.0",
     "prettier": "^3.5.3"
   },
   "scripts": {
