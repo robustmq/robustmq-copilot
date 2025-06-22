@@ -1,4 +1,24 @@
 import { type SidebarData } from '@/utils/types';
+import {
+  LayoutDashboard,
+  Network,
+  UserRound,
+  ListTodo,
+  Bell,
+  Users,
+  Shield,
+  UserX,
+  Cable,
+  Database,
+  BarChart2,
+  LineChart,
+  Zap,
+  Clock,
+  FileEdit,
+  Timer,
+  Activity,
+  Settings,
+} from 'lucide-react';
 
 export const sidebarData: SidebarData = {
   user: {
@@ -12,6 +32,7 @@ export const sidebarData: SidebarData = {
         {
           title: 'Cluster Overview',
           url: '/',
+          icon: LayoutDashboard,
         },
       ],
     },
@@ -21,18 +42,22 @@ export const sidebarData: SidebarData = {
         {
           title: 'Client',
           url: '/general/client',
+          icon: Network,
         },
         {
           title: 'Session',
           url: '/general/session',
+          icon: UserRound,
         },
         {
           title: 'Topic',
           url: '/general/topic',
+          icon: ListTodo,
         },
         {
           title: 'Subscription Management',
           url: '/general/subscribe-manager',
+          icon: Bell,
         },
       ],
     },
@@ -42,14 +67,17 @@ export const sidebarData: SidebarData = {
         {
           title: 'User Management',
           url: '/acl/user-management',
+          icon: Users,
         },
         {
           title: 'ACL Management',
           url: '/acl/acl-management',
+          icon: Shield,
         },
         {
           title: 'Blacklist Management',
           url: '/acl/blacklist-management',
+          icon: UserX,
         },
       ],
     },
@@ -59,10 +87,12 @@ export const sidebarData: SidebarData = {
         {
           title: 'Connector',
           url: '/data-integration/connector',
+          icon: Cable,
         },
         {
           title: 'Schema',
           url: '/data-integration/schema',
+          icon: Database,
         },
       ],
     },
@@ -72,10 +102,12 @@ export const sidebarData: SidebarData = {
         {
           title: 'Cluster',
           url: '/monitoring/cluster',
+          icon: BarChart2,
         },
         {
           title: 'Topic',
           url: '/monitoring/topic',
+          icon: LineChart,
         },
       ],
     },
@@ -85,22 +117,27 @@ export const sidebarData: SidebarData = {
         {
           title: 'Auto Subscription',
           url: '/advanced/auto-subscription',
+          icon: Zap,
         },
         {
           title: 'Slow Subscription',
           url: '/advanced/slow-subscription',
+          icon: Clock,
         },
         {
           title: 'Topic Rewrite',
           url: '/advanced/topic-rewrite',
+          icon: FileEdit,
         },
         {
           title: 'Delayed Message',
           url: '/advanced/delayed-message',
+          icon: Timer,
         },
         {
           title: 'Connection Jitter',
           url: '/advanced/connection-jitter',
+          icon: Activity,
         },
       ],
     },
@@ -109,6 +146,7 @@ export const sidebarData: SidebarData = {
         {
           title: 'Setting',
           url: '/system-setting',
+          icon: Settings,
         },
       ],
     },
