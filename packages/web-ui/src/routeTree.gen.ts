@@ -8,667 +8,444 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router'
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 
-import { Route as rootRoute } from './routes/__root';
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated/route';
-import { Route as AuthenticatedIndexImport } from './routes/_authenticated/index';
-import { Route as authSignInImport } from './routes/(auth)/sign-in';
-import { Route as authOtpImport } from './routes/(auth)/otp';
-import { Route as auth500Import } from './routes/(auth)/500';
-
-// Create Virtual Routes
-
-const errors503LazyImport = createFileRoute('/(errors)/503')();
-const errors500LazyImport = createFileRoute('/(errors)/500')();
-const errors404LazyImport = createFileRoute('/(errors)/404')();
-const errors403LazyImport = createFileRoute('/(errors)/403')();
-const errors401LazyImport = createFileRoute('/(errors)/401')();
-const authSignUpLazyImport = createFileRoute('/(auth)/sign-up')();
-const authSignIn2LazyImport = createFileRoute('/(auth)/sign-in-2')();
-const authForgotPasswordLazyImport = createFileRoute('/(auth)/forgot-password')();
-const AuthenticatedSystemSettingIndexLazyImport = createFileRoute('/_authenticated/system-setting/')();
-const AuthenticatedHelpCenterIndexLazyImport = createFileRoute('/_authenticated/help-center/')();
-const AuthenticatedAppsIndexLazyImport = createFileRoute('/_authenticated/apps/')();
-const AuthenticatedMonitoringTopicIndexLazyImport = createFileRoute('/_authenticated/monitoring/topic/')();
-const AuthenticatedMonitoringClusterIndexLazyImport = createFileRoute('/_authenticated/monitoring/cluster/')();
-const AuthenticatedGeneralTopicIndexLazyImport = createFileRoute('/_authenticated/general/topic/')();
-const AuthenticatedGeneralSubscribeManagerIndexLazyImport = createFileRoute(
-  '/_authenticated/general/subscribe-manager/',
-)();
-const AuthenticatedGeneralSessionIndexLazyImport = createFileRoute('/_authenticated/general/session/')();
-const AuthenticatedGeneralClientIndexLazyImport = createFileRoute('/_authenticated/general/client/')();
-const AuthenticatedDataIntegrationSchemaIndexLazyImport = createFileRoute('/_authenticated/data-integration/schema/')();
-const AuthenticatedDataIntegrationConnectorIndexLazyImport = createFileRoute(
-  '/_authenticated/data-integration/connector/',
-)();
-const AuthenticatedAdvancedTopicRewriteIndexLazyImport = createFileRoute('/_authenticated/advanced/topic-rewrite/')();
-const AuthenticatedAdvancedSlowSubscriptionIndexLazyImport = createFileRoute(
-  '/_authenticated/advanced/slow-subscription/',
-)();
-const AuthenticatedAdvancedDelayedMessageIndexLazyImport = createFileRoute(
+const errors503LazyRouteImport = createFileRoute('/(errors)/503')()
+const errors500LazyRouteImport = createFileRoute('/(errors)/500')()
+const errors404LazyRouteImport = createFileRoute('/(errors)/404')()
+const errors403LazyRouteImport = createFileRoute('/(errors)/403')()
+const errors401LazyRouteImport = createFileRoute('/(errors)/401')()
+const authSignUpLazyRouteImport = createFileRoute('/(auth)/sign-up')()
+const authSignIn2LazyRouteImport = createFileRoute('/(auth)/sign-in-2')()
+const authForgotPasswordLazyRouteImport = createFileRoute(
+  '/(auth)/forgot-password',
+)()
+const AuthenticatedSystemSettingIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/system-setting/',
+)()
+const AuthenticatedHelpCenterIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/help-center/',
+)()
+const AuthenticatedAppsIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/apps/',
+)()
+const AuthenticatedMonitoringTopicIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/monitoring/topic/',
+)()
+const AuthenticatedMonitoringClusterIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/monitoring/cluster/',
+)()
+const AuthenticatedGeneralTopicIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/general/topic/',
+)()
+const AuthenticatedGeneralSubscribeManagerIndexLazyRouteImport =
+  createFileRoute('/_authenticated/general/subscribe-manager/')()
+const AuthenticatedGeneralSessionIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/general/session/',
+)()
+const AuthenticatedGeneralClientIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/general/client/',
+)()
+const AuthenticatedDataIntegrationSchemaIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/data-integration/schema/',
+)()
+const AuthenticatedDataIntegrationConnectorIndexLazyRouteImport =
+  createFileRoute('/_authenticated/data-integration/connector/')()
+const AuthenticatedAdvancedTopicRewriteIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/advanced/topic-rewrite/',
+)()
+const AuthenticatedAdvancedSlowSubscriptionIndexLazyRouteImport =
+  createFileRoute('/_authenticated/advanced/slow-subscription/')()
+const AuthenticatedAdvancedDelayedMessageIndexLazyRouteImport = createFileRoute(
   '/_authenticated/advanced/delayed-message/',
-)();
-const AuthenticatedAdvancedConnectionJitterIndexLazyImport = createFileRoute(
-  '/_authenticated/advanced/connection-jitter/',
-)();
-const AuthenticatedAdvancedAutoSubscriptionIndexLazyImport = createFileRoute(
-  '/_authenticated/advanced/auto-subscription/',
-)();
-const AuthenticatedAclUserManagementIndexLazyImport = createFileRoute('/_authenticated/acl/user-management/')();
-const AuthenticatedAclBlacklistManagementIndexLazyImport = createFileRoute(
+)()
+const AuthenticatedAdvancedConnectionJitterIndexLazyRouteImport =
+  createFileRoute('/_authenticated/advanced/connection-jitter/')()
+const AuthenticatedAdvancedAutoSubscriptionIndexLazyRouteImport =
+  createFileRoute('/_authenticated/advanced/auto-subscription/')()
+const AuthenticatedAclUserManagementIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/acl/user-management/',
+)()
+const AuthenticatedAclBlacklistManagementIndexLazyRouteImport = createFileRoute(
   '/_authenticated/acl/blacklist-management/',
-)();
-const AuthenticatedAclAclManagementIndexLazyImport = createFileRoute('/_authenticated/acl/acl-management/')();
+)()
+const AuthenticatedAclAclManagementIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/acl/acl-management/',
+)()
 
-// Create/Update Routes
-
-const AuthenticatedRouteRoute = AuthenticatedRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
-  getParentRoute: () => rootRoute,
-} as any);
-
-const AuthenticatedIndexRoute = AuthenticatedIndexImport.update({
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
-} as any);
-
-const errors503LazyRoute = errors503LazyImport
+} as any)
+const errors503LazyRoute = errors503LazyRouteImport
   .update({
     id: '/(errors)/503',
     path: '/503',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(errors)/503.lazy').then(d => d.Route));
-
-const errors500LazyRoute = errors500LazyImport
+  .lazy(() => import('./routes/(errors)/503.lazy').then((d) => d.Route))
+const errors500LazyRoute = errors500LazyRouteImport
   .update({
     id: '/(errors)/500',
     path: '/500',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(errors)/500.lazy').then(d => d.Route));
-
-const errors404LazyRoute = errors404LazyImport
+  .lazy(() => import('./routes/(errors)/500.lazy').then((d) => d.Route))
+const errors404LazyRoute = errors404LazyRouteImport
   .update({
     id: '/(errors)/404',
     path: '/404',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(errors)/404.lazy').then(d => d.Route));
-
-const errors403LazyRoute = errors403LazyImport
+  .lazy(() => import('./routes/(errors)/404.lazy').then((d) => d.Route))
+const errors403LazyRoute = errors403LazyRouteImport
   .update({
     id: '/(errors)/403',
     path: '/403',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(errors)/403.lazy').then(d => d.Route));
-
-const errors401LazyRoute = errors401LazyImport
+  .lazy(() => import('./routes/(errors)/403.lazy').then((d) => d.Route))
+const errors401LazyRoute = errors401LazyRouteImport
   .update({
     id: '/(errors)/401',
     path: '/401',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(errors)/401.lazy').then(d => d.Route));
-
-const authSignUpLazyRoute = authSignUpLazyImport
+  .lazy(() => import('./routes/(errors)/401.lazy').then((d) => d.Route))
+const authSignUpLazyRoute = authSignUpLazyRouteImport
   .update({
     id: '/(auth)/sign-up',
     path: '/sign-up',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(auth)/sign-up.lazy').then(d => d.Route));
-
-const authSignIn2LazyRoute = authSignIn2LazyImport
+  .lazy(() => import('./routes/(auth)/sign-up.lazy').then((d) => d.Route))
+const authSignIn2LazyRoute = authSignIn2LazyRouteImport
   .update({
     id: '/(auth)/sign-in-2',
     path: '/sign-in-2',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(auth)/sign-in-2.lazy').then(d => d.Route));
-
-const authForgotPasswordLazyRoute = authForgotPasswordLazyImport
+  .lazy(() => import('./routes/(auth)/sign-in-2.lazy').then((d) => d.Route))
+const authForgotPasswordLazyRoute = authForgotPasswordLazyRouteImport
   .update({
     id: '/(auth)/forgot-password',
     path: '/forgot-password',
-    getParentRoute: () => rootRoute,
+    getParentRoute: () => rootRouteImport,
   } as any)
-  .lazy(() => import('./routes/(auth)/forgot-password.lazy').then(d => d.Route));
-
-const authSignInRoute = authSignInImport.update({
+  .lazy(() =>
+    import('./routes/(auth)/forgot-password.lazy').then((d) => d.Route),
+  )
+const authSignInRoute = authSignInRouteImport.update({
   id: '/(auth)/sign-in',
   path: '/sign-in',
-  getParentRoute: () => rootRoute,
-} as any);
-
-const authOtpRoute = authOtpImport.update({
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authOtpRoute = authOtpRouteImport.update({
   id: '/(auth)/otp',
   path: '/otp',
-  getParentRoute: () => rootRoute,
-} as any);
-
-const auth500Route = auth500Import.update({
-  id: '/(auth)/500',
-  path: '/500',
-  getParentRoute: () => rootRoute,
-} as any);
-
-const AuthenticatedSystemSettingIndexLazyRoute = AuthenticatedSystemSettingIndexLazyImport.update({
-  id: '/system-setting/',
-  path: '/system-setting/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/system-setting/index.lazy').then(d => d.Route));
-
-const AuthenticatedHelpCenterIndexLazyRoute = AuthenticatedHelpCenterIndexLazyImport.update({
-  id: '/help-center/',
-  path: '/help-center/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/help-center/index.lazy').then(d => d.Route));
-
-const AuthenticatedAppsIndexLazyRoute = AuthenticatedAppsIndexLazyImport.update({
-  id: '/apps/',
-  path: '/apps/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/apps/index.lazy').then(d => d.Route));
-
-const AuthenticatedMonitoringTopicIndexLazyRoute = AuthenticatedMonitoringTopicIndexLazyImport.update({
-  id: '/monitoring/topic/',
-  path: '/monitoring/topic/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/monitoring/topic/index.lazy').then(d => d.Route));
-
-const AuthenticatedMonitoringClusterIndexLazyRoute = AuthenticatedMonitoringClusterIndexLazyImport.update({
-  id: '/monitoring/cluster/',
-  path: '/monitoring/cluster/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/monitoring/cluster/index.lazy').then(d => d.Route));
-
-const AuthenticatedGeneralTopicIndexLazyRoute = AuthenticatedGeneralTopicIndexLazyImport.update({
-  id: '/general/topic/',
-  path: '/general/topic/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/general/topic/index.lazy').then(d => d.Route));
-
-const AuthenticatedGeneralSubscribeManagerIndexLazyRoute = AuthenticatedGeneralSubscribeManagerIndexLazyImport.update({
-  id: '/general/subscribe-manager/',
-  path: '/general/subscribe-manager/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/general/subscribe-manager/index.lazy').then(d => d.Route));
-
-const AuthenticatedGeneralSessionIndexLazyRoute = AuthenticatedGeneralSessionIndexLazyImport.update({
-  id: '/general/session/',
-  path: '/general/session/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/general/session/index.lazy').then(d => d.Route));
-
-const AuthenticatedGeneralClientIndexLazyRoute = AuthenticatedGeneralClientIndexLazyImport.update({
-  id: '/general/client/',
-  path: '/general/client/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/general/client/index.lazy').then(d => d.Route));
-
-const AuthenticatedDataIntegrationSchemaIndexLazyRoute = AuthenticatedDataIntegrationSchemaIndexLazyImport.update({
-  id: '/data-integration/schema/',
-  path: '/data-integration/schema/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/data-integration/schema/index.lazy').then(d => d.Route));
-
-const AuthenticatedDataIntegrationConnectorIndexLazyRoute = AuthenticatedDataIntegrationConnectorIndexLazyImport.update(
-  {
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSystemSettingIndexLazyRoute =
+  AuthenticatedSystemSettingIndexLazyRouteImport.update({
+    id: '/system-setting/',
+    path: '/system-setting/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/system-setting/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedHelpCenterIndexLazyRoute =
+  AuthenticatedHelpCenterIndexLazyRouteImport.update({
+    id: '/help-center/',
+    path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/help-center/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedAppsIndexLazyRoute =
+  AuthenticatedAppsIndexLazyRouteImport.update({
+    id: '/apps/',
+    path: '/apps/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/apps/index.lazy').then((d) => d.Route),
+  )
+const AuthenticatedMonitoringTopicIndexLazyRoute =
+  AuthenticatedMonitoringTopicIndexLazyRouteImport.update({
+    id: '/monitoring/topic/',
+    path: '/monitoring/topic/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/monitoring/topic/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedMonitoringClusterIndexLazyRoute =
+  AuthenticatedMonitoringClusterIndexLazyRouteImport.update({
+    id: '/monitoring/cluster/',
+    path: '/monitoring/cluster/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/monitoring/cluster/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedGeneralTopicIndexLazyRoute =
+  AuthenticatedGeneralTopicIndexLazyRouteImport.update({
+    id: '/general/topic/',
+    path: '/general/topic/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/general/topic/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedGeneralSubscribeManagerIndexLazyRoute =
+  AuthenticatedGeneralSubscribeManagerIndexLazyRouteImport.update({
+    id: '/general/subscribe-manager/',
+    path: '/general/subscribe-manager/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/general/subscribe-manager/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedGeneralSessionIndexLazyRoute =
+  AuthenticatedGeneralSessionIndexLazyRouteImport.update({
+    id: '/general/session/',
+    path: '/general/session/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/general/session/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedGeneralClientIndexLazyRoute =
+  AuthenticatedGeneralClientIndexLazyRouteImport.update({
+    id: '/general/client/',
+    path: '/general/client/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/general/client/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedDataIntegrationSchemaIndexLazyRoute =
+  AuthenticatedDataIntegrationSchemaIndexLazyRouteImport.update({
+    id: '/data-integration/schema/',
+    path: '/data-integration/schema/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/data-integration/schema/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedDataIntegrationConnectorIndexLazyRoute =
+  AuthenticatedDataIntegrationConnectorIndexLazyRouteImport.update({
     id: '/data-integration/connector/',
     path: '/data-integration/connector/',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any,
-).lazy(() => import('./routes/_authenticated/data-integration/connector/index.lazy').then(d => d.Route));
-
-const AuthenticatedAdvancedTopicRewriteIndexLazyRoute = AuthenticatedAdvancedTopicRewriteIndexLazyImport.update({
-  id: '/advanced/topic-rewrite/',
-  path: '/advanced/topic-rewrite/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/advanced/topic-rewrite/index.lazy').then(d => d.Route));
-
-const AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute = AuthenticatedAdvancedSlowSubscriptionIndexLazyImport.update(
-  {
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/data-integration/connector/index.lazy'
+    ).then((d) => d.Route),
+  )
+const AuthenticatedAdvancedTopicRewriteIndexLazyRoute =
+  AuthenticatedAdvancedTopicRewriteIndexLazyRouteImport.update({
+    id: '/advanced/topic-rewrite/',
+    path: '/advanced/topic-rewrite/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/advanced/topic-rewrite/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute =
+  AuthenticatedAdvancedSlowSubscriptionIndexLazyRouteImport.update({
     id: '/advanced/slow-subscription/',
     path: '/advanced/slow-subscription/',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any,
-).lazy(() => import('./routes/_authenticated/advanced/slow-subscription/index.lazy').then(d => d.Route));
-
-const AuthenticatedAdvancedDelayedMessageIndexLazyRoute = AuthenticatedAdvancedDelayedMessageIndexLazyImport.update({
-  id: '/advanced/delayed-message/',
-  path: '/advanced/delayed-message/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/advanced/delayed-message/index.lazy').then(d => d.Route));
-
-const AuthenticatedAdvancedConnectionJitterIndexLazyRoute = AuthenticatedAdvancedConnectionJitterIndexLazyImport.update(
-  {
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/advanced/slow-subscription/index.lazy'
+    ).then((d) => d.Route),
+  )
+const AuthenticatedAdvancedDelayedMessageIndexLazyRoute =
+  AuthenticatedAdvancedDelayedMessageIndexLazyRouteImport.update({
+    id: '/advanced/delayed-message/',
+    path: '/advanced/delayed-message/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/advanced/delayed-message/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedAdvancedConnectionJitterIndexLazyRoute =
+  AuthenticatedAdvancedConnectionJitterIndexLazyRouteImport.update({
     id: '/advanced/connection-jitter/',
     path: '/advanced/connection-jitter/',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any,
-).lazy(() => import('./routes/_authenticated/advanced/connection-jitter/index.lazy').then(d => d.Route));
-
-const AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute = AuthenticatedAdvancedAutoSubscriptionIndexLazyImport.update(
-  {
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/advanced/connection-jitter/index.lazy'
+    ).then((d) => d.Route),
+  )
+const AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute =
+  AuthenticatedAdvancedAutoSubscriptionIndexLazyRouteImport.update({
     id: '/advanced/auto-subscription/',
     path: '/advanced/auto-subscription/',
     getParentRoute: () => AuthenticatedRouteRoute,
-  } as any,
-).lazy(() => import('./routes/_authenticated/advanced/auto-subscription/index.lazy').then(d => d.Route));
-
-const AuthenticatedAclUserManagementIndexLazyRoute = AuthenticatedAclUserManagementIndexLazyImport.update({
-  id: '/acl/user-management/',
-  path: '/acl/user-management/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/acl/user-management/index.lazy').then(d => d.Route));
-
-const AuthenticatedAclBlacklistManagementIndexLazyRoute = AuthenticatedAclBlacklistManagementIndexLazyImport.update({
-  id: '/acl/blacklist-management/',
-  path: '/acl/blacklist-management/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/acl/blacklist-management/index.lazy').then(d => d.Route));
-
-const AuthenticatedAclAclManagementIndexLazyRoute = AuthenticatedAclAclManagementIndexLazyImport.update({
-  id: '/acl/acl-management/',
-  path: '/acl/acl-management/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/acl/acl-management/index.lazy').then(d => d.Route));
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_authenticated': {
-      id: '/_authenticated';
-      path: '';
-      fullPath: '';
-      preLoaderRoute: typeof AuthenticatedRouteImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/500': {
-      id: '/(auth)/500';
-      path: '/500';
-      fullPath: '/500';
-      preLoaderRoute: typeof auth500Import;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/otp': {
-      id: '/(auth)/otp';
-      path: '/otp';
-      fullPath: '/otp';
-      preLoaderRoute: typeof authOtpImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/sign-in': {
-      id: '/(auth)/sign-in';
-      path: '/sign-in';
-      fullPath: '/sign-in';
-      preLoaderRoute: typeof authSignInImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/forgot-password': {
-      id: '/(auth)/forgot-password';
-      path: '/forgot-password';
-      fullPath: '/forgot-password';
-      preLoaderRoute: typeof authForgotPasswordLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/sign-in-2': {
-      id: '/(auth)/sign-in-2';
-      path: '/sign-in-2';
-      fullPath: '/sign-in-2';
-      preLoaderRoute: typeof authSignIn2LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(auth)/sign-up': {
-      id: '/(auth)/sign-up';
-      path: '/sign-up';
-      fullPath: '/sign-up';
-      preLoaderRoute: typeof authSignUpLazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(errors)/401': {
-      id: '/(errors)/401';
-      path: '/401';
-      fullPath: '/401';
-      preLoaderRoute: typeof errors401LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(errors)/403': {
-      id: '/(errors)/403';
-      path: '/403';
-      fullPath: '/403';
-      preLoaderRoute: typeof errors403LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(errors)/404': {
-      id: '/(errors)/404';
-      path: '/404';
-      fullPath: '/404';
-      preLoaderRoute: typeof errors404LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(errors)/500': {
-      id: '/(errors)/500';
-      path: '/500';
-      fullPath: '/500';
-      preLoaderRoute: typeof errors500LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/(errors)/503': {
-      id: '/(errors)/503';
-      path: '/503';
-      fullPath: '/503';
-      preLoaderRoute: typeof errors503LazyImport;
-      parentRoute: typeof rootRoute;
-    };
-    '/_authenticated/': {
-      id: '/_authenticated/';
-      path: '/';
-      fullPath: '/';
-      preLoaderRoute: typeof AuthenticatedIndexImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/apps/': {
-      id: '/_authenticated/apps/';
-      path: '/apps';
-      fullPath: '/apps';
-      preLoaderRoute: typeof AuthenticatedAppsIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/help-center/': {
-      id: '/_authenticated/help-center/';
-      path: '/help-center';
-      fullPath: '/help-center';
-      preLoaderRoute: typeof AuthenticatedHelpCenterIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/system-setting/': {
-      id: '/_authenticated/system-setting/';
-      path: '/system-setting';
-      fullPath: '/system-setting';
-      preLoaderRoute: typeof AuthenticatedSystemSettingIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/acl/acl-management/': {
-      id: '/_authenticated/acl/acl-management/';
-      path: '/acl/acl-management';
-      fullPath: '/acl/acl-management';
-      preLoaderRoute: typeof AuthenticatedAclAclManagementIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/acl/blacklist-management/': {
-      id: '/_authenticated/acl/blacklist-management/';
-      path: '/acl/blacklist-management';
-      fullPath: '/acl/blacklist-management';
-      preLoaderRoute: typeof AuthenticatedAclBlacklistManagementIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/acl/user-management/': {
-      id: '/_authenticated/acl/user-management/';
-      path: '/acl/user-management';
-      fullPath: '/acl/user-management';
-      preLoaderRoute: typeof AuthenticatedAclUserManagementIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/advanced/auto-subscription/': {
-      id: '/_authenticated/advanced/auto-subscription/';
-      path: '/advanced/auto-subscription';
-      fullPath: '/advanced/auto-subscription';
-      preLoaderRoute: typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/advanced/connection-jitter/': {
-      id: '/_authenticated/advanced/connection-jitter/';
-      path: '/advanced/connection-jitter';
-      fullPath: '/advanced/connection-jitter';
-      preLoaderRoute: typeof AuthenticatedAdvancedConnectionJitterIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/advanced/delayed-message/': {
-      id: '/_authenticated/advanced/delayed-message/';
-      path: '/advanced/delayed-message';
-      fullPath: '/advanced/delayed-message';
-      preLoaderRoute: typeof AuthenticatedAdvancedDelayedMessageIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/advanced/slow-subscription/': {
-      id: '/_authenticated/advanced/slow-subscription/';
-      path: '/advanced/slow-subscription';
-      fullPath: '/advanced/slow-subscription';
-      preLoaderRoute: typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/advanced/topic-rewrite/': {
-      id: '/_authenticated/advanced/topic-rewrite/';
-      path: '/advanced/topic-rewrite';
-      fullPath: '/advanced/topic-rewrite';
-      preLoaderRoute: typeof AuthenticatedAdvancedTopicRewriteIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/data-integration/connector/': {
-      id: '/_authenticated/data-integration/connector/';
-      path: '/data-integration/connector';
-      fullPath: '/data-integration/connector';
-      preLoaderRoute: typeof AuthenticatedDataIntegrationConnectorIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/data-integration/schema/': {
-      id: '/_authenticated/data-integration/schema/';
-      path: '/data-integration/schema';
-      fullPath: '/data-integration/schema';
-      preLoaderRoute: typeof AuthenticatedDataIntegrationSchemaIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/general/client/': {
-      id: '/_authenticated/general/client/';
-      path: '/general/client';
-      fullPath: '/general/client';
-      preLoaderRoute: typeof AuthenticatedGeneralClientIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/general/session/': {
-      id: '/_authenticated/general/session/';
-      path: '/general/session';
-      fullPath: '/general/session';
-      preLoaderRoute: typeof AuthenticatedGeneralSessionIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/general/subscribe-manager/': {
-      id: '/_authenticated/general/subscribe-manager/';
-      path: '/general/subscribe-manager';
-      fullPath: '/general/subscribe-manager';
-      preLoaderRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/general/topic/': {
-      id: '/_authenticated/general/topic/';
-      path: '/general/topic';
-      fullPath: '/general/topic';
-      preLoaderRoute: typeof AuthenticatedGeneralTopicIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/monitoring/cluster/': {
-      id: '/_authenticated/monitoring/cluster/';
-      path: '/monitoring/cluster';
-      fullPath: '/monitoring/cluster';
-      preLoaderRoute: typeof AuthenticatedMonitoringClusterIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-    '/_authenticated/monitoring/topic/': {
-      id: '/_authenticated/monitoring/topic/';
-      path: '/monitoring/topic';
-      fullPath: '/monitoring/topic';
-      preLoaderRoute: typeof AuthenticatedMonitoringTopicIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
-  }
-}
-
-// Create and export the route tree
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute;
-  AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute;
-  AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute;
-  AuthenticatedSystemSettingIndexLazyRoute: typeof AuthenticatedSystemSettingIndexLazyRoute;
-  AuthenticatedAclAclManagementIndexLazyRoute: typeof AuthenticatedAclAclManagementIndexLazyRoute;
-  AuthenticatedAclBlacklistManagementIndexLazyRoute: typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
-  AuthenticatedAclUserManagementIndexLazyRoute: typeof AuthenticatedAclUserManagementIndexLazyRoute;
-  AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute: typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute;
-  AuthenticatedAdvancedConnectionJitterIndexLazyRoute: typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute;
-  AuthenticatedAdvancedDelayedMessageIndexLazyRoute: typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute;
-  AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute: typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute;
-  AuthenticatedAdvancedTopicRewriteIndexLazyRoute: typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute;
-  AuthenticatedDataIntegrationConnectorIndexLazyRoute: typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute;
-  AuthenticatedDataIntegrationSchemaIndexLazyRoute: typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute;
-  AuthenticatedGeneralClientIndexLazyRoute: typeof AuthenticatedGeneralClientIndexLazyRoute;
-  AuthenticatedGeneralSessionIndexLazyRoute: typeof AuthenticatedGeneralSessionIndexLazyRoute;
-  AuthenticatedGeneralSubscribeManagerIndexLazyRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
-  AuthenticatedGeneralTopicIndexLazyRoute: typeof AuthenticatedGeneralTopicIndexLazyRoute;
-  AuthenticatedMonitoringClusterIndexLazyRoute: typeof AuthenticatedMonitoringClusterIndexLazyRoute;
-  AuthenticatedMonitoringTopicIndexLazyRoute: typeof AuthenticatedMonitoringTopicIndexLazyRoute;
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
-  AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
-  AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
-  AuthenticatedSystemSettingIndexLazyRoute: AuthenticatedSystemSettingIndexLazyRoute,
-  AuthenticatedAclAclManagementIndexLazyRoute: AuthenticatedAclAclManagementIndexLazyRoute,
-  AuthenticatedAclBlacklistManagementIndexLazyRoute: AuthenticatedAclBlacklistManagementIndexLazyRoute,
-  AuthenticatedAclUserManagementIndexLazyRoute: AuthenticatedAclUserManagementIndexLazyRoute,
-  AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute: AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute,
-  AuthenticatedAdvancedConnectionJitterIndexLazyRoute: AuthenticatedAdvancedConnectionJitterIndexLazyRoute,
-  AuthenticatedAdvancedDelayedMessageIndexLazyRoute: AuthenticatedAdvancedDelayedMessageIndexLazyRoute,
-  AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute: AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute,
-  AuthenticatedAdvancedTopicRewriteIndexLazyRoute: AuthenticatedAdvancedTopicRewriteIndexLazyRoute,
-  AuthenticatedDataIntegrationConnectorIndexLazyRoute: AuthenticatedDataIntegrationConnectorIndexLazyRoute,
-  AuthenticatedDataIntegrationSchemaIndexLazyRoute: AuthenticatedDataIntegrationSchemaIndexLazyRoute,
-  AuthenticatedGeneralClientIndexLazyRoute: AuthenticatedGeneralClientIndexLazyRoute,
-  AuthenticatedGeneralSessionIndexLazyRoute: AuthenticatedGeneralSessionIndexLazyRoute,
-  AuthenticatedGeneralSubscribeManagerIndexLazyRoute: AuthenticatedGeneralSubscribeManagerIndexLazyRoute,
-  AuthenticatedGeneralTopicIndexLazyRoute: AuthenticatedGeneralTopicIndexLazyRoute,
-  AuthenticatedMonitoringClusterIndexLazyRoute: AuthenticatedMonitoringClusterIndexLazyRoute,
-  AuthenticatedMonitoringTopicIndexLazyRoute: AuthenticatedMonitoringTopicIndexLazyRoute,
-};
-
-const AuthenticatedRouteRouteWithChildren = AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren);
+  } as any).lazy(() =>
+    import(
+      './routes/_authenticated/advanced/auto-subscription/index.lazy'
+    ).then((d) => d.Route),
+  )
+const AuthenticatedAclUserManagementIndexLazyRoute =
+  AuthenticatedAclUserManagementIndexLazyRouteImport.update({
+    id: '/acl/user-management/',
+    path: '/acl/user-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/acl/user-management/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedAclBlacklistManagementIndexLazyRoute =
+  AuthenticatedAclBlacklistManagementIndexLazyRouteImport.update({
+    id: '/acl/blacklist-management/',
+    path: '/acl/blacklist-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/acl/blacklist-management/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
+const AuthenticatedAclAclManagementIndexLazyRoute =
+  AuthenticatedAclAclManagementIndexLazyRouteImport.update({
+    id: '/acl/acl-management/',
+    path: '/acl/acl-management/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/acl/acl-management/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 
 export interface FileRoutesByFullPath {
-  '': typeof AuthenticatedRouteRouteWithChildren;
-  '/500': typeof errors500LazyRoute;
-  '/otp': typeof authOtpRoute;
-  '/sign-in': typeof authSignInRoute;
-  '/forgot-password': typeof authForgotPasswordLazyRoute;
-  '/sign-in-2': typeof authSignIn2LazyRoute;
-  '/sign-up': typeof authSignUpLazyRoute;
-  '/401': typeof errors401LazyRoute;
-  '/403': typeof errors403LazyRoute;
-  '/404': typeof errors404LazyRoute;
-  '/503': typeof errors503LazyRoute;
-  '/': typeof AuthenticatedIndexRoute;
-  '/apps': typeof AuthenticatedAppsIndexLazyRoute;
-  '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute;
-  '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute;
-  '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
-  '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute;
-  '/advanced/auto-subscription': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute;
-  '/advanced/connection-jitter': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute;
-  '/advanced/delayed-message': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute;
-  '/advanced/slow-subscription': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute;
-  '/advanced/topic-rewrite': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute;
-  '/data-integration/connector': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute;
-  '/data-integration/schema': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute;
-  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute;
-  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute;
-  '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
-  '/general/topic': typeof AuthenticatedGeneralTopicIndexLazyRoute;
-  '/monitoring/cluster': typeof AuthenticatedMonitoringClusterIndexLazyRoute;
-  '/monitoring/topic': typeof AuthenticatedMonitoringTopicIndexLazyRoute;
+  '/otp': typeof authOtpRoute
+  '/sign-in': typeof authSignInRoute
+  '/forgot-password': typeof authForgotPasswordLazyRoute
+  '/sign-in-2': typeof authSignIn2LazyRoute
+  '/sign-up': typeof authSignUpLazyRoute
+  '/401': typeof errors401LazyRoute
+  '/403': typeof errors403LazyRoute
+  '/404': typeof errors404LazyRoute
+  '/500': typeof errors500LazyRoute
+  '/503': typeof errors503LazyRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/apps': typeof AuthenticatedAppsIndexLazyRoute
+  '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute
+  '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute
+  '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute
+  '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute
+  '/advanced/auto-subscription': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute
+  '/advanced/connection-jitter': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute
+  '/advanced/delayed-message': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute
+  '/advanced/slow-subscription': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute
+  '/advanced/topic-rewrite': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute
+  '/data-integration/connector': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute
+  '/data-integration/schema': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute
+  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute
+  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute
+  '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute
+  '/general/topic': typeof AuthenticatedGeneralTopicIndexLazyRoute
+  '/monitoring/cluster': typeof AuthenticatedMonitoringClusterIndexLazyRoute
+  '/monitoring/topic': typeof AuthenticatedMonitoringTopicIndexLazyRoute
 }
-
 export interface FileRoutesByTo {
-  '/500': typeof errors500LazyRoute;
-  '/otp': typeof authOtpRoute;
-  '/sign-in': typeof authSignInRoute;
-  '/forgot-password': typeof authForgotPasswordLazyRoute;
-  '/sign-in-2': typeof authSignIn2LazyRoute;
-  '/sign-up': typeof authSignUpLazyRoute;
-  '/401': typeof errors401LazyRoute;
-  '/403': typeof errors403LazyRoute;
-  '/404': typeof errors404LazyRoute;
-  '/503': typeof errors503LazyRoute;
-  '/': typeof AuthenticatedIndexRoute;
-  '/apps': typeof AuthenticatedAppsIndexLazyRoute;
-  '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute;
-  '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute;
-  '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
-  '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute;
-  '/advanced/auto-subscription': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute;
-  '/advanced/connection-jitter': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute;
-  '/advanced/delayed-message': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute;
-  '/advanced/slow-subscription': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute;
-  '/advanced/topic-rewrite': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute;
-  '/data-integration/connector': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute;
-  '/data-integration/schema': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute;
-  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute;
-  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute;
-  '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
-  '/general/topic': typeof AuthenticatedGeneralTopicIndexLazyRoute;
-  '/monitoring/cluster': typeof AuthenticatedMonitoringClusterIndexLazyRoute;
-  '/monitoring/topic': typeof AuthenticatedMonitoringTopicIndexLazyRoute;
+  '/otp': typeof authOtpRoute
+  '/sign-in': typeof authSignInRoute
+  '/forgot-password': typeof authForgotPasswordLazyRoute
+  '/sign-in-2': typeof authSignIn2LazyRoute
+  '/sign-up': typeof authSignUpLazyRoute
+  '/401': typeof errors401LazyRoute
+  '/403': typeof errors403LazyRoute
+  '/404': typeof errors404LazyRoute
+  '/500': typeof errors500LazyRoute
+  '/503': typeof errors503LazyRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/apps': typeof AuthenticatedAppsIndexLazyRoute
+  '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute
+  '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute
+  '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute
+  '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute
+  '/advanced/auto-subscription': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute
+  '/advanced/connection-jitter': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute
+  '/advanced/delayed-message': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute
+  '/advanced/slow-subscription': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute
+  '/advanced/topic-rewrite': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute
+  '/data-integration/connector': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute
+  '/data-integration/schema': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute
+  '/general/client': typeof AuthenticatedGeneralClientIndexLazyRoute
+  '/general/session': typeof AuthenticatedGeneralSessionIndexLazyRoute
+  '/general/subscribe-manager': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute
+  '/general/topic': typeof AuthenticatedGeneralTopicIndexLazyRoute
+  '/monitoring/cluster': typeof AuthenticatedMonitoringClusterIndexLazyRoute
+  '/monitoring/topic': typeof AuthenticatedMonitoringTopicIndexLazyRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute;
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren;
-  '/(auth)/500': typeof auth500Route;
-  '/(auth)/otp': typeof authOtpRoute;
-  '/(auth)/sign-in': typeof authSignInRoute;
-  '/(auth)/forgot-password': typeof authForgotPasswordLazyRoute;
-  '/(auth)/sign-in-2': typeof authSignIn2LazyRoute;
-  '/(auth)/sign-up': typeof authSignUpLazyRoute;
-  '/(errors)/401': typeof errors401LazyRoute;
-  '/(errors)/403': typeof errors403LazyRoute;
-  '/(errors)/404': typeof errors404LazyRoute;
-  '/(errors)/500': typeof errors500LazyRoute;
-  '/(errors)/503': typeof errors503LazyRoute;
-  '/_authenticated/': typeof AuthenticatedIndexRoute;
-  '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute;
-  '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute;
-  '/_authenticated/system-setting/': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/_authenticated/acl/acl-management/': typeof AuthenticatedAclAclManagementIndexLazyRoute;
-  '/_authenticated/acl/blacklist-management/': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
-  '/_authenticated/acl/user-management/': typeof AuthenticatedAclUserManagementIndexLazyRoute;
-  '/_authenticated/advanced/auto-subscription/': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute;
-  '/_authenticated/advanced/connection-jitter/': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute;
-  '/_authenticated/advanced/delayed-message/': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute;
-  '/_authenticated/advanced/slow-subscription/': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute;
-  '/_authenticated/advanced/topic-rewrite/': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute;
-  '/_authenticated/data-integration/connector/': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute;
-  '/_authenticated/data-integration/schema/': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute;
-  '/_authenticated/general/client/': typeof AuthenticatedGeneralClientIndexLazyRoute;
-  '/_authenticated/general/session/': typeof AuthenticatedGeneralSessionIndexLazyRoute;
-  '/_authenticated/general/subscribe-manager/': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute;
-  '/_authenticated/general/topic/': typeof AuthenticatedGeneralTopicIndexLazyRoute;
-  '/_authenticated/monitoring/cluster/': typeof AuthenticatedMonitoringClusterIndexLazyRoute;
-  '/_authenticated/monitoring/topic/': typeof AuthenticatedMonitoringTopicIndexLazyRoute;
+  __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/(auth)/otp': typeof authOtpRoute
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/forgot-password': typeof authForgotPasswordLazyRoute
+  '/(auth)/sign-in-2': typeof authSignIn2LazyRoute
+  '/(auth)/sign-up': typeof authSignUpLazyRoute
+  '/(errors)/401': typeof errors401LazyRoute
+  '/(errors)/403': typeof errors403LazyRoute
+  '/(errors)/404': typeof errors404LazyRoute
+  '/(errors)/500': typeof errors500LazyRoute
+  '/(errors)/503': typeof errors503LazyRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute
+  '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute
+  '/_authenticated/system-setting/': typeof AuthenticatedSystemSettingIndexLazyRoute
+  '/_authenticated/acl/acl-management/': typeof AuthenticatedAclAclManagementIndexLazyRoute
+  '/_authenticated/acl/blacklist-management/': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute
+  '/_authenticated/acl/user-management/': typeof AuthenticatedAclUserManagementIndexLazyRoute
+  '/_authenticated/advanced/auto-subscription/': typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute
+  '/_authenticated/advanced/connection-jitter/': typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute
+  '/_authenticated/advanced/delayed-message/': typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute
+  '/_authenticated/advanced/slow-subscription/': typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute
+  '/_authenticated/advanced/topic-rewrite/': typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute
+  '/_authenticated/data-integration/connector/': typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute
+  '/_authenticated/data-integration/schema/': typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute
+  '/_authenticated/general/client/': typeof AuthenticatedGeneralClientIndexLazyRoute
+  '/_authenticated/general/session/': typeof AuthenticatedGeneralSessionIndexLazyRoute
+  '/_authenticated/general/subscribe-manager/': typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute
+  '/_authenticated/general/topic/': typeof AuthenticatedGeneralTopicIndexLazyRoute
+  '/_authenticated/monitoring/cluster/': typeof AuthenticatedMonitoringClusterIndexLazyRoute
+  '/_authenticated/monitoring/topic/': typeof AuthenticatedMonitoringTopicIndexLazyRoute
 }
-
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
-    | '/500'
     | '/otp'
     | '/sign-in'
     | '/forgot-password'
@@ -677,6 +454,7 @@ export interface FileRouteTypes {
     | '/401'
     | '/403'
     | '/404'
+    | '/500'
     | '/503'
     | '/'
     | '/apps'
@@ -697,10 +475,9 @@ export interface FileRouteTypes {
     | '/general/subscribe-manager'
     | '/general/topic'
     | '/monitoring/cluster'
-    | '/monitoring/topic';
-  fileRoutesByTo: FileRoutesByTo;
+    | '/monitoring/topic'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | '/500'
     | '/otp'
     | '/sign-in'
     | '/forgot-password'
@@ -709,6 +486,7 @@ export interface FileRouteTypes {
     | '/401'
     | '/403'
     | '/404'
+    | '/500'
     | '/503'
     | '/'
     | '/apps'
@@ -729,11 +507,10 @@ export interface FileRouteTypes {
     | '/general/subscribe-manager'
     | '/general/topic'
     | '/monitoring/cluster'
-    | '/monitoring/topic';
+    | '/monitoring/topic'
   id:
     | '__root__'
     | '/_authenticated'
-    | '/(auth)/500'
     | '/(auth)/otp'
     | '/(auth)/sign-in'
     | '/(auth)/forgot-password'
@@ -763,28 +540,313 @@ export interface FileRouteTypes {
     | '/_authenticated/general/subscribe-manager/'
     | '/_authenticated/general/topic/'
     | '/_authenticated/monitoring/cluster/'
-    | '/_authenticated/monitoring/topic/';
-  fileRoutesById: FileRoutesById;
+    | '/_authenticated/monitoring/topic/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  authOtpRoute: typeof authOtpRoute
+  authSignInRoute: typeof authSignInRoute
+  authForgotPasswordLazyRoute: typeof authForgotPasswordLazyRoute
+  authSignIn2LazyRoute: typeof authSignIn2LazyRoute
+  authSignUpLazyRoute: typeof authSignUpLazyRoute
+  errors401LazyRoute: typeof errors401LazyRoute
+  errors403LazyRoute: typeof errors403LazyRoute
+  errors404LazyRoute: typeof errors404LazyRoute
+  errors500LazyRoute: typeof errors500LazyRoute
+  errors503LazyRoute: typeof errors503LazyRoute
 }
 
-export interface RootRouteChildren {
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren;
-  auth500Route: typeof auth500Route;
-  authOtpRoute: typeof authOtpRoute;
-  authSignInRoute: typeof authSignInRoute;
-  authForgotPasswordLazyRoute: typeof authForgotPasswordLazyRoute;
-  authSignIn2LazyRoute: typeof authSignIn2LazyRoute;
-  authSignUpLazyRoute: typeof authSignUpLazyRoute;
-  errors401LazyRoute: typeof errors401LazyRoute;
-  errors403LazyRoute: typeof errors403LazyRoute;
-  errors404LazyRoute: typeof errors404LazyRoute;
-  errors500LazyRoute: typeof errors500LazyRoute;
-  errors503LazyRoute: typeof errors503LazyRoute;
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/(errors)/503': {
+      id: '/(errors)/503'
+      path: '/503'
+      fullPath: '/503'
+      preLoaderRoute: typeof errors503LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/500': {
+      id: '/(errors)/500'
+      path: '/500'
+      fullPath: '/500'
+      preLoaderRoute: typeof errors500LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/404': {
+      id: '/(errors)/404'
+      path: '/404'
+      fullPath: '/404'
+      preLoaderRoute: typeof errors404LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/403': {
+      id: '/(errors)/403'
+      path: '/403'
+      fullPath: '/403'
+      preLoaderRoute: typeof errors403LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(errors)/401': {
+      id: '/(errors)/401'
+      path: '/401'
+      fullPath: '/401'
+      preLoaderRoute: typeof errors401LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in-2': {
+      id: '/(auth)/sign-in-2'
+      path: '/sign-in-2'
+      fullPath: '/sign-in-2'
+      preLoaderRoute: typeof authSignIn2LazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/otp': {
+      id: '/(auth)/otp'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof authOtpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/system-setting/': {
+      id: '/_authenticated/system-setting/'
+      path: '/system-setting'
+      fullPath: '/system-setting'
+      preLoaderRoute: typeof AuthenticatedSystemSettingIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/help-center/': {
+      id: '/_authenticated/help-center/'
+      path: '/help-center'
+      fullPath: '/help-center'
+      preLoaderRoute: typeof AuthenticatedHelpCenterIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/apps/': {
+      id: '/_authenticated/apps/'
+      path: '/apps'
+      fullPath: '/apps'
+      preLoaderRoute: typeof AuthenticatedAppsIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/monitoring/topic/': {
+      id: '/_authenticated/monitoring/topic/'
+      path: '/monitoring/topic'
+      fullPath: '/monitoring/topic'
+      preLoaderRoute: typeof AuthenticatedMonitoringTopicIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/monitoring/cluster/': {
+      id: '/_authenticated/monitoring/cluster/'
+      path: '/monitoring/cluster'
+      fullPath: '/monitoring/cluster'
+      preLoaderRoute: typeof AuthenticatedMonitoringClusterIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/general/topic/': {
+      id: '/_authenticated/general/topic/'
+      path: '/general/topic'
+      fullPath: '/general/topic'
+      preLoaderRoute: typeof AuthenticatedGeneralTopicIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/general/subscribe-manager/': {
+      id: '/_authenticated/general/subscribe-manager/'
+      path: '/general/subscribe-manager'
+      fullPath: '/general/subscribe-manager'
+      preLoaderRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/general/session/': {
+      id: '/_authenticated/general/session/'
+      path: '/general/session'
+      fullPath: '/general/session'
+      preLoaderRoute: typeof AuthenticatedGeneralSessionIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/general/client/': {
+      id: '/_authenticated/general/client/'
+      path: '/general/client'
+      fullPath: '/general/client'
+      preLoaderRoute: typeof AuthenticatedGeneralClientIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/data-integration/schema/': {
+      id: '/_authenticated/data-integration/schema/'
+      path: '/data-integration/schema'
+      fullPath: '/data-integration/schema'
+      preLoaderRoute: typeof AuthenticatedDataIntegrationSchemaIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/data-integration/connector/': {
+      id: '/_authenticated/data-integration/connector/'
+      path: '/data-integration/connector'
+      fullPath: '/data-integration/connector'
+      preLoaderRoute: typeof AuthenticatedDataIntegrationConnectorIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advanced/topic-rewrite/': {
+      id: '/_authenticated/advanced/topic-rewrite/'
+      path: '/advanced/topic-rewrite'
+      fullPath: '/advanced/topic-rewrite'
+      preLoaderRoute: typeof AuthenticatedAdvancedTopicRewriteIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advanced/slow-subscription/': {
+      id: '/_authenticated/advanced/slow-subscription/'
+      path: '/advanced/slow-subscription'
+      fullPath: '/advanced/slow-subscription'
+      preLoaderRoute: typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advanced/delayed-message/': {
+      id: '/_authenticated/advanced/delayed-message/'
+      path: '/advanced/delayed-message'
+      fullPath: '/advanced/delayed-message'
+      preLoaderRoute: typeof AuthenticatedAdvancedDelayedMessageIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advanced/connection-jitter/': {
+      id: '/_authenticated/advanced/connection-jitter/'
+      path: '/advanced/connection-jitter'
+      fullPath: '/advanced/connection-jitter'
+      preLoaderRoute: typeof AuthenticatedAdvancedConnectionJitterIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/advanced/auto-subscription/': {
+      id: '/_authenticated/advanced/auto-subscription/'
+      path: '/advanced/auto-subscription'
+      fullPath: '/advanced/auto-subscription'
+      preLoaderRoute: typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/acl/user-management/': {
+      id: '/_authenticated/acl/user-management/'
+      path: '/acl/user-management'
+      fullPath: '/acl/user-management'
+      preLoaderRoute: typeof AuthenticatedAclUserManagementIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/acl/blacklist-management/': {
+      id: '/_authenticated/acl/blacklist-management/'
+      path: '/acl/blacklist-management'
+      fullPath: '/acl/blacklist-management'
+      preLoaderRoute: typeof AuthenticatedAclBlacklistManagementIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/acl/acl-management/': {
+      id: '/_authenticated/acl/acl-management/'
+      path: '/acl/acl-management'
+      fullPath: '/acl/acl-management'
+      preLoaderRoute: typeof AuthenticatedAclAclManagementIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+  }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
+  AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
+  AuthenticatedSystemSettingIndexLazyRoute: typeof AuthenticatedSystemSettingIndexLazyRoute
+  AuthenticatedAclAclManagementIndexLazyRoute: typeof AuthenticatedAclAclManagementIndexLazyRoute
+  AuthenticatedAclBlacklistManagementIndexLazyRoute: typeof AuthenticatedAclBlacklistManagementIndexLazyRoute
+  AuthenticatedAclUserManagementIndexLazyRoute: typeof AuthenticatedAclUserManagementIndexLazyRoute
+  AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute: typeof AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute
+  AuthenticatedAdvancedConnectionJitterIndexLazyRoute: typeof AuthenticatedAdvancedConnectionJitterIndexLazyRoute
+  AuthenticatedAdvancedDelayedMessageIndexLazyRoute: typeof AuthenticatedAdvancedDelayedMessageIndexLazyRoute
+  AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute: typeof AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute
+  AuthenticatedAdvancedTopicRewriteIndexLazyRoute: typeof AuthenticatedAdvancedTopicRewriteIndexLazyRoute
+  AuthenticatedDataIntegrationConnectorIndexLazyRoute: typeof AuthenticatedDataIntegrationConnectorIndexLazyRoute
+  AuthenticatedDataIntegrationSchemaIndexLazyRoute: typeof AuthenticatedDataIntegrationSchemaIndexLazyRoute
+  AuthenticatedGeneralClientIndexLazyRoute: typeof AuthenticatedGeneralClientIndexLazyRoute
+  AuthenticatedGeneralSessionIndexLazyRoute: typeof AuthenticatedGeneralSessionIndexLazyRoute
+  AuthenticatedGeneralSubscribeManagerIndexLazyRoute: typeof AuthenticatedGeneralSubscribeManagerIndexLazyRoute
+  AuthenticatedGeneralTopicIndexLazyRoute: typeof AuthenticatedGeneralTopicIndexLazyRoute
+  AuthenticatedMonitoringClusterIndexLazyRoute: typeof AuthenticatedMonitoringClusterIndexLazyRoute
+  AuthenticatedMonitoringTopicIndexLazyRoute: typeof AuthenticatedMonitoringTopicIndexLazyRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
+  AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
+  AuthenticatedSystemSettingIndexLazyRoute:
+    AuthenticatedSystemSettingIndexLazyRoute,
+  AuthenticatedAclAclManagementIndexLazyRoute:
+    AuthenticatedAclAclManagementIndexLazyRoute,
+  AuthenticatedAclBlacklistManagementIndexLazyRoute:
+    AuthenticatedAclBlacklistManagementIndexLazyRoute,
+  AuthenticatedAclUserManagementIndexLazyRoute:
+    AuthenticatedAclUserManagementIndexLazyRoute,
+  AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute:
+    AuthenticatedAdvancedAutoSubscriptionIndexLazyRoute,
+  AuthenticatedAdvancedConnectionJitterIndexLazyRoute:
+    AuthenticatedAdvancedConnectionJitterIndexLazyRoute,
+  AuthenticatedAdvancedDelayedMessageIndexLazyRoute:
+    AuthenticatedAdvancedDelayedMessageIndexLazyRoute,
+  AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute:
+    AuthenticatedAdvancedSlowSubscriptionIndexLazyRoute,
+  AuthenticatedAdvancedTopicRewriteIndexLazyRoute:
+    AuthenticatedAdvancedTopicRewriteIndexLazyRoute,
+  AuthenticatedDataIntegrationConnectorIndexLazyRoute:
+    AuthenticatedDataIntegrationConnectorIndexLazyRoute,
+  AuthenticatedDataIntegrationSchemaIndexLazyRoute:
+    AuthenticatedDataIntegrationSchemaIndexLazyRoute,
+  AuthenticatedGeneralClientIndexLazyRoute:
+    AuthenticatedGeneralClientIndexLazyRoute,
+  AuthenticatedGeneralSessionIndexLazyRoute:
+    AuthenticatedGeneralSessionIndexLazyRoute,
+  AuthenticatedGeneralSubscribeManagerIndexLazyRoute:
+    AuthenticatedGeneralSubscribeManagerIndexLazyRoute,
+  AuthenticatedGeneralTopicIndexLazyRoute:
+    AuthenticatedGeneralTopicIndexLazyRoute,
+  AuthenticatedMonitoringClusterIndexLazyRoute:
+    AuthenticatedMonitoringClusterIndexLazyRoute,
+  AuthenticatedMonitoringTopicIndexLazyRoute:
+    AuthenticatedMonitoringTopicIndexLazyRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  auth500Route: auth500Route,
   authOtpRoute: authOtpRoute,
   authSignInRoute: authSignInRoute,
   authForgotPasswordLazyRoute: authForgotPasswordLazyRoute,
@@ -795,168 +857,7 @@ const rootRouteChildren: RootRouteChildren = {
   errors404LazyRoute: errors404LazyRoute,
   errors500LazyRoute: errors500LazyRoute,
   errors503LazyRoute: errors503LazyRoute,
-};
-
-export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_authenticated",
-        "/(auth)/500",
-        "/(auth)/otp",
-        "/(auth)/sign-in",
-        "/(auth)/forgot-password",
-        "/(auth)/sign-in-2",
-        "/(auth)/sign-up",
-        "/(errors)/401",
-        "/(errors)/403",
-        "/(errors)/404",
-        "/(errors)/500",
-        "/(errors)/503"
-      ]
-    },
-    "/_authenticated": {
-      "filePath": "_authenticated/route.tsx",
-      "children": [
-        "/_authenticated/",
-        "/_authenticated/apps/",
-        "/_authenticated/help-center/",
-        "/_authenticated/system-setting/",
-        "/_authenticated/acl/acl-management/",
-        "/_authenticated/acl/blacklist-management/",
-        "/_authenticated/acl/user-management/",
-        "/_authenticated/advanced/auto-subscription/",
-        "/_authenticated/advanced/connection-jitter/",
-        "/_authenticated/advanced/delayed-message/",
-        "/_authenticated/advanced/slow-subscription/",
-        "/_authenticated/advanced/topic-rewrite/",
-        "/_authenticated/data-integration/connector/",
-        "/_authenticated/data-integration/schema/",
-        "/_authenticated/general/client/",
-        "/_authenticated/general/session/",
-        "/_authenticated/general/subscribe-manager/",
-        "/_authenticated/general/topic/",
-        "/_authenticated/monitoring/cluster/",
-        "/_authenticated/monitoring/topic/"
-      ]
-    },
-    "/(auth)/500": {
-      "filePath": "(auth)/500.tsx"
-    },
-    "/(auth)/otp": {
-      "filePath": "(auth)/otp.tsx"
-    },
-    "/(auth)/sign-in": {
-      "filePath": "(auth)/sign-in.tsx"
-    },
-    "/(auth)/forgot-password": {
-      "filePath": "(auth)/forgot-password.lazy.tsx"
-    },
-    "/(auth)/sign-in-2": {
-      "filePath": "(auth)/sign-in-2.lazy.tsx"
-    },
-    "/(auth)/sign-up": {
-      "filePath": "(auth)/sign-up.lazy.tsx"
-    },
-    "/(errors)/401": {
-      "filePath": "(errors)/401.lazy.tsx"
-    },
-    "/(errors)/403": {
-      "filePath": "(errors)/403.lazy.tsx"
-    },
-    "/(errors)/404": {
-      "filePath": "(errors)/404.lazy.tsx"
-    },
-    "/(errors)/500": {
-      "filePath": "(errors)/500.lazy.tsx"
-    },
-    "/(errors)/503": {
-      "filePath": "(errors)/503.lazy.tsx"
-    },
-    "/_authenticated/": {
-      "filePath": "_authenticated/index.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/apps/": {
-      "filePath": "_authenticated/apps/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/help-center/": {
-      "filePath": "_authenticated/help-center/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/system-setting/": {
-      "filePath": "_authenticated/system-setting/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/acl/acl-management/": {
-      "filePath": "_authenticated/acl/acl-management/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/acl/blacklist-management/": {
-      "filePath": "_authenticated/acl/blacklist-management/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/acl/user-management/": {
-      "filePath": "_authenticated/acl/user-management/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/advanced/auto-subscription/": {
-      "filePath": "_authenticated/advanced/auto-subscription/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/advanced/connection-jitter/": {
-      "filePath": "_authenticated/advanced/connection-jitter/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/advanced/delayed-message/": {
-      "filePath": "_authenticated/advanced/delayed-message/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/advanced/slow-subscription/": {
-      "filePath": "_authenticated/advanced/slow-subscription/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/advanced/topic-rewrite/": {
-      "filePath": "_authenticated/advanced/topic-rewrite/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/data-integration/connector/": {
-      "filePath": "_authenticated/data-integration/connector/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/data-integration/schema/": {
-      "filePath": "_authenticated/data-integration/schema/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/general/client/": {
-      "filePath": "_authenticated/general/client/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/general/session/": {
-      "filePath": "_authenticated/general/session/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/general/subscribe-manager/": {
-      "filePath": "_authenticated/general/subscribe-manager/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/general/topic/": {
-      "filePath": "_authenticated/general/topic/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/monitoring/cluster/": {
-      "filePath": "_authenticated/monitoring/cluster/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/monitoring/topic/": {
-      "filePath": "_authenticated/monitoring/topic/index.lazy.tsx",
-      "parent": "/_authenticated"
-    }
-  }
 }
-ROUTE_MANIFEST_END */
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
