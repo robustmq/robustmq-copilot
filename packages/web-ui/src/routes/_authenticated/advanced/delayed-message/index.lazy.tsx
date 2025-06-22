@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import DelayedMessage from '@/features/advanced/delayed-message';
 
 export const Route = createLazyFileRoute('/_authenticated/advanced/delayed-message/')({
-  component: RouteComponent,
+  component: DelayedMessage,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/advanced/delayed-message/"!</div>;
-}

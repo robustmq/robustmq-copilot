@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import SlowSubscription from '@/features/advanced/slow-subscription';
 
 export const Route = createLazyFileRoute('/_authenticated/advanced/slow-subscription/')({
-  component: RouteComponent,
+  component: SlowSubscription,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/advanced/slow-subscription/"!</div>;
-}

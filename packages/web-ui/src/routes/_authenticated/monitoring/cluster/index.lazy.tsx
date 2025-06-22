@@ -1,11 +1,6 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
+import Cluster from '@/features/monitoring/cluster';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
-export const Route = createLazyFileRoute('/_authenticated/monitoring/cluster/')(
-  {
-    component: RouteComponent,
-  },
-)
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/monitoring/cluster/"!</div>
-}
+export const Route = createLazyFileRoute('/_authenticated/monitoring/cluster/')({
+  component: Cluster,
+});

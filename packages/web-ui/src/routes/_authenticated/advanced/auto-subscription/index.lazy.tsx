@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import AutoSubscription from '@/features/advanced/auto-subscription';
 
 export const Route = createLazyFileRoute('/_authenticated/advanced/auto-subscription/')({
-  component: RouteComponent,
+  component: AutoSubscription,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/advanced/auto-subscription/"!</div>;
-}

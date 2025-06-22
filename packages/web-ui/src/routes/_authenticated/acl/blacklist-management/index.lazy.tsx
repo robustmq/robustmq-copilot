@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import BlacklistManagement from '@/features/acl/blacklist';
 
 export const Route = createLazyFileRoute('/_authenticated/acl/blacklist-management/')({
-  component: RouteComponent,
+  component: BlacklistManagement,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/acl/blacklist-management/"!</div>;
-}

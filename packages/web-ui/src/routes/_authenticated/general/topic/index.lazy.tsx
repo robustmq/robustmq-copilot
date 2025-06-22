@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import Topic from '@/features/general/topic';
 
 export const Route = createLazyFileRoute('/_authenticated/general/topic/')({
-  component: RouteComponent,
+  component: Topic,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/general/topic/"!</div>;
-}

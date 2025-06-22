@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import UserManagement from '@/features/acl/user';
 
 export const Route = createLazyFileRoute('/_authenticated/acl/user-management/')({
-  component: RouteComponent,
+  component: UserManagement,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/acl/user-management/"!</div>;
-}

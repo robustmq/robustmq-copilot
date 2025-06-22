@@ -1,9 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
+import ConnectionJitter from '@/features/advanced/connection-jitter';
 
 export const Route = createLazyFileRoute('/_authenticated/advanced/connection-jitter/')({
-  component: RouteComponent,
+  component: ConnectionJitter,
 });
-
-function RouteComponent() {
-  return <div>Hello "/_authenticated/advanced/connection-jitter/"!</div>;
-}

@@ -29,7 +29,6 @@ const errors401LazyImport = createFileRoute('/(errors)/401')();
 const authSignUpLazyImport = createFileRoute('/(auth)/sign-up')();
 const authSignIn2LazyImport = createFileRoute('/(auth)/sign-in-2')();
 const authForgotPasswordLazyImport = createFileRoute('/(auth)/forgot-password')();
-const AuthenticatedUsersIndexLazyImport = createFileRoute('/_authenticated/users/')();
 const AuthenticatedSystemSettingIndexLazyImport = createFileRoute('/_authenticated/system-setting/')();
 const AuthenticatedHelpCenterIndexLazyImport = createFileRoute('/_authenticated/help-center/')();
 const AuthenticatedAppsIndexLazyImport = createFileRoute('/_authenticated/apps/')();
@@ -158,12 +157,6 @@ const auth500Route = auth500Import.update({
   path: '/500',
   getParentRoute: () => rootRoute,
 } as any);
-
-const AuthenticatedUsersIndexLazyRoute = AuthenticatedUsersIndexLazyImport.update({
-  id: '/users/',
-  path: '/users/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any).lazy(() => import('./routes/_authenticated/users/index.lazy').then(d => d.Route));
 
 const AuthenticatedSystemSettingIndexLazyRoute = AuthenticatedSystemSettingIndexLazyImport.update({
   id: '/system-setting/',
@@ -403,13 +396,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSystemSettingIndexLazyImport;
       parentRoute: typeof AuthenticatedRouteImport;
     };
-    '/_authenticated/users/': {
-      id: '/_authenticated/users/';
-      path: '/users';
-      fullPath: '/users';
-      preLoaderRoute: typeof AuthenticatedUsersIndexLazyImport;
-      parentRoute: typeof AuthenticatedRouteImport;
-    };
     '/_authenticated/acl/acl-management/': {
       id: '/_authenticated/acl/acl-management/';
       path: '/acl/acl-management';
@@ -532,7 +518,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute;
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute;
   AuthenticatedSystemSettingIndexLazyRoute: typeof AuthenticatedSystemSettingIndexLazyRoute;
-  AuthenticatedUsersIndexLazyRoute: typeof AuthenticatedUsersIndexLazyRoute;
   AuthenticatedAclAclManagementIndexLazyRoute: typeof AuthenticatedAclAclManagementIndexLazyRoute;
   AuthenticatedAclBlacklistManagementIndexLazyRoute: typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
   AuthenticatedAclUserManagementIndexLazyRoute: typeof AuthenticatedAclUserManagementIndexLazyRoute;
@@ -556,7 +541,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
   AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
   AuthenticatedSystemSettingIndexLazyRoute: AuthenticatedSystemSettingIndexLazyRoute,
-  AuthenticatedUsersIndexLazyRoute: AuthenticatedUsersIndexLazyRoute,
   AuthenticatedAclAclManagementIndexLazyRoute: AuthenticatedAclAclManagementIndexLazyRoute,
   AuthenticatedAclBlacklistManagementIndexLazyRoute: AuthenticatedAclBlacklistManagementIndexLazyRoute,
   AuthenticatedAclUserManagementIndexLazyRoute: AuthenticatedAclUserManagementIndexLazyRoute,
@@ -593,7 +577,6 @@ export interface FileRoutesByFullPath {
   '/apps': typeof AuthenticatedAppsIndexLazyRoute;
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute;
   '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/users': typeof AuthenticatedUsersIndexLazyRoute;
   '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute;
   '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
   '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute;
@@ -627,7 +610,6 @@ export interface FileRoutesByTo {
   '/apps': typeof AuthenticatedAppsIndexLazyRoute;
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute;
   '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/users': typeof AuthenticatedUsersIndexLazyRoute;
   '/acl/acl-management': typeof AuthenticatedAclAclManagementIndexLazyRoute;
   '/acl/blacklist-management': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
   '/acl/user-management': typeof AuthenticatedAclUserManagementIndexLazyRoute;
@@ -664,7 +646,6 @@ export interface FileRoutesById {
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute;
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute;
   '/_authenticated/system-setting/': typeof AuthenticatedSystemSettingIndexLazyRoute;
-  '/_authenticated/users/': typeof AuthenticatedUsersIndexLazyRoute;
   '/_authenticated/acl/acl-management/': typeof AuthenticatedAclAclManagementIndexLazyRoute;
   '/_authenticated/acl/blacklist-management/': typeof AuthenticatedAclBlacklistManagementIndexLazyRoute;
   '/_authenticated/acl/user-management/': typeof AuthenticatedAclUserManagementIndexLazyRoute;
@@ -701,7 +682,6 @@ export interface FileRouteTypes {
     | '/apps'
     | '/help-center'
     | '/system-setting'
-    | '/users'
     | '/acl/acl-management'
     | '/acl/blacklist-management'
     | '/acl/user-management'
@@ -734,7 +714,6 @@ export interface FileRouteTypes {
     | '/apps'
     | '/help-center'
     | '/system-setting'
-    | '/users'
     | '/acl/acl-management'
     | '/acl/blacklist-management'
     | '/acl/user-management'
@@ -769,7 +748,6 @@ export interface FileRouteTypes {
     | '/_authenticated/apps/'
     | '/_authenticated/help-center/'
     | '/_authenticated/system-setting/'
-    | '/_authenticated/users/'
     | '/_authenticated/acl/acl-management/'
     | '/_authenticated/acl/blacklist-management/'
     | '/_authenticated/acl/user-management/'
@@ -848,7 +826,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
         "/_authenticated/apps/",
         "/_authenticated/help-center/",
         "/_authenticated/system-setting/",
-        "/_authenticated/users/",
         "/_authenticated/acl/acl-management/",
         "/_authenticated/acl/blacklist-management/",
         "/_authenticated/acl/user-management/",
@@ -914,10 +891,6 @@ export const routeTree = rootRoute._addFileChildren(rootRouteChildren)._addFileT
     },
     "/_authenticated/system-setting/": {
       "filePath": "_authenticated/system-setting/index.lazy.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/users/": {
-      "filePath": "_authenticated/users/index.lazy.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/acl/acl-management/": {
