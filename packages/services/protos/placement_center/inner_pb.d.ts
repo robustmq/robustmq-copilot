@@ -74,23 +74,10 @@ export namespace NodeListReply {
 }
 
 export class RegisterNodeRequest extends jspb.Message {
-  getClusterType(): ClusterType;
-  setClusterType(value: ClusterType): RegisterNodeRequest;
-
-  getClusterName(): string;
-  setClusterName(value: string): RegisterNodeRequest;
-
-  getNodeIp(): string;
-  setNodeIp(value: string): RegisterNodeRequest;
-
-  getNodeId(): number;
-  setNodeId(value: number): RegisterNodeRequest;
-
-  getNodeInnerAddr(): string;
-  setNodeInnerAddr(value: string): RegisterNodeRequest;
-
-  getExtendInfo(): string;
-  setExtendInfo(value: string): RegisterNodeRequest;
+  getNode(): Uint8Array | string;
+  getNode_asU8(): Uint8Array;
+  getNode_asB64(): string;
+  setNode(value: Uint8Array | string): RegisterNodeRequest;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): RegisterNodeRequest.AsObject;
@@ -102,12 +89,7 @@ export class RegisterNodeRequest extends jspb.Message {
 
 export namespace RegisterNodeRequest {
   export type AsObject = {
-    clusterType: ClusterType,
-    clusterName: string,
-    nodeIp: string,
-    nodeId: number,
-    nodeInnerAddr: string,
-    extendInfo: string,
+    node: Uint8Array | string,
   }
 }
 

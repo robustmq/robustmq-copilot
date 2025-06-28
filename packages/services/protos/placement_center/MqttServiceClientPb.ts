@@ -342,7 +342,7 @@ export class MqttServiceClient {
 
   methodDescriptorListTopic = new grpcWeb.MethodDescriptor(
     '/placement.center.mqtt.MqttService/ListTopic',
-    grpcWeb.MethodType.UNARY,
+    grpcWeb.MethodType.SERVER_STREAMING,
     mqtt_pb.ListTopicRequest,
     mqtt_pb.ListTopicReply,
     (request: mqtt_pb.ListTopicRequest) => {
@@ -353,34 +353,13 @@ export class MqttServiceClient {
 
   listTopic(
     request: mqtt_pb.ListTopicRequest,
-    metadata?: grpcWeb.Metadata | null): Promise<mqtt_pb.ListTopicReply>;
-
-  listTopic(
-    request: mqtt_pb.ListTopicRequest,
-    metadata: grpcWeb.Metadata | null,
-    callback: (err: grpcWeb.RpcError,
-               response: mqtt_pb.ListTopicReply) => void): grpcWeb.ClientReadableStream<mqtt_pb.ListTopicReply>;
-
-  listTopic(
-    request: mqtt_pb.ListTopicRequest,
-    metadata?: grpcWeb.Metadata | null,
-    callback?: (err: grpcWeb.RpcError,
-               response: mqtt_pb.ListTopicReply) => void) {
-    if (callback !== undefined) {
-      return this.client_.rpcCall(
-        this.hostname_ +
-          '/placement.center.mqtt.MqttService/ListTopic',
-        request,
-        metadata || {},
-        this.methodDescriptorListTopic,
-        callback);
-    }
-    return this.client_.unaryCall(
-    this.hostname_ +
-      '/placement.center.mqtt.MqttService/ListTopic',
-    request,
-    metadata || {},
-    this.methodDescriptorListTopic);
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<mqtt_pb.ListTopicReply> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/placement.center.mqtt.MqttService/ListTopic',
+      request,
+      metadata || {},
+      this.methodDescriptorListTopic);
   }
 
   methodDescriptorCreateTopic = new grpcWeb.MethodDescriptor(

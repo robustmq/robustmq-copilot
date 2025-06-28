@@ -290,7 +290,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.placement.center.mqtt.ListTopicReply = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, proto.placement.center.mqtt.ListTopicReply.repeatedFields_, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
 goog.inherits(proto.placement.center.mqtt.ListTopicReply, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -2924,13 +2924,6 @@ proto.placement.center.mqtt.ListTopicRequest.prototype.setTopicName = function(v
 
 
 
-/**
- * List of repeated fields within this message type.
- * @private {!Array<number>}
- * @const
- */
-proto.placement.center.mqtt.ListTopicReply.repeatedFields_ = [1];
-
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -2962,7 +2955,7 @@ proto.placement.center.mqtt.ListTopicReply.prototype.toObject = function(opt_inc
  */
 proto.placement.center.mqtt.ListTopicReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-topicsList: msg.getTopicsList_asB64()
+topic: msg.getTopic_asB64()
   };
 
   if (includeInstance) {
@@ -3001,7 +2994,7 @@ proto.placement.center.mqtt.ListTopicReply.deserializeBinaryFromReader = functio
     switch (field) {
     case 1:
       var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.addTopics(value);
+      msg.setTopic(value);
       break;
     default:
       reader.skipField();
@@ -3032,9 +3025,9 @@ proto.placement.center.mqtt.ListTopicReply.prototype.serializeBinary = function(
  */
 proto.placement.center.mqtt.ListTopicReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getTopicsList_asU8();
+  f = message.getTopic_asU8();
   if (f.length > 0) {
-    writer.writeRepeatedBytes(
+    writer.writeBytes(
       1,
       f
     );
@@ -3043,63 +3036,44 @@ proto.placement.center.mqtt.ListTopicReply.serializeBinaryToWriter = function(me
 
 
 /**
- * repeated bytes topics = 1;
- * @return {!Array<string>}
+ * optional bytes topic = 1;
+ * @return {string}
  */
-proto.placement.center.mqtt.ListTopicReply.prototype.getTopicsList = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 1));
+proto.placement.center.mqtt.ListTopicReply.prototype.getTopic = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * repeated bytes topics = 1;
- * This is a type-conversion wrapper around `getTopicsList()`
- * @return {!Array<string>}
+ * optional bytes topic = 1;
+ * This is a type-conversion wrapper around `getTopic()`
+ * @return {string}
  */
-proto.placement.center.mqtt.ListTopicReply.prototype.getTopicsList_asB64 = function() {
-  return /** @type {!Array<string>} */ (jspb.Message.bytesListAsB64(
-      this.getTopicsList()));
+proto.placement.center.mqtt.ListTopicReply.prototype.getTopic_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getTopic()));
 };
 
 
 /**
- * repeated bytes topics = 1;
+ * optional bytes topic = 1;
  * Note that Uint8Array is not supported on all browsers.
  * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getTopicsList()`
- * @return {!Array<!Uint8Array>}
+ * This is a type-conversion wrapper around `getTopic()`
+ * @return {!Uint8Array}
  */
-proto.placement.center.mqtt.ListTopicReply.prototype.getTopicsList_asU8 = function() {
-  return /** @type {!Array<!Uint8Array>} */ (jspb.Message.bytesListAsU8(
-      this.getTopicsList()));
-};
-
-
-/**
- * @param {!(Array<!Uint8Array>|Array<string>)} value
- * @return {!proto.placement.center.mqtt.ListTopicReply} returns this
- */
-proto.placement.center.mqtt.ListTopicReply.prototype.setTopicsList = function(value) {
-  return jspb.Message.setField(this, 1, value || []);
+proto.placement.center.mqtt.ListTopicReply.prototype.getTopic_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getTopic()));
 };
 
 
 /**
  * @param {!(string|Uint8Array)} value
- * @param {number=} opt_index
  * @return {!proto.placement.center.mqtt.ListTopicReply} returns this
  */
-proto.placement.center.mqtt.ListTopicReply.prototype.addTopics = function(value, opt_index) {
-  return jspb.Message.addToRepeatedField(this, 1, value, opt_index);
-};
-
-
-/**
- * Clears the list making it empty but non-null.
- * @return {!proto.placement.center.mqtt.ListTopicReply} returns this
- */
-proto.placement.center.mqtt.ListTopicReply.prototype.clearTopicsList = function() {
-  return this.setTopicsList([]);
+proto.placement.center.mqtt.ListTopicReply.prototype.setTopic = function(value) {
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 

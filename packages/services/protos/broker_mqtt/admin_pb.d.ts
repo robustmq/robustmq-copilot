@@ -219,13 +219,61 @@ export class ClusterStatusReply extends jspb.Message {
   getClusterName(): string;
   setClusterName(value: string): ClusterStatusReply;
 
-  getNodesList(): Array<string>;
-  setNodesList(value: Array<string>): ClusterStatusReply;
-  clearNodesList(): ClusterStatusReply;
-  addNodes(value: string, index?: number): ClusterStatusReply;
+  getMessageInRate(): number;
+  setMessageInRate(value: number): ClusterStatusReply;
 
-  getSubscribeInfo(): string;
-  setSubscribeInfo(value: string): ClusterStatusReply;
+  getMessageOutRate(): number;
+  setMessageOutRate(value: number): ClusterStatusReply;
+
+  getConnectionNum(): number;
+  setConnectionNum(value: number): ClusterStatusReply;
+
+  getSessionNum(): number;
+  setSessionNum(value: number): ClusterStatusReply;
+
+  getTopicNum(): number;
+  setTopicNum(value: number): ClusterStatusReply;
+
+  getNodesList(): Array<BrokerNodeRaw>;
+  setNodesList(value: Array<BrokerNodeRaw>): ClusterStatusReply;
+  clearNodesList(): ClusterStatusReply;
+  addNodes(value?: BrokerNodeRaw, index?: number): BrokerNodeRaw;
+
+  getPlacementStatus(): string;
+  setPlacementStatus(value: string): ClusterStatusReply;
+
+  getTcpConnectionNum(): number;
+  setTcpConnectionNum(value: number): ClusterStatusReply;
+
+  getTlsConnectionNum(): number;
+  setTlsConnectionNum(value: number): ClusterStatusReply;
+
+  getWebsocketConnectionNum(): number;
+  setWebsocketConnectionNum(value: number): ClusterStatusReply;
+
+  getQuicConnectionNum(): number;
+  setQuicConnectionNum(value: number): ClusterStatusReply;
+
+  getSubscribeNum(): number;
+  setSubscribeNum(value: number): ClusterStatusReply;
+
+  getExclusiveSubscribeNum(): number;
+  setExclusiveSubscribeNum(value: number): ClusterStatusReply;
+
+  getShareSubscribeLeaderNum(): number;
+  setShareSubscribeLeaderNum(value: number): ClusterStatusReply;
+
+  getShareSubscribeResubNum(): number;
+  setShareSubscribeResubNum(value: number): ClusterStatusReply;
+
+  getExclusiveSubscribeThreadNum(): number;
+  setExclusiveSubscribeThreadNum(value: number): ClusterStatusReply;
+
+  getShareSubscribeLeaderThreadNum(): number;
+  setShareSubscribeLeaderThreadNum(value: number): ClusterStatusReply;
+
+  getShareSubscribeFollowerThreadNum(): number;
+  setShareSubscribeFollowerThreadNum(value: number): ClusterStatusReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ClusterStatusReply.AsObject;
@@ -238,8 +286,130 @@ export class ClusterStatusReply extends jspb.Message {
 export namespace ClusterStatusReply {
   export type AsObject = {
     clusterName: string,
-    nodesList: Array<string>,
-    subscribeInfo: string,
+    messageInRate: number,
+    messageOutRate: number,
+    connectionNum: number,
+    sessionNum: number,
+    topicNum: number,
+    nodesList: Array<BrokerNodeRaw.AsObject>,
+    placementStatus: string,
+    tcpConnectionNum: number,
+    tlsConnectionNum: number,
+    websocketConnectionNum: number,
+    quicConnectionNum: number,
+    subscribeNum: number,
+    exclusiveSubscribeNum: number,
+    shareSubscribeLeaderNum: number,
+    shareSubscribeResubNum: number,
+    exclusiveSubscribeThreadNum: number,
+    shareSubscribeLeaderThreadNum: number,
+    shareSubscribeFollowerThreadNum: number,
+  }
+}
+
+export class BrokerNodeRaw extends jspb.Message {
+  getClusterName(): string;
+  setClusterName(value: string): BrokerNodeRaw;
+
+  getClusterType(): string;
+  setClusterType(value: string): BrokerNodeRaw;
+
+  getExtendInfo(): string;
+  setExtendInfo(value: string): BrokerNodeRaw;
+
+  getNodeId(): number;
+  setNodeId(value: number): BrokerNodeRaw;
+
+  getNodeIp(): string;
+  setNodeIp(value: string): BrokerNodeRaw;
+
+  getNodeInnerAddr(): string;
+  setNodeInnerAddr(value: string): BrokerNodeRaw;
+
+  getStartTime(): number;
+  setStartTime(value: number): BrokerNodeRaw;
+
+  getRegisterTime(): number;
+  setRegisterTime(value: number): BrokerNodeRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): BrokerNodeRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: BrokerNodeRaw): BrokerNodeRaw.AsObject;
+  static serializeBinaryToWriter(message: BrokerNodeRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): BrokerNodeRaw;
+  static deserializeBinaryFromReader(message: BrokerNodeRaw, reader: jspb.BinaryReader): BrokerNodeRaw;
+}
+
+export namespace BrokerNodeRaw {
+  export type AsObject = {
+    clusterName: string,
+    clusterType: string,
+    extendInfo: string,
+    nodeId: number,
+    nodeIp: string,
+    nodeInnerAddr: string,
+    startTime: number,
+    registerTime: number,
+  }
+}
+
+export class ClusterOverviewMetricsRequest extends jspb.Message {
+  getStartTime(): number;
+  setStartTime(value: number): ClusterOverviewMetricsRequest;
+
+  getEndTime(): number;
+  setEndTime(value: number): ClusterOverviewMetricsRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClusterOverviewMetricsRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ClusterOverviewMetricsRequest): ClusterOverviewMetricsRequest.AsObject;
+  static serializeBinaryToWriter(message: ClusterOverviewMetricsRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClusterOverviewMetricsRequest;
+  static deserializeBinaryFromReader(message: ClusterOverviewMetricsRequest, reader: jspb.BinaryReader): ClusterOverviewMetricsRequest;
+}
+
+export namespace ClusterOverviewMetricsRequest {
+  export type AsObject = {
+    startTime: number,
+    endTime: number,
+  }
+}
+
+export class ClusterOverviewMetricsReply extends jspb.Message {
+  getConnectionNum(): string;
+  setConnectionNum(value: string): ClusterOverviewMetricsReply;
+
+  getTopicNum(): string;
+  setTopicNum(value: string): ClusterOverviewMetricsReply;
+
+  getSubscribeNum(): string;
+  setSubscribeNum(value: string): ClusterOverviewMetricsReply;
+
+  getMessageInNum(): string;
+  setMessageInNum(value: string): ClusterOverviewMetricsReply;
+
+  getMessageOutNum(): string;
+  setMessageOutNum(value: string): ClusterOverviewMetricsReply;
+
+  getMessageDropNum(): string;
+  setMessageDropNum(value: string): ClusterOverviewMetricsReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ClusterOverviewMetricsReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ClusterOverviewMetricsReply): ClusterOverviewMetricsReply.AsObject;
+  static serializeBinaryToWriter(message: ClusterOverviewMetricsReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ClusterOverviewMetricsReply;
+  static deserializeBinaryFromReader(message: ClusterOverviewMetricsReply, reader: jspb.BinaryReader): ClusterOverviewMetricsReply;
+}
+
+export namespace ClusterOverviewMetricsReply {
+  export type AsObject = {
+    connectionNum: string,
+    topicNum: string,
+    subscribeNum: string,
+    messageInNum: string,
+    messageOutNum: string,
+    messageDropNum: string,
   }
 }
 

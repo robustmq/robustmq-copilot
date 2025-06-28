@@ -194,10 +194,10 @@ export namespace ListTopicRequest {
 }
 
 export class ListTopicReply extends jspb.Message {
-  getTopicsList(): Array<Uint8Array | string>;
-  setTopicsList(value: Array<Uint8Array | string>): ListTopicReply;
-  clearTopicsList(): ListTopicReply;
-  addTopics(value: Uint8Array | string, index?: number): ListTopicReply;
+  getTopic(): Uint8Array | string;
+  getTopic_asU8(): Uint8Array;
+  getTopic_asB64(): string;
+  setTopic(value: Uint8Array | string): ListTopicReply;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): ListTopicReply.AsObject;
@@ -209,7 +209,7 @@ export class ListTopicReply extends jspb.Message {
 
 export namespace ListTopicReply {
   export type AsObject = {
-    topicsList: Array<Uint8Array | string>,
+    topic: Uint8Array | string,
   }
 }
 

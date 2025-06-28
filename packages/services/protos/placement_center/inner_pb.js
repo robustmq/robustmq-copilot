@@ -1653,12 +1653,7 @@ proto.placement.center.inner.RegisterNodeRequest.prototype.toObject = function(o
  */
 proto.placement.center.inner.RegisterNodeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-clusterType: jspb.Message.getFieldWithDefault(msg, 1, 0),
-clusterName: jspb.Message.getFieldWithDefault(msg, 2, ""),
-nodeIp: jspb.Message.getFieldWithDefault(msg, 3, ""),
-nodeId: jspb.Message.getFieldWithDefault(msg, 4, 0),
-nodeInnerAddr: jspb.Message.getFieldWithDefault(msg, 5, ""),
-extendInfo: jspb.Message.getFieldWithDefault(msg, 6, "")
+node: msg.getNode_asB64()
   };
 
   if (includeInstance) {
@@ -1696,28 +1691,8 @@ proto.placement.center.inner.RegisterNodeRequest.deserializeBinaryFromReader = f
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {!proto.placement.center.inner.ClusterType} */ (reader.readEnum());
-      msg.setClusterType(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setClusterName(value);
-      break;
-    case 3:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setNodeIp(value);
-      break;
-    case 4:
-      var value = /** @type {number} */ (reader.readUint64());
-      msg.setNodeId(value);
-      break;
-    case 5:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setNodeInnerAddr(value);
-      break;
-    case 6:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setExtendInfo(value);
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setNode(value);
       break;
     default:
       reader.skipField();
@@ -1748,156 +1723,55 @@ proto.placement.center.inner.RegisterNodeRequest.prototype.serializeBinary = fun
  */
 proto.placement.center.inner.RegisterNodeRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getClusterType();
-  if (f !== 0.0) {
-    writer.writeEnum(
+  f = message.getNode_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
       1,
       f
     );
   }
-  f = message.getClusterName();
-  if (f.length > 0) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-  f = message.getNodeIp();
-  if (f.length > 0) {
-    writer.writeString(
-      3,
-      f
-    );
-  }
-  f = message.getNodeId();
-  if (f !== 0) {
-    writer.writeUint64(
-      4,
-      f
-    );
-  }
-  f = message.getNodeInnerAddr();
-  if (f.length > 0) {
-    writer.writeString(
-      5,
-      f
-    );
-  }
-  f = message.getExtendInfo();
-  if (f.length > 0) {
-    writer.writeString(
-      6,
-      f
-    );
-  }
 };
 
 
 /**
- * optional ClusterType cluster_type = 1;
- * @return {!proto.placement.center.inner.ClusterType}
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getClusterType = function() {
-  return /** @type {!proto.placement.center.inner.ClusterType} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
-};
-
-
-/**
- * @param {!proto.placement.center.inner.ClusterType} value
- * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setClusterType = function(value) {
-  return jspb.Message.setProto3EnumField(this, 1, value);
-};
-
-
-/**
- * optional string cluster_name = 2;
+ * optional bytes node = 1;
  * @return {string}
  */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getClusterName = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+proto.placement.center.inner.RegisterNodeRequest.prototype.getNode = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
 /**
- * @param {string} value
- * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setClusterName = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
-};
-
-
-/**
- * optional string node_ip = 3;
+ * optional bytes node = 1;
+ * This is a type-conversion wrapper around `getNode()`
  * @return {string}
  */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getNodeIp = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+proto.placement.center.inner.RegisterNodeRequest.prototype.getNode_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getNode()));
 };
 
 
 /**
- * @param {string} value
+ * optional bytes node = 1;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getNode()`
+ * @return {!Uint8Array}
+ */
+proto.placement.center.inner.RegisterNodeRequest.prototype.getNode_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getNode()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
  * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
  */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setNodeIp = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
-};
-
-
-/**
- * optional uint64 node_id = 4;
- * @return {number}
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getNodeId = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
-};
-
-
-/**
- * @param {number} value
- * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setNodeId = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
-};
-
-
-/**
- * optional string node_inner_addr = 5;
- * @return {string}
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getNodeInnerAddr = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setNodeInnerAddr = function(value) {
-  return jspb.Message.setProto3StringField(this, 5, value);
-};
-
-
-/**
- * optional string extend_info = 6;
- * @return {string}
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.getExtendInfo = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.placement.center.inner.RegisterNodeRequest} returns this
- */
-proto.placement.center.inner.RegisterNodeRequest.prototype.setExtendInfo = function(value) {
-  return jspb.Message.setProto3StringField(this, 6, value);
+proto.placement.center.inner.RegisterNodeRequest.prototype.setNode = function(value) {
+  return jspb.Message.setProto3BytesField(this, 1, value);
 };
 
 

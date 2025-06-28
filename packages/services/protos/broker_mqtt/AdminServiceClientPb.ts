@@ -168,6 +168,49 @@ export class MQTTBrokerAdminServiceClient {
     this.methodDescriptorcluster_status);
   }
 
+  methodDescriptorcluster_overview_metrics = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/cluster_overview_metrics',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ClusterOverviewMetricsRequest,
+    admin_pb.ClusterOverviewMetricsReply,
+    (request: admin_pb.ClusterOverviewMetricsRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ClusterOverviewMetricsReply.deserializeBinary
+  );
+
+  cluster_overview_metrics(
+    request: admin_pb.ClusterOverviewMetricsRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ClusterOverviewMetricsReply>;
+
+  cluster_overview_metrics(
+    request: admin_pb.ClusterOverviewMetricsRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ClusterOverviewMetricsReply) => void): grpcWeb.ClientReadableStream<admin_pb.ClusterOverviewMetricsReply>;
+
+  cluster_overview_metrics(
+    request: admin_pb.ClusterOverviewMetricsRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ClusterOverviewMetricsReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/cluster_overview_metrics',
+        request,
+        metadata || {},
+        this.methodDescriptorcluster_overview_metrics,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/cluster_overview_metrics',
+    request,
+    metadata || {},
+    this.methodDescriptorcluster_overview_metrics);
+  }
+
   methodDescriptormqtt_broker_create_user = new grpcWeb.MethodDescriptor(
     '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_create_user',
     grpcWeb.MethodType.UNARY,

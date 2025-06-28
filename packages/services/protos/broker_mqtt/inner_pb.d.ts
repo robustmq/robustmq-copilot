@@ -159,4 +159,5 @@ export enum MQTTBrokerUpdateCacheResourceType {
   SCHEMA = 5,
   SCHEMARESOURCE = 6,
   CLUSTERRESOURCECONFIG = 7,
+  NODE = 8,
 }
