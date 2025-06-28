@@ -21,7 +21,7 @@ export const getQueryOptions = (query?: QueryOption): QueryOptions => {
       const filterList = filers.map(filter => {
         const f = new Filter();
         f.setField(filter.field);
-        f.setValuesList(filter.values);
+        f.setValuesList(filter.valueList);
         f.setExactMatch(filter.exactMatch ? 0 : 1);
         return f;
       });

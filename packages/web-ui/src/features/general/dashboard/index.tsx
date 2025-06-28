@@ -1,16 +1,82 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Header } from '@/components/layout/header';
 import { Main } from '@/components/layout/main';
 import { TopNav } from '@/components/layout/top-nav';
 import { ProfileDropdown } from '@/components/profile-dropdown';
 import { Search } from '@/components/search';
 import { ThemeSwitch } from '@/components/theme-switch';
-import { Overview } from './components/overview';
-import { RecentSales } from './components/recent-sales';
+import { SimpleLineChart } from './components/chart';
+import { HeaderCard } from './components/card';
+import {
+  Network,
+  Hash,
+  Bell,
+  Download,
+  Upload,
+  User,
+  Users,
+  Crown,
+  RefreshCw,
+  Settings,
+  Activity,
+  Monitor,
+} from 'lucide-react';
+import { getOverviewMetricsData, getOverviewStatusData } from '@/services/mqtt';
+import { useQuery } from '@tanstack/react-query';
+import { SimpleTable } from './components/table';
+
+const BrokerNodeColumns = [
+  { key: 'nodeId', label: 'Node ID' },
+  { key: 'nodeIp', label: 'Node IP' },
+  { key: 'nodeInnerAddr', label: 'Node Inner Addr' },
+  { key: 'startTime', label: 'Start Time' },
+  { key: 'registerTime', label: 'Register Time' },
+];
+
+const PlacementCenterColumns = [
+  { key: 'nodeId', label: 'Node ID' },
+  { key: 'nodeIp', label: 'Node IP' },
+];
 
 export default function Dashboard() {
+  const { data } = useQuery({
+    queryKey: ['overview-metrics'],
+    queryFn: getOverviewMetricsData,
+    initialData: {
+      connectionNum: [],
+      topicNum: [],
+      subscribeNum: [],
+      messageInNum: [],
+      messageOutNum: [],
+      messageDropNum: [],
+    },
+  });
+
+  const { data: statusData } = useQuery({
+    queryKey: ['overview-status'],
+    queryFn: getOverviewStatusData,
+    initialData: {
+      clusterName: '',
+      messageInRate: 0,
+      messageOutRate: 0,
+      connectionNum: 0,
+      sessionNum: 0,
+      topicNum: 0,
+      nodesList: [],
+      tcpConnectionNum: 0,
+      tlsConnectionNum: 0,
+      websocketConnectionNum: 0,
+      quicConnectionNum: 0,
+      subscribeNum: 0,
+      exclusiveSubscribeNum: 0,
+      shareSubscribeLeaderNum: 0,
+      shareSubscribeResubNum: 0,
+      exclusiveSubscribeThreadNum: 0,
+      shareSubscribeLeaderThreadNum: 0,
+      shareSubscribeFollowerThreadNum: 0,
+    },
+  });
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -27,164 +93,102 @@ export default function Dashboard() {
       <Main>
         <div className="mb-2 flex items-center justify-between space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-          <div className="flex items-center space-x-2">
-            <Button>Download</Button>
+        </div>
+        <div className="mt-4 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+            <HeaderCard
+              title="MessageIn Rate"
+              value={statusData.messageInRate}
+              icon={<Download className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="MessageOut Rate"
+              value={statusData.messageOutRate}
+              icon={<Upload className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Connection"
+              value={statusData.connectionNum}
+              icon={<Network className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Session"
+              value={statusData.sessionNum}
+              icon={<Monitor className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Topic"
+              value={statusData.topicNum}
+              icon={<Hash className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Subscription"
+              value={statusData.subscribeNum}
+              icon={<Bell className="h-4 w-4 text-muted-foreground" />}
+            />
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+            <HeaderCard
+              title="Exclusive Subscribe"
+              value={statusData.exclusiveSubscribeNum}
+              icon={<User className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Share Subscribe Leader"
+              value={statusData.shareSubscribeLeaderNum}
+              icon={<Crown className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Share Subscribe Resub"
+              value={statusData.shareSubscribeResubNum}
+              icon={<RefreshCw className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Exclusive Subscribe Thread"
+              value={statusData.exclusiveSubscribeThreadNum}
+              icon={<Settings className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Share Subscribe Leader Thread"
+              value={statusData.shareSubscribeLeaderThreadNum}
+              icon={<Activity className="h-4 w-4 text-muted-foreground" />}
+            />
+            <HeaderCard
+              title="Share Subscribe Follower Thread"
+              value={statusData.shareSubscribeFollowerThreadNum}
+              icon={<Users className="h-4 w-4 text-muted-foreground" />}
+            />
+          </div>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
+            <Card className="col-span-1 lg:col-span-4">
+              <CardHeader>
+                <CardTitle>Broker Nodes</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <SimpleTable columns={BrokerNodeColumns} data={statusData?.nodesList || []} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-1 lg:col-span-3">
+              <CardHeader>
+                <CardTitle>Placement Center</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SimpleTable columns={PlacementCenterColumns} data={[]} />
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <SimpleLineChart title="MessageIn Rate" data={data?.messageInNum || []} />
+            <SimpleLineChart title="MessageOut Rate" data={data?.messageOutNum || []} />
+            <SimpleLineChart title="MessageDrop" data={data?.messageDropNum || []} />
+            <SimpleLineChart title="Connection" data={data?.connectionNum || []} />
+            <SimpleLineChart title="Topic" data={data?.topicNum || []} />
+            <SimpleLineChart title="Subscription" data={data?.subscribeNum || []} />
           </div>
         </div>
-        <Tabs orientation="vertical" defaultValue="overview" className="space-y-4">
-          <div className="w-full overflow-x-auto pb-2">
-            <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="analytics" disabled>
-                Analytics
-              </TabsTrigger>
-              <TabsTrigger value="reports" disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value="notifications" disabled>
-                Notifications
-              </TabsTrigger>
-            </TabsList>
-          </div>
-          <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">$45,231.89</div>
-                  <p className="text-xs text-muted-foreground">+20.1% from last month</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+2350</div>
-                  <p className="text-xs text-muted-foreground">+180.1% from last month</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Sales</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                    <path d="M2 10h20" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+12,234</div>
-                  <p className="text-xs text-muted-foreground">+19% from last month</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Active Now</CardTitle>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    className="h-4 w-4 text-muted-foreground"
-                  >
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">+573</div>
-                  <p className="text-xs text-muted-foreground">+201 since last hour</p>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-              <Card className="col-span-1 lg:col-span-4">
-                <CardHeader>
-                  <CardTitle>Overview</CardTitle>
-                </CardHeader>
-                <CardContent className="pl-2">
-                  <Overview />
-                </CardContent>
-              </Card>
-              <Card className="col-span-1 lg:col-span-3">
-                <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
-                  <CardDescription>You made 265 sales this month.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RecentSales />
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
       </Main>
     </>
   );
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-];
