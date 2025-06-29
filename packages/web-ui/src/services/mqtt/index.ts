@@ -20,9 +20,17 @@ export interface OverviewMetricsData {
   messageDropNum: OverviewMetricsDataItem[];
 }
 
-export const getOverviewMetricsData = async (): Promise<OverviewMetricsData> => {
+export interface OverviewMetricsDataParam {
+  startTime: number;
+  endTime: number;
+}
+export const getOverviewMetricsData = async (param: OverviewMetricsDataParam): Promise<OverviewMetricsData> => {
+  const request = new mqttAdminApi.ClusterOverviewMetricsRequest();
+  request.setStartTime(param.startTime);
+  request.setEndTime(param.endTime);
+
   return new Promise((s, j) => {
-    service.cluster_overview_metrics(new mqttAdminApi.ClusterOverviewMetricsRequest(), {}, (err, response) => {
+    service.cluster_overview_metrics(request, {}, (err, response) => {
       if (err) {
         j(err);
         return;

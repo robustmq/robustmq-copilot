@@ -42,7 +42,13 @@ const PlacementCenterColumns = [
 export default function Dashboard() {
   const { data } = useQuery({
     queryKey: ['overview-metrics'],
-    queryFn: getOverviewMetricsData,
+    queryFn: () => {
+      const now = Math.floor(Date.now() / 1000);
+      return getOverviewMetricsData({
+        startTime: now - 60 * 60,
+        endTime: now,
+      });
+    },
     initialData: {
       connectionNum: [],
       topicNum: [],
@@ -81,8 +87,6 @@ export default function Dashboard() {
   const placementCenterNodes = useMemo(() => {
     return Object.values(statusData?.placementStatus?.membership_config?.membership?.nodes || {});
   }, [statusData]);
-
-  console.log(placementCenterNodes);
 
   return (
     <>

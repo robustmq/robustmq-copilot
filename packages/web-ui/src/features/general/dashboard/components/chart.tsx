@@ -68,7 +68,7 @@ export function SimpleLineChart({ title = '', data }: SimpleLineChartProps) {
             />
             <Line
               type="monotone"
-              dataKey="count"
+              dataKey="value"
               stroke="var(--primary)"
               strokeWidth={2}
               connectNulls={true}
