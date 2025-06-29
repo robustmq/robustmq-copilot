@@ -24,6 +24,7 @@ import {
 import { getOverviewMetricsData, getOverviewStatusData } from '@/services/mqtt';
 import { useQuery } from '@tanstack/react-query';
 import { SimpleTable } from './components/table';
+import { useMemo } from 'react';
 
 const BrokerNodeColumns = [
   { key: 'nodeId', label: 'Node ID' },
@@ -34,8 +35,8 @@ const BrokerNodeColumns = [
 ];
 
 const PlacementCenterColumns = [
-  { key: 'nodeId', label: 'Node ID' },
-  { key: 'nodeIp', label: 'Node IP' },
+  { key: 'node_id', label: 'Node ID' },
+  { key: 'rpc_addr', label: 'Node IP' },
 ];
 
 export default function Dashboard() {
@@ -77,6 +78,12 @@ export default function Dashboard() {
     },
   });
 
+  const placementCenterNodes = useMemo(() => {
+    return Object.values(statusData?.placementStatus?.membership_config?.membership?.nodes || {});
+  }, [statusData]);
+
+  console.log(placementCenterNodes);
+
   return (
     <>
       {/* ===== Top Heading ===== */}
@@ -95,7 +102,7 @@ export default function Dashboard() {
           <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
         </div>
         <div className="mt-4 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <HeaderCard
               title="MessageIn Rate"
               value={statusData.messageInRate}
@@ -126,9 +133,6 @@ export default function Dashboard() {
               value={statusData.subscribeNum}
               icon={<Bell className="h-4 w-4 text-muted-foreground" />}
             />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             <HeaderCard
               title="Exclusive Subscribe"
               value={statusData.exclusiveSubscribeNum}
@@ -160,6 +164,7 @@ export default function Dashboard() {
               icon={<Users className="h-4 w-4 text-muted-foreground" />}
             />
           </div>
+
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
             <Card className="col-span-1 lg:col-span-4">
               <CardHeader>
@@ -174,7 +179,7 @@ export default function Dashboard() {
                 <CardTitle>Placement Center</CardTitle>
               </CardHeader>
               <CardContent>
-                <SimpleTable columns={PlacementCenterColumns} data={[]} />
+                <SimpleTable columns={PlacementCenterColumns} data={placementCenterNodes} />
               </CardContent>
             </Card>
           </div>
