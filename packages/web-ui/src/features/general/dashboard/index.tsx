@@ -103,7 +103,10 @@ export default function Dashboard() {
       {/* ===== Main ===== */}
       <Main>
         <div className="mb-2 flex items-center justify-between space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+            <span className="text-sm text-muted-foreground">Cluster Name: {statusData.clusterName || '-'}</span>
+          </div>
         </div>
         <div className="mt-4 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

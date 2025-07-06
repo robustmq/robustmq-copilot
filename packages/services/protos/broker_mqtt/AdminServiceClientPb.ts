@@ -1673,5 +1673,91 @@ export class MQTTBrokerAdminServiceClient {
     this.methodDescriptormqtt_broker_list_auto_subscribe_rule);
   }
 
+  methodDescriptormqtt_broker_list_subscribe = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_subscribe',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.ListSubscribeRequest,
+    admin_pb.ListSubscribeReply,
+    (request: admin_pb.ListSubscribeRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.ListSubscribeReply.deserializeBinary
+  );
+
+  mqtt_broker_list_subscribe(
+    request: admin_pb.ListSubscribeRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.ListSubscribeReply>;
+
+  mqtt_broker_list_subscribe(
+    request: admin_pb.ListSubscribeRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSubscribeReply) => void): grpcWeb.ClientReadableStream<admin_pb.ListSubscribeReply>;
+
+  mqtt_broker_list_subscribe(
+    request: admin_pb.ListSubscribeRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.ListSubscribeReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_subscribe',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_list_subscribe,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_list_subscribe',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_list_subscribe);
+  }
+
+  methodDescriptormqtt_broker_subscribe_detail = new grpcWeb.MethodDescriptor(
+    '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_subscribe_detail',
+    grpcWeb.MethodType.UNARY,
+    admin_pb.SubscribeDetailRequest,
+    admin_pb.SubscribeDetailReply,
+    (request: admin_pb.SubscribeDetailRequest) => {
+      return request.serializeBinary();
+    },
+    admin_pb.SubscribeDetailReply.deserializeBinary
+  );
+
+  mqtt_broker_subscribe_detail(
+    request: admin_pb.SubscribeDetailRequest,
+    metadata?: grpcWeb.Metadata | null): Promise<admin_pb.SubscribeDetailReply>;
+
+  mqtt_broker_subscribe_detail(
+    request: admin_pb.SubscribeDetailRequest,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: admin_pb.SubscribeDetailReply) => void): grpcWeb.ClientReadableStream<admin_pb.SubscribeDetailReply>;
+
+  mqtt_broker_subscribe_detail(
+    request: admin_pb.SubscribeDetailRequest,
+    metadata?: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: admin_pb.SubscribeDetailReply) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_subscribe_detail',
+        request,
+        metadata || {},
+        this.methodDescriptormqtt_broker_subscribe_detail,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/broker.mqtt.admin.MQTTBrokerAdminService/mqtt_broker_subscribe_detail',
+    request,
+    metadata || {},
+    this.methodDescriptormqtt_broker_subscribe_detail);
+  }
+
 }
 

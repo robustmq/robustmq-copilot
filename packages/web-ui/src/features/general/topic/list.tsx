@@ -1,66 +1,40 @@
 import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
-import { getSessionList } from '@/services/mqtt';
-import { format } from 'date-fns';
+import { getTopicList } from '@/services/mqtt';
 
 export default function TopicList() {
   const columns: ColumnDef<any>[] = [
     {
-      id: 'clientId',
-      accessorKey: 'clientId',
-      header: 'Client ID',
+      id: 'Topic ID',
+      accessorKey: 'topicId',
+      header: 'Topic ID',
     },
     {
-      accessorKey: 'connectionId',
-      header: 'Connection ID',
-      cell: ({ row }) => row.original.connectionId || '-',
+      accessorKey: 'clusterId',
+      header: 'Cluster ID',
+      cell: ({ row }) => row.original.clusterId || '-',
     },
     {
-      accessorKey: 'brokerId',
-      header: 'Broker ID',
-      cell: ({ row }) => row.original.brokerId || '-',
+      accessorKey: 'topicName',
+      header: 'Topic Name',
+      cell: ({ row }) => row.original.topicName || '-',
     },
     {
-      accessorKey: 'sessionExpiry',
-      header: 'Session Expiry (s)',
-      cell: ({ row }) => row.original.sessionExpiry || '-',
-    },
-    {
-      accessorKey: 'isContainLastWill',
-      header: 'Has Last Will',
-      cell: ({ row }) => (row.original.isContainLastWill ? 'Yes' : 'No'),
-    },
-    {
-      accessorKey: 'lastWillDelayInterval',
-      header: 'Last Will Delay (s)',
-      cell: ({ row }) => row.original.lastWillDelayInterval || '-',
-    },
-    {
-      accessorKey: 'createTime',
-      header: 'Created At',
-      cell: ({ row }) => (row.original.createTime ? format(row.original.createTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
-    },
-    {
-      accessorKey: 'reconnectTime',
-      header: 'Reconnected At',
-      cell: ({ row }) => (row.original.reconnectTime ? format(row.original.reconnectTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
-    },
-    {
-      accessorKey: 'distinctTime',
-      header: 'Disconnect Time',
-      cell: ({ row }) => (row.original.distinctTime ? format(row.original.distinctTime, 'yyyy-MM-dd HH:mm:ss') : '-'),
+      accessorKey: 'retainMessage',
+      header: 'Has Retain Message',
+      cell: ({ row }) => (row.original.retainMessage ? 'Yes' : 'No'),
     },
   ];
 
   const fetchDataFn = async (pageIndex: number, pageSize: number) => {
-    const ret = await getSessionList({
+    const ret = await getTopicList({
       pagination: {
         offset: pageIndex * pageSize,
         limit: pageSize,
       },
     });
     return {
-      data: ret.sessionsList,
+      data: ret.topicsList,
       totalCount: ret.totalCount,
     };
   };

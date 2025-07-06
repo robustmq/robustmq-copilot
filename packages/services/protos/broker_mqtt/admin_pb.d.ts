@@ -326,11 +326,11 @@ export class BrokerNodeRaw extends jspb.Message {
   getNodeInnerAddr(): string;
   setNodeInnerAddr(value: string): BrokerNodeRaw;
 
-  getStartTime(): number;
-  setStartTime(value: number): BrokerNodeRaw;
+  getStartTime(): string;
+  setStartTime(value: string): BrokerNodeRaw;
 
-  getRegisterTime(): number;
-  setRegisterTime(value: number): BrokerNodeRaw;
+  getRegisterTime(): string;
+  setRegisterTime(value: string): BrokerNodeRaw;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): BrokerNodeRaw.AsObject;
@@ -348,8 +348,8 @@ export namespace BrokerNodeRaw {
     nodeId: number,
     nodeIp: string,
     nodeInnerAddr: string,
-    startTime: number,
-    registerTime: number,
+    startTime: string,
+    registerTime: string,
   }
 }
 
@@ -2251,6 +2251,151 @@ export class DeleteAutoSubscribeRuleReply extends jspb.Message {
 
 export namespace DeleteAutoSubscribeRuleReply {
   export type AsObject = {
+  }
+}
+
+export class ListSubscribeRequest extends jspb.Message {
+  getOptions(): QueryOptions | undefined;
+  setOptions(value?: QueryOptions): ListSubscribeRequest;
+  hasOptions(): boolean;
+  clearOptions(): ListSubscribeRequest;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSubscribeRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSubscribeRequest): ListSubscribeRequest.AsObject;
+  static serializeBinaryToWriter(message: ListSubscribeRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSubscribeRequest;
+  static deserializeBinaryFromReader(message: ListSubscribeRequest, reader: jspb.BinaryReader): ListSubscribeRequest;
+}
+
+export namespace ListSubscribeRequest {
+  export type AsObject = {
+    options?: QueryOptions.AsObject,
+  }
+
+  export enum OptionsCase { 
+    _OPTIONS_NOT_SET = 0,
+    OPTIONS = 1,
+  }
+}
+
+export class ListSubscribeReply extends jspb.Message {
+  getSubscriptionsList(): Array<MqttSubscribeRaw>;
+  setSubscriptionsList(value: Array<MqttSubscribeRaw>): ListSubscribeReply;
+  clearSubscriptionsList(): ListSubscribeReply;
+  addSubscriptions(value?: MqttSubscribeRaw, index?: number): MqttSubscribeRaw;
+
+  getTotalCount(): number;
+  setTotalCount(value: number): ListSubscribeReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): ListSubscribeReply.AsObject;
+  static toObject(includeInstance: boolean, msg: ListSubscribeReply): ListSubscribeReply.AsObject;
+  static serializeBinaryToWriter(message: ListSubscribeReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): ListSubscribeReply;
+  static deserializeBinaryFromReader(message: ListSubscribeReply, reader: jspb.BinaryReader): ListSubscribeReply;
+}
+
+export namespace ListSubscribeReply {
+  export type AsObject = {
+    subscriptionsList: Array<MqttSubscribeRaw.AsObject>,
+    totalCount: number,
+  }
+}
+
+export class MqttSubscribeRaw extends jspb.Message {
+  getClientId(): string;
+  setClientId(value: string): MqttSubscribeRaw;
+
+  getPath(): string;
+  setPath(value: string): MqttSubscribeRaw;
+
+  getBrokerId(): number;
+  setBrokerId(value: number): MqttSubscribeRaw;
+
+  getProtocol(): string;
+  setProtocol(value: string): MqttSubscribeRaw;
+
+  getQos(): string;
+  setQos(value: string): MqttSubscribeRaw;
+
+  getNoLocal(): number;
+  setNoLocal(value: number): MqttSubscribeRaw;
+
+  getPreserveRetain(): number;
+  setPreserveRetain(value: number): MqttSubscribeRaw;
+
+  getRetainHandling(): string;
+  setRetainHandling(value: string): MqttSubscribeRaw;
+
+  getCreateTime(): string;
+  setCreateTime(value: string): MqttSubscribeRaw;
+
+  getPkId(): number;
+  setPkId(value: number): MqttSubscribeRaw;
+
+  getProperties(): string;
+  setProperties(value: string): MqttSubscribeRaw;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): MqttSubscribeRaw.AsObject;
+  static toObject(includeInstance: boolean, msg: MqttSubscribeRaw): MqttSubscribeRaw.AsObject;
+  static serializeBinaryToWriter(message: MqttSubscribeRaw, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): MqttSubscribeRaw;
+  static deserializeBinaryFromReader(message: MqttSubscribeRaw, reader: jspb.BinaryReader): MqttSubscribeRaw;
+}
+
+export namespace MqttSubscribeRaw {
+  export type AsObject = {
+    clientId: string,
+    path: string,
+    brokerId: number,
+    protocol: string,
+    qos: string,
+    noLocal: number,
+    preserveRetain: number,
+    retainHandling: string,
+    createTime: string,
+    pkId: number,
+    properties: string,
+  }
+}
+
+export class SubscribeDetailRequest extends jspb.Message {
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeDetailRequest.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeDetailRequest): SubscribeDetailRequest.AsObject;
+  static serializeBinaryToWriter(message: SubscribeDetailRequest, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeDetailRequest;
+  static deserializeBinaryFromReader(message: SubscribeDetailRequest, reader: jspb.BinaryReader): SubscribeDetailRequest;
+}
+
+export namespace SubscribeDetailRequest {
+  export type AsObject = {
+  }
+}
+
+export class SubscribeDetailReply extends jspb.Message {
+  getSubDetail(): string;
+  setSubDetail(value: string): SubscribeDetailReply;
+
+  getThreadDetailList(): Array<string>;
+  setThreadDetailList(value: Array<string>): SubscribeDetailReply;
+  clearThreadDetailList(): SubscribeDetailReply;
+  addThreadDetail(value: string, index?: number): SubscribeDetailReply;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): SubscribeDetailReply.AsObject;
+  static toObject(includeInstance: boolean, msg: SubscribeDetailReply): SubscribeDetailReply.AsObject;
+  static serializeBinaryToWriter(message: SubscribeDetailReply, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): SubscribeDetailReply;
+  static deserializeBinaryFromReader(message: SubscribeDetailReply, reader: jspb.BinaryReader): SubscribeDetailReply;
+}
+
+export namespace SubscribeDetailReply {
+  export type AsObject = {
+    subDetail: string,
+    threadDetailList: Array<string>,
   }
 }
 
