@@ -5,9 +5,9 @@ import { getUserList } from '@/services/mqtt';
 export default function UserList() {
   const columns: ColumnDef<any>[] = [
     {
-      id: 'userId',
-      accessorKey: 'userId',
-      header: 'User ID',
+      id: 'username',
+      accessorKey: 'username',
+      header: 'Username',
     },
     {
       accessorKey: 'isSuperUser',
