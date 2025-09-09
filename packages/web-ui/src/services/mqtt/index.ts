@@ -1,3 +1,4 @@
+import { requestApi } from '@/utils/requestApi';
 import { MQTTBrokerAdminServiceClient } from '@mbpb/AdminServiceClientPb';
 import * as mqttAdminApi from '@mbpb/admin_pb';
 import { QueryOption } from '../common';
@@ -21,32 +22,23 @@ export interface OverviewMetricsData {
 }
 
 export interface OverviewMetricsDataParam {
-  startTime: number;
-  endTime: number;
+  start_time: number;
+  end_time: number;
 }
-export const getOverviewMetricsData = async (param: OverviewMetricsDataParam): Promise<OverviewMetricsData> => {
-  const request = new mqttAdminApi.ClusterOverviewMetricsRequest();
-  request.setStartTime(param.startTime);
-  request.setEndTime(param.endTime);
 
-  return new Promise((s, j) => {
-    service.cluster_overview_metrics(request, {}, (err, response) => {
-      if (err) {
-        j(err);
-        return;
-      }
-      const originData = response.toObject();
-      const data: OverviewMetricsData = {
-        connectionNum: JSON.parse(originData.connectionNum),
-        topicNum: JSON.parse(originData.topicNum),
-        subscribeNum: JSON.parse(originData.subscribeNum),
-        messageInNum: JSON.parse(originData.messageInNum),
-        messageOutNum: JSON.parse(originData.messageOutNum),
-        messageDropNum: JSON.parse(originData.messageDropNum),
-      };
-      s(data);
-    });
-  });
+export const getOverviewMetricsData = async (param: OverviewMetricsDataParam): Promise<OverviewMetricsData> => {
+  const response = await requestApi('/mqtt/overview/metrics', param);
+
+  const data: OverviewMetricsData = {
+    connectionNum: JSON.parse(response.connection_num),
+    topicNum: JSON.parse(response.topic_num),
+    subscribeNum: JSON.parse(response.subscribe_num),
+    messageInNum: JSON.parse(response.message_in_num),
+    messageOutNum: JSON.parse(response.message_out_num),
+    messageDropNum: JSON.parse(response.message_drop_num),
+  };
+
+  return data;
 };
 
 export interface BrokerNodeRaw {
@@ -82,38 +74,30 @@ export interface OverviewStatusData {
 }
 
 export const getOverviewStatusData = async (): Promise<OverviewStatusData> => {
-  return new Promise((s, j) => {
-    service.cluster_status(new mqttAdminApi.ClusterStatusRequest(), {}, (err, response) => {
-      if (err) {
-        j(err);
-        return;
-      }
-      const originData = response.toObject();
-      const placementStatus = originData.placementStatus ? JSON.parse(originData.placementStatus) : undefined;
-      const data: OverviewStatusData = {
-        clusterName: originData.clusterName,
-        messageInRate: originData.messageInRate,
-        messageOutRate: originData.messageOutRate,
-        connectionNum: originData.connectionNum,
-        sessionNum: originData.sessionNum,
-        topicNum: originData.topicNum,
-        nodesList: originData.nodesList,
-        placementStatus,
-        tcpConnectionNum: originData.tcpConnectionNum,
-        tlsConnectionNum: originData.tlsConnectionNum,
-        websocketConnectionNum: originData.websocketConnectionNum,
-        quicConnectionNum: originData.quicConnectionNum,
-        subscribeNum: originData.subscribeNum,
-        exclusiveSubscribeNum: originData.exclusiveSubscribeNum,
-        shareSubscribeLeaderNum: originData.shareSubscribeLeaderNum,
-        shareSubscribeResubNum: originData.shareSubscribeResubNum,
-        exclusiveSubscribeThreadNum: originData.exclusiveSubscribeThreadNum,
-        shareSubscribeLeaderThreadNum: originData.shareSubscribeLeaderThreadNum,
-        shareSubscribeFollowerThreadNum: originData.shareSubscribeFollowerThreadNum,
-      };
-      s(data);
-    });
-  });
+  const response = await requestApi('/mqtt/overview');
+  const data: OverviewStatusData = {
+    clusterName: response.cluster_name,
+    messageInRate: response.message_in_rate,
+    messageOutRate: response.message_out_rate,
+    connectionNum: response.connection_num,
+    sessionNum: response.session_num,
+    topicNum: response.topic_num,
+    nodesList: response.nodes,
+    placementStatus: response.placement_status ? JSON.parse(response.placement_status) : undefined,
+    tcpConnectionNum: response.tcp_connection_num,
+    tlsConnectionNum: response.tls_connection_num,
+    websocketConnectionNum: response.websocket_connection_num,
+    quicConnectionNum: response.quic_connection_num,
+    subscribeNum: response.subscribe_num,
+    exclusiveSubscribeNum: response.exclusive_subscribe_num,
+    shareSubscribeLeaderNum: response.share_subscribe_leader_num,
+    shareSubscribeResubNum: response.share_subscribe_resub_num,
+    exclusiveSubscribeThreadNum: response.exclusive_subscribe_thread_num,
+    shareSubscribeLeaderThreadNum: response.share_subscribe_leader_thread_num,
+    shareSubscribeFollowerThreadNum: response.share_subscribe_follower_thread_num,
+  };
+
+  return data;
 };
 
 /** General APIs */
@@ -179,20 +163,6 @@ export const getSubscribeList = async (query?: QueryOption): Promise<mqttAdminAp
 };
 
 // -------- ACL APIs --------
-export const getUserList = async (query?: QueryOption): Promise<mqttAdminApi.ListUserReply.AsObject> => {
-  return new Promise((s, j) => {
-    const request = new mqttAdminApi.ListUserRequest();
-    request.setOptions(getQueryOptions(query));
-
-    service.mqtt_broker_list_user(request, {}, (err, response) => {
-      if (err) {
-        j(err);
-        return;
-      }
-      s(response.toObject());
-    });
-  });
-};
 
 export const getAclList = async (query?: QueryOption): Promise<mqttAdminApi.ListAclReply.AsObject> => {
   return new Promise((s, j) => {
@@ -300,4 +270,23 @@ export const getTopicRewriteRuleList = async (
       s(response.toObject());
     });
   });
+};
+
+// -------- User APIs --------
+export interface UserRaw {
+  username: string;
+  isSuperuser: boolean;
+}
+
+export const getUserList = async (
+  query?: QueryOption,
+): Promise<{
+  usersList: UserRaw[];
+  totalCount: number;
+}> => {
+  const response = await requestApi('/mqtt/user/list', query);
+  return {
+    usersList: response.data,
+    totalCount: response.total_count,
+  };
 };

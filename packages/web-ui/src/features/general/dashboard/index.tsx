@@ -45,8 +45,8 @@ export default function Dashboard() {
     queryFn: () => {
       const now = Math.floor(Date.now() / 1000);
       return getOverviewMetricsData({
-        startTime: now - 60 * 60,
-        endTime: now,
+        start_time: now - 60 * 60,
+        end_time: now,
       });
     },
     initialData: {
