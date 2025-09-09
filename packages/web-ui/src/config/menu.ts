@@ -30,7 +30,7 @@ export const sidebarData: SidebarData = {
     {
       items: [
         {
-          title: 'Cluster Overview',
+          title: 'Overview',
           url: '/',
           icon: LayoutDashboard,
         },
@@ -55,9 +55,14 @@ export const sidebarData: SidebarData = {
           icon: ListTodo,
         },
         {
-          title: 'Subscription Management',
+          title: 'Subscribe',
           url: '/general/subscribe-manager',
           icon: Bell,
+        },
+        {
+          title: 'Delayed Message',
+          url: '/advanced/delayed-message',
+          icon: Timer,
         },
       ],
     },
@@ -65,17 +70,17 @@ export const sidebarData: SidebarData = {
       title: 'Access Control',
       items: [
         {
-          title: 'User Management',
+          title: 'User',
           url: '/acl/user-management',
           icon: Users,
         },
         {
-          title: 'ACL Management',
+          title: 'ACL',
           url: '/acl/acl-management',
           icon: Shield,
         },
         {
-          title: 'Blacklist Management',
+          title: 'Blacklist',
           url: '/acl/blacklist-management',
           icon: UserX,
         },
@@ -93,21 +98,6 @@ export const sidebarData: SidebarData = {
           title: 'Schema',
           url: '/data-integration/schema',
           icon: Database,
-        },
-      ],
-    },
-    {
-      title: 'Monitoring',
-      items: [
-        {
-          title: 'Cluster',
-          url: '/monitoring/cluster',
-          icon: BarChart2,
-        },
-        {
-          title: 'Topic',
-          url: '/monitoring/topic',
-          icon: LineChart,
         },
       ],
     },
@@ -130,23 +120,29 @@ export const sidebarData: SidebarData = {
           icon: FileEdit,
         },
         {
-          title: 'Delayed Message',
-          url: '/advanced/delayed-message',
-          icon: Timer,
-        },
-        {
           title: 'Connection Jitter',
           url: '/advanced/connection-jitter',
           icon: Activity,
         },
+        {
+          title: 'System Alarm',
+          url: '/advanced/connection-jitter',
+          icon: Timer,
+        },
       ],
     },
     {
+      title: 'Setting',
       items: [
         {
-          title: 'Setting',
-          url: '/system-setting',
-          icon: Settings,
+          title: 'Configuration',
+          url: '/advanced/connection-jitter',
+          icon: Timer,
+        },
+        {
+          title: 'Audit Log',
+          url: '/advanced/connection-jitter',
+          icon: Timer,
         },
       ],
     },

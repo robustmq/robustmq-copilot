@@ -109,6 +109,25 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="mt-4 space-y-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
+            <Card className="col-span-1 lg:col-span-3">
+              <CardHeader>
+                <CardTitle>Meta Service</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SimpleTable columns={PlacementCenterColumns} data={placementCenterNodes} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-1 lg:col-span-4">
+              <CardHeader>
+                <CardTitle>Broker Nodes</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <SimpleTable columns={BrokerNodeColumns} data={statusData?.nodesList || []} />
+              </CardContent>
+            </Card>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <HeaderCard
               title="MessageIn Rate"
@@ -170,25 +189,6 @@ export default function Dashboard() {
               value={statusData.shareSubscribeFollowerThreadNum}
               icon={<Users className="h-4 w-4 text-muted-foreground" />}
             />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-7">
-            <Card className="col-span-1 lg:col-span-4">
-              <CardHeader>
-                <CardTitle>Broker Nodes</CardTitle>
-              </CardHeader>
-              <CardContent className="pl-2">
-                <SimpleTable columns={BrokerNodeColumns} data={statusData?.nodesList || []} />
-              </CardContent>
-            </Card>
-            <Card className="col-span-1 lg:col-span-3">
-              <CardHeader>
-                <CardTitle>Placement Center</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <SimpleTable columns={PlacementCenterColumns} data={placementCenterNodes} />
-              </CardContent>
-            </Card>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
