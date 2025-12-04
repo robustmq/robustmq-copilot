@@ -1,7 +1,7 @@
+import React from 'react';
 import axios from 'axios';
 import { QueryOption } from '@/services/common/query';
 import { toast } from '@/hooks/use-toast';
-import React from 'react';
 
 // 动态获取 API 基础地址
 // 优先级：环境变量 > 当前页面地址 > 默认fallback
