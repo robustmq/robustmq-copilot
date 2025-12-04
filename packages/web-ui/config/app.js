@@ -27,10 +27,6 @@ const defaultConfig = {
   api: {
     // HTTP API 基础地址，如果设置了则优先使用，否则使用当前页面地址
     baseUrl: null,
-    // gRPC 服务地址，如果设置了则优先使用，否则使用当前页面地址
-    grpcUrl: null,
-    // PlacementCenter gRPC 服务地址，如果设置了则优先使用，否则使用当前页面地址+1228端口
-    placementGrpcUrl: null,
   },
 };
 
