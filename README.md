@@ -184,18 +184,16 @@ robustmq-copilot/
 │   │   ├── config/       # Configuration files
 │   │   └── dist/         # Build output
 │   └── services/         # gRPC service definitions
-├── robustmq-proto/       # Protocol buffer definitions (submodule)
 └── package.json          # Root package configuration
 ```
 
 ### Development Setup
 
-1. Clone the project and initialize submodules:
+1. Clone the project:
 
 ```bash
 git clone <repository-url>
 cd robustmq-copilot
-git submodule update --init --recursive
 ```
 
 2. Install dependencies:
@@ -208,22 +206,6 @@ pnpm install
 
 ```bash
 pnpm ui:dev
-```
-
-### gRPC Interface Updates
-
-When the protocol buffer definitions are updated:
-
-1. Update the submodule:
-
-```bash
-git submodule update --remote
-```
-
-2. Regenerate gRPC code:
-
-```bash
-pnpm gen:grpc
 ```
 
 ### Configuration Development
