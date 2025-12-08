@@ -279,7 +279,6 @@ If builds fail:
 - **UI Components**: Radix UI, Tailwind CSS
 - **Build Tool**: Rsbuild
 - **Package Manager**: pnpm
-- **gRPC**: gRPC-Web for service communication
 - **State Management**: Zustand
 
 ## Contributing

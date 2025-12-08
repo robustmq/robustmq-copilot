@@ -1,4 +1,9 @@
 {
-  "plugins": ["react-perf", "import", "jsdoc", "node", "promise"],
-  "ignorePatterns": ["packages/services/**/*"]
+  "plugins": [
+    "react-perf",
+    "import",
+    "jsdoc",
+    "node",
+    "promise"
+  ]
 }
