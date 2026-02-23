@@ -1108,9 +1108,7 @@ export const getClusterConfig = async (): Promise<ClusterConfig> => {
 
 // -------- Cluster Status APIs --------
 export interface BrokerNode {
-  cluster_name: string;
-  cluster_type: string;
-  extend_info: string;
+  roles: string[];
   extend?: {
     mqtt?: {
       grpc_addr?: string;
@@ -1123,29 +1121,66 @@ export interface BrokerNode {
   };
   node_id: number;
   node_ip: string;
-  node_inner_addr: string;
   grpc_addr: string;
   engine_addr?: string;
-  start_time: string;
-  register_time: string;
-  roles: string[];
+  start_time: number;
+  register_time: number;
   storage_fold?: string[];
-  [key: string]: any;
+}
+
+export interface RaftLeaderId {
+  term: number;
+  node_id: number;
+}
+
+export interface RaftLogId {
+  leader_id: RaftLeaderId;
+  index: number;
+}
+
+export interface RaftMembershipNode {
+  node_id: number;
+  rpc_addr: string;
+}
+
+export interface RaftState {
+  running_state: { Ok: null } | { [key: string]: any };
+  id: number;
+  current_term: number;
+  vote: {
+    leader_id: RaftLeaderId;
+    committed: boolean;
+  };
+  last_log_index: number;
+  last_applied: RaftLogId;
+  snapshot: RaftLogId;
+  purged: RaftLogId;
+  state: string;
+  current_leader: number;
+  millis_since_quorum_ack: number;
+  last_quorum_acked: number;
+  membership_config: {
+    log_id: RaftLogId;
+    membership: {
+      configs: number[][];
+      nodes: Record<string, RaftMembershipNode>;
+    };
+  };
+  heartbeat: Record<string, any>;
+  replication: Record<string, RaftLogId>;
 }
 
 export interface ClusterStatus {
   cluster_name: string;
   version: string;
-  start_time: string;
-  nodes?: any[];
+  start_time: number;
+  nodes: string[];
   broker_node_list: BrokerNode[];
   meta: {
-    replication: {
-      [key: string]: any;
-    };
-    [key: string]: any;
+    offset: RaftState;
+    mqtt: RaftState;
+    meta: RaftState;
   };
-  [key: string]: any;
 }
 
 export const getClusterStatus = async (): Promise<ClusterStatus> => {

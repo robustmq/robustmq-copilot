@@ -53,7 +53,7 @@ export function DataTable<TData, TValue>({
   hideToolBar = false,
   fetchDataFn,
   queryKey,
-  defaultPageSize = 10,
+  defaultPageSize = 20,
   defaultSorting = [],
   extraActions,
   leftActions,
