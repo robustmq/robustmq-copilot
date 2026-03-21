@@ -8,7 +8,13 @@ import { format } from 'date-fns';
 import { useNavigate } from '@tanstack/react-router';
 import { useToast } from '@/hooks/use-toast';
 
-export default function SessionList() {
+interface ClientListProps {
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
+}
+
+export default function SessionList({ leftActions, tenant, onSearch }: ClientListProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -50,8 +56,26 @@ export default function SessionList() {
           </Button>
         </div>
       ),
-      attr: true,
       size: 280,
+    },
+    {
+      id: 'tenant',
+      accessorKey: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <span className="text-sm text-gray-600 dark:text-gray-400">
+          {row.original.mqtt_connection?.tenant || '-'}
+        </span>
+      ),
+    },
+    {
+      id: 'source_ip',
+      header: 'Source IP',
+      cell: ({ row }) => (
+        <span className="text-sm font-mono text-gray-700 dark:text-gray-300">
+          {row.original.mqtt_connection?.source_ip_addr || '-'}
+        </span>
+      ),
     },
     {
       id: 'connection_id',
@@ -65,7 +89,6 @@ export default function SessionList() {
           <span className="font-medium font-mono">{row.original.connection_id}</span>
         </div>
       ),
-      attr: true,
     },
     {
       accessorKey: 'connection_type',
@@ -79,7 +102,6 @@ export default function SessionList() {
           {row.original.network_connection?.connection_type || '-'}
         </Badge>
       ),
-      attr: true,
     },
     {
       accessorKey: 'protocol',
@@ -89,7 +111,6 @@ export default function SessionList() {
           {row.original.network_connection?.protocol || '-'}
         </Badge>
       ),
-      attr: true,
     },
     {
       accessorKey: 'create_time',
@@ -109,7 +130,6 @@ export default function SessionList() {
           </div>
         );
       },
-      attr: true,
     },
     {
       accessorKey: 'heartbeat_time',
@@ -129,7 +149,6 @@ export default function SessionList() {
           </div>
         );
       },
-      attr: true,
     },
     {
       accessorKey: 'keep_alive',
@@ -150,7 +169,6 @@ export default function SessionList() {
           </div>
         );
       },
-      attr: true,
     },
     {
       id: 'actions',
@@ -172,14 +190,14 @@ export default function SessionList() {
   ];
 
   const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const clientIdVal = searchValue.find(f => f.field === 'client_id' || f.field === '')?.valueList?.[0];
+
     const ret = await getClientListHttp({
-      pagination: {
-        offset: pageIndex * pageSize,
-        limit: pageSize,
-      },
-      filers: searchValue,
-      sort_field: 'create_time',
+      pagination: { offset: pageIndex * pageSize, limit: pageSize },
+      sort_field: 'connection_id',
       sort_by: 'desc',
+      ...(tenant ? { tenant } : {}),
+      ...(clientIdVal ? { client_id: clientIdVal } : {}),
     } as any);
     return {
       data: ret.clientsList,
@@ -192,8 +210,11 @@ export default function SessionList() {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QueryClientListData"
+        queryKey={`QueryClientListData_${tenant ?? 'all'}`}
         headerClassName="bg-purple-600 text-white"
+        leftActions={leftActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by client ID..."
       />
     </div>
   );

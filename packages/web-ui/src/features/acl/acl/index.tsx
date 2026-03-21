@@ -1,12 +1,39 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Shield } from 'lucide-react';
 import AclList from './list';
 import { CreateAclForm } from './components/create-acl-form';
+import { getTenantList } from '@/services/mqtt';
 
 export default function AclManagement() {
   const [createAclOpen, setCreateAclOpen] = useState(false);
+  const [selectedTenant, setSelectedTenant] = useState<string>('all');
+  const [appliedTenant, setAppliedTenant] = useState<string>('all');
+
+  const { data: tenantData } = useQuery({
+    queryKey: ['TenantListForAclFilter'],
+    queryFn: () => getTenantList({ pagination: { offset: 0, limit: 200 } }),
+  });
+  const tenants = tenantData?.tenantList ?? [];
+
+  const leftActions = useMemo(() => (
+    <Select value={selectedTenant} onValueChange={setSelectedTenant}>
+      <SelectTrigger className="w-[160px] h-8 text-sm">
+        <SelectValue placeholder="All Tenants" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">All Tenants</SelectItem>
+        {tenants.map(t => (
+          <SelectItem key={t.tenant_name} value={t.tenant_name}>
+            {t.tenant_name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  ), [selectedTenant, tenants]);
 
   const extraActions = (
     <Button
@@ -32,7 +59,12 @@ export default function AclManagement() {
         </div>
       </div>
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <AclList extraActions={extraActions} />
+        <AclList
+          leftActions={leftActions}
+          extraActions={extraActions}
+          tenant={appliedTenant === 'all' ? undefined : appliedTenant}
+          onSearch={() => setAppliedTenant(selectedTenant)}
+        />
       </div>
 
       <CreateAclForm open={createAclOpen} onOpenChange={setCreateAclOpen} />

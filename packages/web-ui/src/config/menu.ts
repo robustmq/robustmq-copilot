@@ -10,14 +10,12 @@ import {
   UserX,
   Cable,
   Database,
-  BarChart2,
   Zap,
-  Clock,
   FileEdit,
-  Timer,
-  Activity,
   Settings,
   MessageSquare,
+  Building2,
+  ScrollText,
 } from 'lucide-react';
 
 export const sidebarData: SidebarData = {
@@ -112,37 +110,22 @@ export const sidebarData: SidebarData = {
       ],
     },
     {
-      title: 'Monitor',
-      items: [
-        {
-          title: 'Slow Subscription',
-          url: '/advanced/slow-subscription',
-          icon: Clock,
-        },
-        {
-          title: 'Connection Jitter',
-          url: '/advanced/connection-jitter',
-          icon: Activity,
-        },
-        {
-          title: 'System Alarm',
-          url: '/advanced/system-alarm',
-          icon: Timer,
-        },
-        {
-          title: 'Ban Log',
-          url: '/system/ban-log',
-          icon: BarChart2,
-        },
-      ],
-    },
-    {
       title: 'System',
       items: [
+        {
+          title: 'Tenant',
+          url: '/system/tenant',
+          icon: Building2,
+        },
         {
           title: 'Pub Sub',
           url: '/system/pub-sub',
           icon: MessageSquare,
+        },
+        {
+          title: 'System Log',
+          url: '/system/system-log',
+          icon: ScrollText,
         },
         {
           title: 'Configuration',

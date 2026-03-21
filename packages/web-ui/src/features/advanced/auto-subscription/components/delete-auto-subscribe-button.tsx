@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { deleteAutoSubscribe, DeleteAutoSubscribeRequest, AutoSubscribeRaw } from '@/services/mqtt';
+import { deleteAutoSubscribe, AutoSubscribeRaw } from '@/services/mqtt';
 
 interface DeleteAutoSubscribeButtonProps {
   autoSubscribe: AutoSubscribeRaw;
@@ -25,27 +25,19 @@ export function DeleteAutoSubscribeButton({ autoSubscribe }: DeleteAutoSubscribe
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: (data: DeleteAutoSubscribeRequest) => deleteAutoSubscribe(data),
+    mutationFn: () => deleteAutoSubscribe({ tenant: autoSubscribe.tenant, name: autoSubscribe.name }),
     onSuccess: () => {
       toast({
         title: 'Success',
         description: 'Auto subscription rule deleted successfully',
       });
-      queryClient.invalidateQueries({ queryKey: ['QueryAutoSubscriptionListData'] });
+      queryClient.refetchQueries({ queryKey: ['QueryAutoSubscriptionListData_all'], exact: false });
       setOpen(false);
     },
     onError: (error: any) => {
-      // 错误信息已经在 requestApi 中显示了，这里不需要重复显示
       console.error('Failed to delete auto subscription rule:', error);
     },
   });
-
-  const handleDelete = () => {
-    const deleteData: DeleteAutoSubscribeRequest = {
-      topic_name: autoSubscribe.topic,
-    };
-    deleteMutation.mutate(deleteData);
-  };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -66,20 +58,16 @@ export function DeleteAutoSubscribeButton({ autoSubscribe }: DeleteAutoSubscribe
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-md">
               <div className="text-sm space-y-1">
                 <div>
+                  <span className="font-medium">Name:</span> {autoSubscribe.name}
+                </div>
+                <div>
+                  <span className="font-medium">Tenant:</span> {autoSubscribe.tenant}
+                </div>
+                <div>
                   <span className="font-medium">Topic:</span> {autoSubscribe.topic}
                 </div>
                 <div>
                   <span className="font-medium">QoS:</span> {autoSubscribe.qos}
-                </div>
-                <div>
-                  <span className="font-medium">No Local:</span> {autoSubscribe.no_local ? 'Yes' : 'No'}
-                </div>
-                <div>
-                  <span className="font-medium">Retain As Published:</span>{' '}
-                  {autoSubscribe.retain_as_published ? 'Yes' : 'No'}
-                </div>
-                <div>
-                  <span className="font-medium">Retained Handling:</span> {autoSubscribe.retained_handling}
                 </div>
               </div>
             </div>
@@ -88,7 +76,7 @@ export function DeleteAutoSubscribeButton({ autoSubscribe }: DeleteAutoSubscribe
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
             className="bg-red-600 hover:bg-red-700 text-white"
           >

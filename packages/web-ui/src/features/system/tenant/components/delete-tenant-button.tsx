@@ -14,35 +14,30 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
-import { deleteUser } from '@/services/mqtt';
+import { deleteTenant } from '@/services/mqtt';
 
-interface DeleteUserButtonProps {
-  tenant: string;
-  username: string;
-  isSuperUser?: boolean;
+interface DeleteTenantButtonProps {
+  tenantName: string;
 }
 
-export function DeleteUserButton({ tenant, username, isSuperUser }: DeleteUserButtonProps) {
+export function DeleteTenantButton({ tenantName }: DeleteTenantButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
 
-  const deleteUserMutation = useMutation({
-    mutationFn: deleteUser,
+  const deleteTenantMutation = useMutation({
+    mutationFn: deleteTenant,
     onSuccess: () => {
-      toast({
-        title: 'Success',
-        description: 'User deleted successfully!',
-      });
-      queryClient.refetchQueries({ queryKey: ['QueryUserListData_all'], exact: false });
+      toast({ title: 'Success', description: 'Tenant deleted successfully!' });
+      queryClient.invalidateQueries({ queryKey: ['QueryTenantListData'] });
       setIsOpen(false);
     },
     onError: (error: any) => {
-      console.error('Failed to delete user:', error);
+      console.error('Failed to delete tenant:', error);
     },
   });
 
   const handleDelete = () => {
-    deleteUserMutation.mutate({ tenant, username });
+    deleteTenantMutation.mutate({ tenant_name: tenantName });
   };
 
   return (
@@ -58,24 +53,22 @@ export function DeleteUserButton({ tenant, username, isSuperUser }: DeleteUserBu
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete User</AlertDialogTitle>
+          <AlertDialogTitle>Delete Tenant</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete user <strong>"{username}"</strong>
-            {isSuperUser && <span className="text-destructive"> (Super User)</span>}?
+            Are you sure you want to delete tenant <strong>"{tenantName}"</strong>?
             <br />
             <br />
-            This action cannot be undone. This will permanently delete the user account and remove all associated
-            permissions.
+            This action cannot be undone. All resources associated with this tenant will be permanently removed.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
-            disabled={deleteUserMutation.isPending}
+            disabled={deleteTenantMutation.isPending}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
-            {deleteUserMutation.isPending ? 'Deleting...' : 'Delete User'}
+            {deleteTenantMutation.isPending ? 'Deleting...' : 'Delete Tenant'}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

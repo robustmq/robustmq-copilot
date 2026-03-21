@@ -20,6 +20,7 @@ import {
   Tag,
   Timer,
   User,
+  Building2,
 } from 'lucide-react';
 import { getClientListHttp, getMonitorData } from '@/services/mqtt';
 import { format } from 'date-fns';
@@ -220,7 +221,7 @@ export default function ClientDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
               <div className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
                 <div className="flex-shrink-0 mt-1">
                   <Hash className="h-4 w-4 text-purple-500" />
@@ -231,6 +232,19 @@ export default function ClientDetail() {
                   </label>
                   <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
                     {data.client_id}
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                <div className="flex-shrink-0 mt-1">
+                  <Building2 className="h-4 w-4 text-purple-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                    Tenant
+                  </label>
+                  <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
+                    {data.mqtt_connection?.tenant || '-'}
                   </div>
                 </div>
               </div>

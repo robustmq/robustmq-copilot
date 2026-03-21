@@ -1,75 +1,46 @@
 import { useQuery } from '@tanstack/react-query';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import {
   Settings,
   Server,
   Wifi,
   Database,
-  BarChart3,
   Shield,
   Zap,
   HardDrive,
   Clock,
-  Lock,
-  Eye,
   Activity,
   FileText,
-  Key,
   AlertTriangle,
   Gauge,
   Cpu,
-  MonitorSpeaker,
+  Bot,
 } from 'lucide-react';
-import { getClusterConfig, ClusterConfig } from '@/services/mqtt';
+import { getClusterConfig, ClusterConfig, LimitQuota } from '@/services/mqtt';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// 统一的配置项显示组件
-function ConfigItem({
-  label,
-  value,
-  title,
-  mono = true,
-}: {
-  label: string;
-  value: string | number;
-  title?: string;
-  mono?: boolean;
-}) {
+function ConfigItem({ label, value, mono = true }: { label: string; value: string | number; mono?: boolean }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-        {label}
-      </label>
-      <div
-        className={`p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-sm ${mono ? 'font-mono' : ''} ${title ? 'truncate' : ''}`}
-        title={title}
-      >
+      <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">{label}</label>
+      <div className={`p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-sm truncate ${mono ? 'font-mono' : ''}`}>
         {value}
       </div>
     </div>
   );
 }
 
-// 布尔值配置项
-function BooleanItem({ label, value }: { label: string; value?: boolean }) {
+function BoolItem({ label, value }: { label: string; value?: boolean }) {
   return (
     <div className="space-y-1.5">
-      <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-        {label}
-      </label>
+      <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">{label}</label>
       <div className="mt-1">
-        <Badge
-          variant={value ? 'default' : 'secondary'}
-          className={
-            value
-              ? 'bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700'
-              : 'bg-gray-100 text-gray-500 border-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600'
-          }
-        >
+        <Badge variant={value ? 'default' : 'secondary'} className={value
+          ? 'bg-green-100 text-green-700 border-green-300 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700'
+          : 'bg-gray-100 text-gray-500 border-gray-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600'}>
           {value ? 'Enabled' : 'Disabled'}
         </Badge>
       </div>
@@ -77,12 +48,39 @@ function BooleanItem({ label, value }: { label: string; value?: boolean }) {
   );
 }
 
+function Section({ title, icon: Icon, children }: { title: string; icon: React.ElementType; children: React.ReactNode }) {
+  return (
+    <Card>
+      <CardContent className="pt-5 pb-4 px-5">
+        <div className="flex items-center gap-2 mb-4">
+          <Icon className="h-4 w-4 text-purple-500" />
+          <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">{title}</span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          {children}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function LimitSection({ title, quota }: { title: string; quota: LimitQuota }) {
+  return (
+    <div className="space-y-3">
+      <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">{title}</p>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <ConfigItem label="Max Connections / Node" value={quota.max_connections_per_node.toLocaleString()} />
+        <ConfigItem label="Max Connection Rate" value={quota.max_connection_rate.toLocaleString()} />
+        <ConfigItem label="Max Topics" value={quota.max_topics.toLocaleString()} />
+        <ConfigItem label="Max Sessions" value={quota.max_sessions.toLocaleString()} />
+        <ConfigItem label="Max Publish Rate" value={quota.max_publish_rate.toLocaleString()} />
+      </div>
+    </div>
+  );
+}
+
 export default function Configuration() {
-  const {
-    data: config,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: config, isLoading, error } = useQuery({
     queryKey: ['cluster-config'],
     queryFn: getClusterConfig,
   });
@@ -104,7 +102,7 @@ export default function Configuration() {
     );
   }
 
-  if (error) {
+  if (error || !config) {
     return (
       <CommonLayout>
         <div className="mb-6 flex items-center space-x-3">
@@ -113,13 +111,7 @@ export default function Configuration() {
           </div>
           <h2 className="text-xl font-bold text-purple-600">Cluster Configuration</h2>
         </div>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="text-center text-red-600">
-              Failed to load configuration. Please check the server connection.
-            </div>
-          </CardContent>
-        </Card>
+        <Card><CardContent className="pt-6 text-center text-red-600">Failed to load configuration. Please check the server connection.</CardContent></Card>
       </CommonLayout>
     );
   }
@@ -133,884 +125,204 @@ export default function Configuration() {
           </div>
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Cluster Configuration</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              View and manage cluster configuration settings
-            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">View cluster configuration settings</p>
           </div>
         </div>
       </div>
 
       <Tabs defaultValue="cluster" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 h-auto p-1 bg-gray-100 dark:bg-gray-900">
-          <TabsTrigger
-            value="cluster"
-            className="flex items-center space-x-2 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm py-3"
-          >
-            <Server className="h-4 w-4" />
-            <span className="font-medium">Cluster</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="meta"
-            className="flex items-center space-x-2 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm py-3"
-          >
-            <Database className="h-4 w-4" />
-            <span className="font-medium">Meta</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="mqtt"
-            className="flex items-center space-x-2 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm py-3"
-          >
-            <Zap className="h-4 w-4" />
-            <span className="font-medium">MQTT</span>
-          </TabsTrigger>
-          <TabsTrigger
-            value="storage"
-            className="flex items-center space-x-2 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm py-3"
-          >
-            <HardDrive className="h-4 w-4" />
-            <span className="font-medium">Storage Engine</span>
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-5 h-auto p-1 bg-gray-100 dark:bg-gray-900">
+          {[
+            { value: 'cluster', icon: Server, label: 'Cluster' },
+            { value: 'runtime', icon: Cpu, label: 'Runtime' },
+            { value: 'mqtt', icon: Wifi, label: 'MQTT' },
+            { value: 'storage', icon: Database, label: 'Storage' },
+            { value: 'limits', icon: Gauge, label: 'Limits' },
+          ].map(({ value, icon: Icon, label }) => (
+            <TabsTrigger key={value} value={value} className="flex items-center space-x-2 data-[state=active]:bg-white dark:data-[state=active]:bg-gray-800 data-[state=active]:shadow-sm py-3">
+              <Icon className="h-4 w-4" />
+              <span className="font-medium">{label}</span>
+            </TabsTrigger>
+          ))}
         </TabsList>
 
+        {/* Cluster Tab */}
         <TabsContent value="cluster" className="space-y-4">
-          <ClusterConfigPanel config={config} />
+          <Section title="Basic" icon={Server}>
+            <ConfigItem label="Cluster Name" value={config.cluster_name} />
+            <ConfigItem label="Broker ID" value={config.broker_id} />
+            <ConfigItem label="Broker IP" value={config.broker_ip ?? '-'} />
+            <ConfigItem label="gRPC Port" value={config.grpc_port} />
+            <ConfigItem label="HTTP Port" value={config.http_port} />
+            <ConfigItem label="Roles" value={config.roles.join(', ')} mono={false} />
+          </Section>
+
+          <Section title="Prometheus" icon={Activity}>
+            <BoolItem label="Enable" value={config.prometheus.enable} />
+            <ConfigItem label="Port" value={config.prometheus.port} />
+          </Section>
+
+          <Section title="Log" icon={FileText}>
+            <ConfigItem label="Log Path" value={config.log.log_path} />
+            <ConfigItem label="Log Config" value={config.log.log_config} />
+          </Section>
+
+          <Section title="pprof" icon={Gauge}>
+            <BoolItem label="Enable" value={config.pprof.enable} />
+            <ConfigItem label="Port" value={config.pprof.port} />
+            <ConfigItem label="Frequency" value={config.pprof.frequency} />
+          </Section>
+
+          {config.llm_client && (
+            <Section title="LLM Client" icon={Bot}>
+              <ConfigItem label="Platform" value={config.llm_client.platform} mono={false} />
+              <ConfigItem label="Model" value={config.llm_client.model} mono={false} />
+              {config.llm_client.base_url && <ConfigItem label="Base URL" value={config.llm_client.base_url} />}
+            </Section>
+          )}
         </TabsContent>
 
-        <TabsContent value="meta" className="space-y-4">
-          <MetaConfigPanel config={config} />
+        {/* Runtime Tab */}
+        <TabsContent value="runtime" className="space-y-4">
+          <Section title="Runtime Threads" icon={Cpu}>
+            <ConfigItem label="Runtime Worker Threads" value={config.runtime.runtime_worker_threads} />
+            <ConfigItem label="Server Worker Threads" value={config.runtime.server_worker_threads} />
+            <ConfigItem label="Meta Worker Threads" value={config.runtime.meta_worker_threads} />
+            <ConfigItem label="Broker Worker Threads" value={config.runtime.broker_worker_threads} />
+            <ConfigItem label="Channels per Address" value={config.runtime.channels_per_address} />
+          </Section>
+
+          <Section title="TLS" icon={Shield}>
+            <ConfigItem label="TLS Cert" value={config.runtime.tls_cert} />
+            <ConfigItem label="TLS Key" value={config.runtime.tls_key} />
+          </Section>
+
+          <Section title="Network" icon={Wifi}>
+            <ConfigItem label="Accept Thread Num" value={config.network.accept_thread_num} />
+            <ConfigItem label="Handler Thread Num" value={config.network.handler_thread_num} />
+            <ConfigItem label="Queue Size" value={config.network.queue_size} />
+          </Section>
+
+          <Section title="Meta Runtime" icon={Server}>
+            <ConfigItem label="Heartbeat Timeout (ms)" value={config.meta_runtime.heartbeat_timeout_ms} />
+            <ConfigItem label="Heartbeat Check Interval (ms)" value={config.meta_runtime.heartbeat_check_time_ms} />
+            <ConfigItem label="Raft Write Timeout (s)" value={config.meta_runtime.raft_write_timeout_sec} />
+            <ConfigItem label="Offset Raft Groups" value={config.meta_runtime.offset_raft_group_num} />
+            <ConfigItem label="Data Raft Groups" value={config.meta_runtime.data_raft_group_num} />
+          </Section>
         </TabsContent>
 
+        {/* MQTT Tab */}
         <TabsContent value="mqtt" className="space-y-4">
-          <MqttConfigPanel config={config} />
+          <Section title="MQTT Server Ports" icon={Wifi}>
+            <ConfigItem label="TCP Port" value={config.mqtt_server.tcp_port} />
+            <ConfigItem label="TLS Port" value={config.mqtt_server.tls_port} />
+            <ConfigItem label="WebSocket Port" value={config.mqtt_server.websocket_port} />
+            <ConfigItem label="WebSocket Secure Port" value={config.mqtt_server.websockets_port} />
+            <ConfigItem label="QUIC Port" value={config.mqtt_server.quic_port} />
+          </Section>
+
+          <Section title="Runtime" icon={Zap}>
+            <ConfigItem label="Default User" value={config.mqtt_runtime.default_user} mono={false} />
+            <ConfigItem label="Default Password" value={config.mqtt_runtime.default_password} />
+            <BoolItem label="Durable Sessions" value={config.mqtt_runtime.durable_sessions_enable} />
+            <BoolItem label="Secret Free Login" value={config.mqtt_runtime.secret_free_login} />
+            <BoolItem label="Self Protection" value={config.mqtt_runtime.is_self_protection_status} />
+          </Section>
+
+          <Section title="Keep Alive" icon={Clock}>
+            <BoolItem label="Enable" value={config.mqtt_keep_alive.enable} />
+            <ConfigItem label="Default Time (s)" value={config.mqtt_keep_alive.default_time} />
+            <ConfigItem label="Max Time (s)" value={config.mqtt_keep_alive.max_time} />
+            <ConfigItem label="Timeout Multiplier" value={config.mqtt_keep_alive.default_timeout} />
+          </Section>
+
+          <Section title="Protocol" icon={Settings}>
+            <ConfigItem label="Max Session Expiry (s)" value={config.mqtt_protocol.max_session_expiry_interval} />
+            <ConfigItem label="Default Session Expiry (s)" value={config.mqtt_protocol.default_session_expiry_interval} />
+            <ConfigItem label="Topic Alias Max" value={config.mqtt_protocol.topic_alias_max} />
+            <ConfigItem label="Max Packet Size (B)" value={config.mqtt_protocol.max_packet_size.toLocaleString()} />
+            <ConfigItem label="Receive Max" value={config.mqtt_protocol.receive_max} />
+            <ConfigItem label="Max Message Expiry (s)" value={config.mqtt_protocol.max_message_expiry_interval} />
+            <BoolItem label="Client PKID Persistent" value={config.mqtt_protocol.client_pkid_persistent} />
+          </Section>
+
+          <Section title="Offline Message" icon={HardDrive}>
+            <BoolItem label="Enable" value={config.mqtt_offline_message.enable} />
+            <ConfigItem label="Expire (ms)" value={config.mqtt_offline_message.expire_ms === 0 ? 'No Expiry' : config.mqtt_offline_message.expire_ms} />
+            <ConfigItem label="Max Messages" value={config.mqtt_offline_message.max_messages_num === 0 ? 'Unlimited' : config.mqtt_offline_message.max_messages_num} />
+          </Section>
+
+          <Section title="Slow Subscribe" icon={Clock}>
+            <BoolItem label="Enable" value={config.mqtt_slow_subscribe.enable} />
+            <ConfigItem label="Record Time (ms)" value={config.mqtt_slow_subscribe.record_time} />
+            <ConfigItem label="Delay Type" value={config.mqtt_slow_subscribe.delay_type} mono={false} />
+          </Section>
+
+          <Section title="Flapping Detect" icon={Activity}>
+            <BoolItem label="Enable" value={config.mqtt_flapping_detect.enable} />
+            <ConfigItem label="Window Time (min)" value={config.mqtt_flapping_detect.window_time} />
+            <ConfigItem label="Max Connections" value={config.mqtt_flapping_detect.max_client_connections} />
+            <ConfigItem label="Ban Time (min)" value={config.mqtt_flapping_detect.ban_time} />
+          </Section>
+
+          <Section title="Schema Validation" icon={Shield}>
+            <BoolItem label="Enable" value={config.mqtt_schema.enable} />
+            <ConfigItem label="Strategy" value={config.mqtt_schema.strategy} mono={false} />
+            <ConfigItem label="Failed Operation" value={config.mqtt_schema.failed_operation} mono={false} />
+            <BoolItem label="Echo Log" value={config.mqtt_schema.echo_log} />
+            <ConfigItem label="Log Level" value={config.mqtt_schema.log_level} mono={false} />
+          </Section>
+
+          <Section title="System Monitor" icon={AlertTriangle}>
+            <BoolItem label="Enable" value={config.mqtt_system_monitor.enable} />
+            <ConfigItem label="CPU High Watermark (%)" value={config.mqtt_system_monitor.os_cpu_high_watermark} />
+            <ConfigItem label="Memory High Watermark (%)" value={config.mqtt_system_monitor.os_memory_high_watermark} />
+            <ConfigItem label="System Topic Interval (ms)" value={config.mqtt_system_monitor.system_topic_interval_ms} />
+          </Section>
         </TabsContent>
 
+        {/* Storage Tab */}
         <TabsContent value="storage" className="space-y-4">
-          <StorageEnginePanel config={config} />
+          <Section title="RocksDB" icon={Database}>
+            <ConfigItem label="Data Path" value={config.rocksdb.data_path} />
+            <ConfigItem label="Max Open Files" value={config.rocksdb.max_open_files.toLocaleString()} />
+          </Section>
+
+          <Section title="Storage Runtime" icon={HardDrive}>
+            <ConfigItem label="TCP Port" value={config.storage_runtime.tcp_port} />
+            <ConfigItem label="Max Segment Size (B)" value={config.storage_runtime.max_segment_size.toLocaleString()} />
+            <ConfigItem label="IO Thread Num" value={config.storage_runtime.io_thread_num} />
+            <BoolItem label="Offset Cache" value={config.storage_runtime.offset_enable_cache} />
+            {config.storage_runtime.data_path.length > 0 && (
+              <ConfigItem label="Data Paths" value={config.storage_runtime.data_path.join(', ')} />
+            )}
+          </Section>
+        </TabsContent>
+
+        {/* Limits Tab */}
+        <TabsContent value="limits" className="space-y-4">
+          <Section title="Cluster Network Limits" icon={Gauge}>
+            <ConfigItem label="Max Network Connections" value={config.cluster_limit.max_network_connection.toLocaleString()} />
+            <ConfigItem label="Max Connection Rate" value={config.cluster_limit.max_network_connection_rate.toLocaleString()} />
+            <ConfigItem label="Max Admin HTTP Rate" value={config.cluster_limit.max_admin_http_uri_rate} />
+          </Section>
+
+          <Card>
+            <CardContent className="pt-5 pb-4 px-5">
+              <div className="flex items-center gap-2 mb-5">
+                <Zap className="h-4 w-4 text-purple-500" />
+                <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">MQTT Limits</span>
+              </div>
+              <div className="space-y-6">
+                <LimitSection title="Cluster" quota={config.mqtt_limit.cluster} />
+                <div className="border-t" />
+                <LimitSection title="Tenant (Default)" quota={config.mqtt_limit.tenant} />
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </CommonLayout>
-  );
-}
-
-// ==================== Cluster Tab ====================
-function ClusterConfigPanel({ config }: { config?: ClusterConfig }) {
-  if (!config) return null;
-
-  return (
-    <div className="space-y-6">
-      {/* Cluster Information + Network - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-purple-200 dark:border-purple-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900">
-                <Server className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <span>Cluster Information</span>
-            </CardTitle>
-            <CardDescription>Basic cluster identification and node configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem label="Cluster Name" value={config.cluster_name} />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="Broker ID" value={config.broker_id} />
-              <ConfigItem label="Broker IP" value={config.broker_ip || '-'} />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Roles
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {config.roles.map((role, index) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="bg-gradient-to-r from-purple-50 to-indigo-50 text-purple-700 border-purple-300 dark:from-purple-950 dark:to-indigo-950 dark:text-purple-300 dark:border-purple-700 px-3 py-1"
-                  >
-                    {role}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <Separator className="my-2" />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="GRPC Port" value={config.grpc_port} />
-              <ConfigItem label="HTTP Port" value={config.http_port} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-blue-200 dark:border-blue-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-                <Wifi className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <span>Network Configuration</span>
-            </CardTitle>
-            <CardDescription>Network threading and connection settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              <ConfigItem label="Accept Threads" value={config.network?.accept_thread_num ?? '-'} />
-              <ConfigItem label="Handler Threads" value={config.network?.handler_thread_num ?? '-'} />
-              <ConfigItem label="Response Threads" value={config.network?.response_thread_num ?? '-'} />
-            </div>
-            <ConfigItem
-              label="Queue Size"
-              value={config.network?.queue_size?.toLocaleString() ?? '-'}
-            />
-            <Separator className="my-2" />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="Lock Max Try Times" value={config.network?.lock_max_try_mut_times ?? '-'} />
-              <ConfigItem label="Lock Sleep (ms)" value={config.network?.lock_try_mut_sleep_time_ms ?? '-'} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Runtime + Log - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-gray-200 dark:border-gray-700 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-                <Cpu className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-              </div>
-              <span>Runtime</span>
-            </CardTitle>
-            <CardDescription>Runtime threading and TLS configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem label="Worker Threads" value={config.runtime?.runtime_worker_threads ?? '-'} />
-            <ConfigItem
-              label="TLS Certificate"
-              value={config.runtime?.tls_cert || 'Not configured'}
-              title={config.runtime?.tls_cert}
-            />
-            <ConfigItem
-              label="TLS Key"
-              value={config.runtime?.tls_key || 'Not configured'}
-              title={config.runtime?.tls_key}
-            />
-          </CardContent>
-        </Card>
-
-        <Card className="border-gray-200 dark:border-gray-700 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-                <FileText className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-              </div>
-              <span>Log Configuration</span>
-            </CardTitle>
-            <CardDescription>System logging settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem
-              label="Log Config"
-              value={config.log?.log_config || 'Not configured'}
-              title={config.log?.log_config}
-            />
-            <ConfigItem
-              label="Log Path"
-              value={config.log?.log_path || 'Not configured'}
-              title={config.log?.log_path}
-            />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Prometheus + PProf + RocksDB - three columns */}
-      <div className="grid gap-6 md:grid-cols-3">
-        <Card className="border-green-200 dark:border-green-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-base">
-              <div className="p-1.5 rounded-lg bg-green-100 dark:bg-green-900">
-                <BarChart3 className="h-4 w-4 text-green-600 dark:text-green-400" />
-              </div>
-              <span>Prometheus</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Status" value={config.prometheus?.enable} />
-            <ConfigItem label="Port" value={config.prometheus?.port ?? '-'} />
-          </CardContent>
-        </Card>
-
-        <Card className="border-orange-200 dark:border-orange-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-base">
-              <div className="p-1.5 rounded-lg bg-orange-100 dark:bg-orange-900">
-                <Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-              </div>
-              <span>PProf</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Status" value={config.p_prof?.enable} />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="Port" value={config.p_prof?.port ?? '-'} />
-              <ConfigItem label="Frequency" value={config.p_prof?.frequency ?? '-'} />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-indigo-200 dark:border-indigo-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-base">
-              <div className="p-1.5 rounded-lg bg-indigo-100 dark:bg-indigo-900">
-                <Database className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-              </div>
-              <span>RocksDB</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem
-              label="Data Path"
-              value={config.rocksdb?.data_path || 'Not configured'}
-              title={config.rocksdb?.data_path}
-            />
-            <ConfigItem
-              label="Max Open Files"
-              value={config.rocksdb?.max_open_files?.toLocaleString() ?? '-'}
-            />
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-// ==================== Meta Tab ====================
-function MetaConfigPanel({ config }: { config?: ClusterConfig }) {
-  if (!config) return null;
-
-  return (
-    <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-purple-200 dark:border-purple-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900">
-                <Server className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <span>Meta Addresses</span>
-            </CardTitle>
-            <CardDescription>Meta service node addresses and endpoints</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {config.meta_addrs &&
-                Object.entries(config.meta_addrs).map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="flex items-center justify-between p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-                  >
-                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
-                      Node {key}
-                    </span>
-                    <span className="text-sm font-mono text-gray-900 dark:text-gray-100">{value}</span>
-                  </div>
-                ))}
-              {(!config.meta_addrs || Object.keys(config.meta_addrs).length === 0) && (
-                <div className="text-center py-6 text-muted-foreground text-sm">No meta addresses configured</div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-blue-200 dark:border-blue-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-                <Clock className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <span>Meta Runtime</span>
-            </CardTitle>
-            <CardDescription>Meta service heartbeat and runtime configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem
-              label="Heartbeat Timeout"
-              value={config.meta_runtime?.heartbeat_timeout_ms ? `${config.meta_runtime.heartbeat_timeout_ms} ms` : '-'}
-            />
-            <ConfigItem
-              label="Heartbeat Check Time"
-              value={
-                config.meta_runtime?.heartbeat_check_time_ms
-                  ? `${config.meta_runtime.heartbeat_check_time_ms} ms`
-                  : '-'
-              }
-            />
-            <ConfigItem
-              label="Raft Write Timeout"
-              value={
-                config.meta_runtime?.raft_write_timeout_sec
-                  ? `${config.meta_runtime.raft_write_timeout_sec} sec`
-                  : '-'
-              }
-            />
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-// ==================== MQTT Tab ====================
-function MqttConfigPanel({ config }: { config?: ClusterConfig }) {
-  if (!config) return null;
-
-  const authnConfig = config.mqtt_auth_config?.authn_config;
-  const passwordBasedConfig = authnConfig?.password_based_config;
-  const authzConfig = config.mqtt_auth_config?.authz_config;
-
-  return (
-    <div className="space-y-6">
-      {/* MQTT Server + Keep Alive - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-cyan-200 dark:border-cyan-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-cyan-100 dark:bg-cyan-900">
-                <Zap className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
-              </div>
-              <span>MQTT Server</span>
-            </CardTitle>
-            <CardDescription>MQTT server listening ports</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="TCP Port" value={config.mqtt_server?.tcp_port ?? '-'} />
-              <ConfigItem label="TLS Port" value={config.mqtt_server?.tls_port ?? '-'} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="WebSocket Port" value={config.mqtt_server?.websocket_port ?? '-'} />
-              <ConfigItem label="WebSockets Port" value={config.mqtt_server?.websockets_port ?? '-'} />
-            </div>
-            <ConfigItem label="QUIC Port" value={config.mqtt_server?.quic_port ?? '-'} />
-          </CardContent>
-        </Card>
-
-        <Card className="border-green-200 dark:border-green-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900">
-                <Clock className="h-5 w-5 text-green-600 dark:text-green-400" />
-              </div>
-              <span>Keep Alive</span>
-            </CardTitle>
-            <CardDescription>MQTT keep alive timeout settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Enable" value={config.mqtt_keep_alive?.enable} />
-            <div className="grid grid-cols-3 gap-4">
-              <ConfigItem
-                label="Default Time"
-                value={config.mqtt_keep_alive?.default_time ? `${config.mqtt_keep_alive.default_time}s` : '-'}
-              />
-              <ConfigItem
-                label="Max Time"
-                value={config.mqtt_keep_alive?.max_time ? `${config.mqtt_keep_alive.max_time}s` : '-'}
-              />
-              <ConfigItem
-                label="Default Timeout"
-                value={config.mqtt_keep_alive?.default_timeout ? `${config.mqtt_keep_alive.default_timeout}s` : '-'}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Runtime + Security - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-purple-200 dark:border-purple-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900">
-                <Settings className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <span>MQTT Runtime</span>
-            </CardTitle>
-            <CardDescription>MQTT runtime and connection settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="Default User" value={config.mqtt_runtime?.default_user || '-'} />
-              <ConfigItem label="Default Password" value="••••••••" />
-            </div>
-            <ConfigItem
-              label="Max Connections"
-              value={config.mqtt_runtime?.max_connection_num?.toLocaleString() ?? '-'}
-            />
-            <BooleanItem label="Durable Sessions" value={config.mqtt_runtime?.durable_sessions_enable} />
-          </CardContent>
-        </Card>
-
-        <Card className="border-red-200 dark:border-red-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900">
-                <Shield className="h-5 w-5 text-red-600 dark:text-red-400" />
-              </div>
-              <span>MQTT Security</span>
-            </CardTitle>
-            <CardDescription>MQTT security and authentication settings</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Self Protection" value={config.mqtt_security?.is_self_protection_status} />
-            <BooleanItem label="Secret Free Login" value={config.mqtt_security?.secret_free_login} />
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Protocol Config - full width */}
-      <Card className="border-blue-200 dark:border-blue-800 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-              <Gauge className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <span>Protocol Configuration</span>
-          </CardTitle>
-          <CardDescription>MQTT protocol limits and session configuration</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <ConfigItem
-              label="Max Packet Size"
-              value={
-                config.mqtt_protocol_config?.max_packet_size
-                  ? `${(config.mqtt_protocol_config.max_packet_size / 1024 / 1024).toFixed(1)} MB`
-                  : '-'
-              }
-            />
-            <ConfigItem
-              label="Max QoS Flight Msg"
-              value={config.mqtt_protocol_config?.max_qos_flight_message ?? '-'}
-            />
-            <ConfigItem
-              label="Topic Alias Max"
-              value={config.mqtt_protocol_config?.topic_alias_max?.toLocaleString() ?? '-'}
-            />
-            <ConfigItem
-              label="Receive Max"
-              value={config.mqtt_protocol_config?.receive_max?.toLocaleString() ?? '-'}
-            />
-          </div>
-          <Separator className="my-2" />
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <ConfigItem
-              label="Default Session Expiry"
-              value={
-                config.mqtt_protocol_config?.default_session_expiry_interval
-                  ? `${config.mqtt_protocol_config.default_session_expiry_interval}s`
-                  : '-'
-              }
-            />
-            <ConfigItem
-              label="Max Session Expiry"
-              value={
-                config.mqtt_protocol_config?.max_session_expiry_interval
-                  ? `${config.mqtt_protocol_config.max_session_expiry_interval}s`
-                  : '-'
-              }
-            />
-            <ConfigItem
-              label="Max Message Expiry"
-              value={
-                config.mqtt_protocol_config?.max_message_expiry_interval
-                  ? `${config.mqtt_protocol_config.max_message_expiry_interval}s`
-                  : '-'
-              }
-            />
-            <BooleanItem label="Client PKID Persistent" value={config.mqtt_protocol_config?.client_pkid_persistent} />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Authentication Config - full width */}
-      <Card className="border-amber-200 dark:border-amber-800 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <div className="p-2 rounded-lg bg-amber-100 dark:bg-amber-900">
-              <Key className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-            </div>
-            <span>Authentication Configuration</span>
-          </CardTitle>
-          <CardDescription>MQTT authentication and authorization configuration</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* AuthN */}
-          <div>
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-              <Lock className="h-4 w-4 text-amber-500" />
-              Authentication (AuthN)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pl-6 border-l-2 border-amber-200 dark:border-amber-800">
-              <ConfigItem label="AuthN Type" value={authnConfig?.authn_type || '-'} />
-              <ConfigItem label="JWT Config" value={authnConfig?.jwt_config ? 'Configured' : 'Not configured'} />
-              {passwordBasedConfig && (
-                <>
-                  <ConfigItem
-                    label="Storage Type"
-                    value={passwordBasedConfig.storage_config?.storage_type || '-'}
-                  />
-                  <ConfigItem
-                    label="Credential Type"
-                    value={passwordBasedConfig.password_config?.credential_type || '-'}
-                  />
-                  <ConfigItem
-                    label="Algorithm"
-                    value={passwordBasedConfig.password_config?.algorithm || '-'}
-                  />
-                  <ConfigItem
-                    label="Salt Position"
-                    value={passwordBasedConfig.password_config?.salt_position || '-'}
-                  />
-                </>
-              )}
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* AuthZ */}
-          <div>
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-              <Eye className="h-4 w-4 text-amber-500" />
-              Authorization (AuthZ)
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pl-6 border-l-2 border-amber-200 dark:border-amber-800">
-              <ConfigItem
-                label="Storage Type"
-                value={authzConfig?.storage_config?.storage_type || '-'}
-              />
-              <ConfigItem
-                label="Placement Config"
-                value={
-                  authzConfig?.storage_config?.placement_config
-                    ? authzConfig.storage_config.placement_config.journal_addr || 'Default'
-                    : 'Not configured'
-                }
-              />
-              <ConfigItem
-                label="MySQL Config"
-                value={authzConfig?.storage_config?.mysql_config ? 'Configured' : 'Not configured'}
-              />
-              <ConfigItem
-                label="PostgreSQL Config"
-                value={authzConfig?.storage_config?.postgres_config ? 'Configured' : 'Not configured'}
-              />
-              <ConfigItem
-                label="Redis Config"
-                value={authzConfig?.storage_config?.redis_config ? 'Configured' : 'Not configured'}
-              />
-              <ConfigItem
-                label="HTTP Config"
-                value={authzConfig?.storage_config?.http_config ? 'Configured' : 'Not configured'}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Offline Message + Schema - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-gray-200 dark:border-gray-700 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-                <BarChart3 className="h-5 w-5 text-gray-600 dark:text-gray-400" />
-              </div>
-              <span>Offline Message</span>
-            </CardTitle>
-            <CardDescription>MQTT offline message configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Enable" value={config.mqtt_offline_message?.enable} />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem
-                label="Expire Time"
-                value={
-                  config.mqtt_offline_message?.expire_ms
-                    ? `${(config.mqtt_offline_message.expire_ms / 1000 / 60).toFixed(0)} min`
-                    : '-'
-                }
-              />
-              <ConfigItem
-                label="Max Messages"
-                value={config.mqtt_offline_message?.max_messages_num?.toLocaleString() ?? '-'}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-indigo-200 dark:border-indigo-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900">
-                <FileText className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
-              </div>
-              <span>Schema</span>
-            </CardTitle>
-            <CardDescription>MQTT schema validation configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Enable" value={config.mqtt_schema?.enable} />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem label="Strategy" value={config.mqtt_schema?.strategy || '-'} />
-              <ConfigItem label="Failed Operation" value={config.mqtt_schema?.failed_operation || '-'} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <BooleanItem label="Echo Log" value={config.mqtt_schema?.echo_log} />
-              <ConfigItem label="Log Level" value={config.mqtt_schema?.log_level || '-'} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Slow Subscribe + Flapping Detect - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-orange-200 dark:border-orange-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-orange-100 dark:bg-orange-900">
-                <Clock className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-              </div>
-              <span>Slow Subscribe</span>
-            </CardTitle>
-            <CardDescription>MQTT slow subscription detection</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Enable" value={config.mqtt_slow_subscribe_config?.enable} />
-            <div className="grid grid-cols-2 gap-4">
-              <ConfigItem
-                label="Record Time"
-                value={
-                  config.mqtt_slow_subscribe_config?.record_time
-                    ? `${config.mqtt_slow_subscribe_config.record_time} ms`
-                    : '-'
-                }
-              />
-              <ConfigItem
-                label="Delay Type"
-                value={config.mqtt_slow_subscribe_config?.delay_type || '-'}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-red-200 dark:border-red-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900">
-                <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-              </div>
-              <span>Flapping Detect</span>
-            </CardTitle>
-            <CardDescription>MQTT connection flapping detection</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <BooleanItem label="Enable" value={config.mqtt_flapping_detect?.enable} />
-            <div className="grid grid-cols-3 gap-4">
-              <ConfigItem
-                label="Window Time"
-                value={
-                  config.mqtt_flapping_detect?.window_time
-                    ? `${config.mqtt_flapping_detect.window_time}s`
-                    : '-'
-                }
-              />
-              <ConfigItem
-                label="Max Connections"
-                value={config.mqtt_flapping_detect?.max_client_connections ?? '-'}
-              />
-              <ConfigItem
-                label="Ban Time"
-                value={
-                  config.mqtt_flapping_detect?.ban_time
-                    ? `${config.mqtt_flapping_detect.ban_time}s`
-                    : '-'
-                }
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* System Monitor - full width */}
-      <Card className="border-teal-200 dark:border-teal-800 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900">
-              <MonitorSpeaker className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-            </div>
-            <span>System Monitor</span>
-          </CardTitle>
-          <CardDescription>MQTT system monitoring configuration</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-4">
-            <BooleanItem label="Enable" value={config.mqtt_system_monitor?.enable} />
-            <ConfigItem
-              label="CPU High Watermark"
-              value={
-                config.mqtt_system_monitor?.os_cpu_high_watermark != null
-                  ? `${config.mqtt_system_monitor.os_cpu_high_watermark}%`
-                  : '-'
-              }
-            />
-            <ConfigItem
-              label="Memory High Watermark"
-              value={
-                config.mqtt_system_monitor?.os_memory_high_watermark != null
-                  ? `${config.mqtt_system_monitor.os_memory_high_watermark}%`
-                  : '-'
-              }
-            />
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-// ==================== Storage Engine Tab ====================
-function StorageEnginePanel({ config }: { config?: ClusterConfig }) {
-  if (!config) return null;
-
-  const msgStorage = config.message_storage;
-  const storageRuntime = config.storage_runtime;
-
-  // 收集 message_storage 中非 null 的引擎配置
-  const engineConfigs: { label: string; value: any }[] = [];
-  if (msgStorage) {
-    if (msgStorage.engine_config) engineConfigs.push({ label: 'Engine Config', value: msgStorage.engine_config });
-    if (msgStorage.memory_config) engineConfigs.push({ label: 'Memory Config', value: msgStorage.memory_config });
-    if (msgStorage.minio_config) engineConfigs.push({ label: 'MinIO Config', value: msgStorage.minio_config });
-    if (msgStorage.mysql_config) engineConfigs.push({ label: 'MySQL Config', value: msgStorage.mysql_config });
-    if (msgStorage.rocksdb_config) engineConfigs.push({ label: 'RocksDB Config', value: msgStorage.rocksdb_config });
-    if (msgStorage.s3_config) engineConfigs.push({ label: 'S3 Config', value: msgStorage.s3_config });
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Message Storage + Storage Offset - side by side */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="border-purple-200 dark:border-purple-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center space-x-2 text-lg">
-              <div className="p-2 rounded-lg bg-purple-100 dark:bg-purple-900">
-                <HardDrive className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-              </div>
-              <span>Message Storage</span>
-            </CardTitle>
-            <CardDescription>Message storage engine type and configuration</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <ConfigItem label="Storage Type" value={msgStorage?.storage_type || '-'} />
-
-            {engineConfigs.length > 0 ? (
-              <div className="space-y-3">
-                <Separator />
-                <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                  Active Engine Configurations
-                </label>
-                {engineConfigs.map((ec) => (
-                  <div
-                    key={ec.label}
-                    className="p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
-                  >
-                    <div className="text-xs font-semibold text-purple-600 dark:text-purple-400 uppercase mb-1">
-                      {ec.label}
-                    </div>
-                    <pre className="text-xs font-mono text-gray-700 dark:text-gray-300 whitespace-pre-wrap break-all">
-                      {typeof ec.value === 'object' ? JSON.stringify(ec.value, null, 2) : String(ec.value)}
-                    </pre>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Separator />
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                  {['Engine', 'Memory', 'MinIO', 'MySQL', 'RocksDB', 'S3'].map((name) => (
-                    <div
-                      key={name}
-                      className="p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-center"
-                    >
-                      <span className="text-xs text-gray-400 dark:text-gray-500">{name}</span>
-                      <div className="text-xs text-gray-400 mt-0.5">Not configured</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        <div className="space-y-6">
-          <Card className="border-green-200 dark:border-green-800 shadow-sm">
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center space-x-2 text-lg">
-                <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900">
-                  <Database className="h-5 w-5 text-green-600 dark:text-green-400" />
-                </div>
-                <span>Storage Offset</span>
-              </CardTitle>
-              <CardDescription>Storage offset cache settings</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <BooleanItem label="Enable Cache" value={config.storage_offset?.enable_cache} />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Storage Runtime - full width */}
-      <Card className="border-blue-200 dark:border-blue-800 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-              <Cpu className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            </div>
-            <span>Storage Runtime</span>
-          </CardTitle>
-          <CardDescription>Storage engine runtime configuration</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-3 gap-4">
-            <ConfigItem label="TCP Port" value={storageRuntime?.tcp_port ?? '-'} />
-            <ConfigItem
-              label="Max Segment Size"
-              value={
-                storageRuntime?.max_segment_size
-                  ? `${(storageRuntime.max_segment_size / 1024 / 1024 / 1024).toFixed(1)} GB`
-                  : '-'
-              }
-            />
-            <ConfigItem label="IO Thread Num" value={storageRuntime?.io_thread_num ?? '-'} />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-              Data Paths
-            </label>
-            <div className="space-y-2">
-              {storageRuntime?.data_path?.map((path, index) => (
-                <div
-                  key={index}
-                  className="p-3 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono"
-                  title={path}
-                >
-                  {path}
-                </div>
-              )) || <div className="text-sm text-muted-foreground">No data paths configured</div>}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
   );
 }

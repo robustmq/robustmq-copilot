@@ -1,5 +1,6 @@
-import { DataTable } from '@/components/table';
+import { DataTable, ColumnSetting } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
+import { FilterValue } from '@/components/table/filter';
 import { getTopicListHttp, deleteTopic, readMessages } from '@/services/mqtt';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -12,12 +13,10 @@ import {
   Inbox,
   ChevronRight,
   Database,
-  GitFork,
-  HardDrive,
+  Building2,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useState, useEffect, useRef } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { useNavigate } from '@tanstack/react-router';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
@@ -35,12 +34,18 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-export default function TopicList() {
-  const [topicType, setTopicType] = useState<'all' | 'normal' | 'system'>('normal');
+interface TopicListProps {
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  topicType?: string;
+  onSearch?: () => void;
+}
+
+export default function TopicList({ leftActions, tenant, topicType, onSearch }: TopicListProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [topicToDelete, setTopicToDelete] = useState<string | null>(null);
+  const [topicToDelete, setTopicToDelete] = useState<{ topic_name: string; tenant?: string } | null>(null);
 
   // Message viewer state
   const [messageSheetOpen, setMessageSheetOpen] = useState(false);
@@ -115,7 +120,7 @@ export default function TopicList() {
           ),
           description: <div className="text-sm">The topic has been permanently deleted from the system.</div>,
         });
-        queryClient.invalidateQueries({ queryKey: [`QueryTopicListData-${topicType}`] });
+        queryClient.refetchQueries({ queryKey: ['QueryTopicListData_'], exact: false });
         setTopicToDelete(null);
       }, 2000);
     },
@@ -126,18 +131,18 @@ export default function TopicList() {
     },
   });
 
-  const handleDeleteClick = (topicName: string) => {
-    setTopicToDelete(topicName);
+  const handleDeleteClick = (topicName: string, topicTenant?: string) => {
+    setTopicToDelete({ topic_name: topicName, tenant: topicTenant });
     setDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = () => {
     if (topicToDelete) {
-      deleteMutation.mutate({ topic_name: topicToDelete });
+      deleteMutation.mutate({ topic_name: topicToDelete.topic_name, tenant: topicToDelete.tenant });
     }
   };
 
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnSetting<any, any>[] = [
     {
       accessorKey: 'topic_name',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Topic Name" />,
@@ -181,6 +186,34 @@ export default function TopicList() {
       size: 450,
     },
     {
+      id: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <Building2 className="h-4 w-4 text-purple-400" />
+          <span className="text-sm text-gray-600 dark:text-gray-400">{row.original.tenant || '-'}</span>
+        </div>
+      ),
+      size: 140,
+    },
+    {
+      id: 'topic_type_display',
+      header: 'Topic Type',
+      cell: ({ row }) => {
+        const isSystem = row.original.topic_name?.startsWith('$');
+        return isSystem ? (
+          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 text-xs">
+            System
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 text-xs">
+            Normal
+          </Badge>
+        );
+      },
+      size: 110,
+    },
+    {
       accessorKey: 'storage_type',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Storage Type" />,
       cell: ({ row }) => {
@@ -198,28 +231,17 @@ export default function TopicList() {
       size: 130,
     },
     {
-      accessorKey: 'partition',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Partition" />,
+      id: 'partition_replication',
+      header: 'P / R',
       cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <GitFork className="h-4 w-4 text-green-500" />
-          <span className="text-sm font-medium">{row.original.partition || 0}</span>
-        </div>
+        <span
+          className="text-sm font-medium cursor-default"
+          title={`Partition: ${row.original.partition || 0} / Replication: ${row.original.replication || 0}`}
+        >
+          {row.original.partition || 0}/{row.original.replication || 0}
+        </span>
       ),
-      enableSorting: true,
-      size: 100,
-    },
-    {
-      accessorKey: 'replication',
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Replication" />,
-      cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <HardDrive className="h-4 w-4 text-orange-500" />
-          <span className="text-sm font-medium">{row.original.replication || 0}</span>
-        </div>
-      ),
-      enableSorting: true,
-      size: 120,
+      size: 80,
     },
     {
       accessorKey: 'create_time',
@@ -254,7 +276,11 @@ export default function TopicList() {
             size="sm"
             className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 px-1.5 py-0.5 h-6 text-[11px]"
             onClick={() => {
-              navigate({ to: '/general/topic/$topicId', params: { topicId: row.original.topic_name } });
+              navigate({
+                to: '/general/topic/$topicId',
+                params: { topicId: row.original.topic_name },
+                state: { tenant: row.original.tenant },
+              });
             }}
           >
             <Eye className="mr-0.5 h-2.5 w-2.5" />
@@ -277,7 +303,7 @@ export default function TopicList() {
             className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950 px-1.5 py-0.5 h-6 text-[11px]"
             onClick={e => {
               e.stopPropagation();
-              handleDeleteClick(row.original.topic_name);
+              handleDeleteClick(row.original.topic_name, row.original.tenant);
             }}
           >
             <Trash2 className="h-3 w-3" />
@@ -288,13 +314,16 @@ export default function TopicList() {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const topicNameVal = searchValue.find(f => f.field === 'topic_name' || f.field === '')?.valueList?.[0];
     const ret = await getTopicListHttp({
       pagination: {
         offset: pageIndex * pageSize,
         limit: pageSize,
       },
-      topic_type: topicType,
+      ...(tenant ? { tenant } : {}),
+      ...(topicNameVal ? { topic_name: topicNameVal } : {}),
+      ...(topicType ? { topic_type: topicType } : {}),
     } as any);
     return {
       data: ret.topicsList,
@@ -302,29 +331,19 @@ export default function TopicList() {
     };
   };
 
-  const topicTypeSelector = (
-    <Select value={topicType} onValueChange={(value: 'all' | 'normal' | 'system') => setTopicType(value)}>
-      <SelectTrigger className="w-[180px] h-[34px]">
-        <SelectValue placeholder="Select Topic Type" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="all">All Topics</SelectItem>
-        <SelectItem value="normal">Normal Topics</SelectItem>
-        <SelectItem value="system">System Topics</SelectItem>
-      </SelectContent>
-    </Select>
-  );
-
   return (
     <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey={`QueryTopicListData-${topicType}`}
+        queryKey={`QueryTopicListData_${tenant ?? 'all'}_${topicType ?? 'all'}`}
         defaultPageSize={20}
         defaultSorting={[{ id: 'create_time', desc: true }]}
+        defaultColumnVisibility={{  }}
         headerClassName="bg-purple-600 text-white"
-        leftActions={topicTypeSelector}
+        leftActions={leftActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by topic name..."
       />
 
       {/* Delete Confirmation Dialog */}
@@ -333,7 +352,7 @@ export default function TopicList() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Topic</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete topic <strong>"{topicToDelete}"</strong>?
+              Are you sure you want to delete topic <strong>"{topicToDelete?.topic_name}"</strong>?
               <br />
               <br />
               <span className="text-red-600 dark:text-red-400 font-medium">

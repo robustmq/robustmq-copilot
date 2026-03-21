@@ -1,12 +1,40 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Plus, Users } from 'lucide-react';
 import UserList from './list';
 import { CreateUserForm } from './components/create-user-form';
+import { getTenantList } from '@/services/mqtt';
 
 export default function UserManagement() {
   const [createUserOpen, setCreateUserOpen] = useState(false);
+  const [selectedTenant, setSelectedTenant] = useState<string>('all');
+  const [appliedTenant, setAppliedTenant] = useState<string>('all');
+
+  const { data: tenantData } = useQuery({
+    queryKey: ['TenantListForUserFilter'],
+    queryFn: () => getTenantList({ pagination: { offset: 0, limit: 200 } }),
+  });
+
+  const tenants = tenantData?.tenantList ?? [];
+
+  const leftActions = (
+    <Select value={selectedTenant} onValueChange={setSelectedTenant}>
+      <SelectTrigger className="w-[160px] h-8 text-sm">
+        <SelectValue placeholder="All Tenants" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="all">All Tenants</SelectItem>
+        {tenants.map((t) => (
+          <SelectItem key={t.tenant_name} value={t.tenant_name}>
+            {t.tenant_name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
 
   const extraActions = (
     <Button
@@ -32,7 +60,12 @@ export default function UserManagement() {
         </div>
       </div>
       <div className="-mx-4 flex-1 overflow-auto px-4 py-1 lg:flex-row lg:space-x-12 lg:space-y-0">
-        <UserList extraActions={extraActions} />
+        <UserList
+          extraActions={extraActions}
+          leftActions={leftActions}
+          tenant={appliedTenant === 'all' ? undefined : appliedTenant}
+          onSearch={() => setAppliedTenant(selectedTenant)}
+        />
       </div>
 
       <CreateUserForm open={createUserOpen} onOpenChange={setCreateUserOpen} />

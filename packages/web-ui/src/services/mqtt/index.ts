@@ -175,9 +175,13 @@ export interface ClientRaw {
   network_connection: {
     connection_type: string;
     protocol: string;
+    addr: string;
     [key: string]: any;
   };
   mqtt_connection: {
+    tenant: string;
+    source_ip_addr: string;
+    login_user: string;
     create_time: string;
     [key: string]: any;
   };
@@ -217,12 +221,17 @@ const convertPaginationForHttpApi = (query?: QueryOption) => {
 };
 
 export const getClientListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   clientsList: ClientRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
+  const { tenant, client_id, ...rest } = query || {};
+  const httpQuery = {
+    ...convertPaginationForHttpApi(rest),
+    ...(tenant ? { tenant } : {}),
+    ...(client_id ? { client_id } : {}),
+  };
   const response = await requestApi('/api/mqtt/client/list', httpQuery, 'GET');
   return {
     clientsList: response.data,
@@ -232,6 +241,7 @@ export const getClientListHttp = async (
 
 // -------- Session APIs --------
 export interface SessionRaw {
+  tenant: string;
   client_id: string;
   session_expiry: number;
   is_contain_last_will: boolean;
@@ -244,12 +254,17 @@ export interface SessionRaw {
 }
 
 export const getSessionListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   sessionsList: SessionRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
+  const { tenant, client_id, ...rest } = query || {};
+  const httpQuery = {
+    ...convertPaginationForHttpApi(rest),
+    ...(tenant ? { tenant } : {}),
+    ...(client_id ? { client_id } : {}),
+  };
   const response = await requestApi('/api/mqtt/session/list', httpQuery, 'GET');
   return {
     sessionsList: response.data,
@@ -261,6 +276,7 @@ export const getSessionListHttp = async (
 export interface TopicRaw {
   topic_id: string;
   topic_name: string;
+  tenant: string;
   storage_type: string;
   partition: number;
   replication: number;
@@ -269,13 +285,23 @@ export interface TopicRaw {
 }
 
 export const getTopicListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; topic_name?: string; topic_type?: string },
 ): Promise<{
   topicsList: TopicRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/topic/list', httpQuery, 'GET');
+  const { tenant, topic_name, topic_type, ...rest } = (query || {}) as any;
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/topic/list',
+    {
+      ...httpQuery,
+      ...(tenant ? { tenant } : {}),
+      ...(topic_name ? { topic_name } : {}),
+      ...(topic_type ? { topic_type } : {}),
+    },
+    'GET',
+  );
   return {
     topicsList: response.data,
     totalCount: response.total_count,
@@ -319,8 +345,12 @@ export interface TopicDetail {
   storage_list: Record<string, TopicStorageShard> | null;
 }
 
-export const getTopicDetail = async (topicName: string): Promise<TopicDetail> => {
-  const response = await requestApi('/api/mqtt/topic/detail', { topic_name: topicName }, 'GET');
+export const getTopicDetail = async (topicName: string, tenant?: string): Promise<TopicDetail> => {
+  const response = await requestApi(
+    '/api/mqtt/topic/detail',
+    { topic_name: topicName, ...(tenant ? { tenant } : {}) },
+    'GET',
+  );
   return {
     topic_info: response.topic_info,
     retain_message: response.retain_message,
@@ -332,6 +362,7 @@ export const getTopicDetail = async (topicName: string): Promise<TopicDetail> =>
 
 export interface DeleteTopicRequest {
   topic_name: string;
+  tenant?: string;
 }
 
 export const deleteTopic = async (data: DeleteTopicRequest): Promise<string> => {
@@ -341,6 +372,7 @@ export const deleteTopic = async (data: DeleteTopicRequest): Promise<string> => 
 
 // -------- Subscribe APIs --------
 export interface SubscribeRaw {
+  tenant: string;
   client_id: string;
   path: string;
   broker_id: number;
@@ -356,13 +388,22 @@ export interface SubscribeRaw {
 }
 
 export const getSubscribeListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   subscriptionsList: SubscribeRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/subscribe/list', httpQuery, 'GET');
+  const { tenant, client_id, ...rest } = (query || {}) as any;
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/subscribe/list',
+    {
+      ...httpQuery,
+      ...(tenant ? { tenant } : {}),
+      ...(client_id ? { client_id } : {}),
+    },
+    'GET',
+  );
   return {
     subscriptionsList: response.data,
     totalCount: response.total_count,
@@ -415,6 +456,7 @@ export interface SubscribeDetail {
 }
 
 export interface GetSubscribeDetailRequest {
+  tenant: string;
   client_id: string;
   path: string;
 }
@@ -430,18 +472,25 @@ export const getSubscribeDetail = async (data: GetSubscribeDetailRequest): Promi
 
 // -------- User APIs --------
 export interface UserRaw {
+  tenant: string;
   username: string;
   is_superuser: boolean;
   create_time?: number; // Unix timestamp in seconds
 }
 
 export const getUserList = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; user_name?: string },
 ): Promise<{
   usersList: UserRaw[];
   totalCount: number;
 }> => {
-  const response = await requestApi('/api/mqtt/user/list', query || {}, 'GET');
+  const { tenant, user_name, ...rest } = query || {};
+  const httpQuery = {
+    ...convertPaginationForHttpApi(rest),
+    ...(tenant ? { tenant } : {}),
+    ...(user_name ? { user_name } : {}),
+  };
+  const response = await requestApi('/api/mqtt/user/list', httpQuery, 'GET');
   return {
     usersList: response.data,
     totalCount: response.total_count,
@@ -449,6 +498,7 @@ export const getUserList = async (
 };
 
 export interface CreateUserRequest {
+  tenant: string;
   username: string;
   password: string;
   is_superuser: boolean;
@@ -460,6 +510,7 @@ export const createUser = async (data: CreateUserRequest): Promise<string> => {
 };
 
 export interface DeleteUserRequest {
+  tenant: string;
   username: string;
 }
 
@@ -470,6 +521,9 @@ export const deleteUser = async (data: DeleteUserRequest): Promise<string> => {
 
 // -------- ACL APIs --------
 export interface AclRaw {
+  tenant: string;
+  name: string;
+  desc: string;
   resource_type: string;
   resource_name: string;
   topic: string;
@@ -479,13 +533,22 @@ export interface AclRaw {
 }
 
 export const getAclListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; name?: string },
 ): Promise<{
   aclsList: AclRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/acl/list', httpQuery, 'GET');
+  const { tenant, name, ...rest } = (query || {}) as any;
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/acl/list',
+    {
+      ...httpQuery,
+      ...(tenant ? { tenant } : {}),
+      ...(name ? { name } : {}),
+    },
+    'GET',
+  );
   return {
     aclsList: response.data,
     totalCount: response.total_count,
@@ -493,10 +556,13 @@ export const getAclListHttp = async (
 };
 
 export interface CreateAclRequest {
+  tenant: string;
+  name: string;
+  desc?: string;
   resource_type: string;
   resource_name: string;
-  topic: string;
-  ip: string;
+  topic?: string;
+  ip?: string;
   action: string;
   permission: string;
 }
@@ -507,12 +573,8 @@ export const createAcl = async (data: CreateAclRequest): Promise<string> => {
 };
 
 export interface DeleteAclRequest {
-  resource_type: string;
-  resource_name: string;
-  topic: string;
-  ip: string;
-  action: string;
-  permission: string;
+  tenant: string;
+  name: string;
 }
 
 export const deleteAcl = async (data: DeleteAclRequest): Promise<string> => {
@@ -522,20 +584,31 @@ export const deleteAcl = async (data: DeleteAclRequest): Promise<string> => {
 
 // -------- Blacklist APIs --------
 export interface BlacklistRaw {
+  name: string;
+  tenant: string;
   blacklist_type: string;
   resource_name: string;
+  end_time: string;
   desc: string;
-  end_time: string; // String format: "yyyy-MM-dd HH:mm:ss"
 }
 
 export const getBlacklistListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; name?: string },
 ): Promise<{
   blacklistsList: BlacklistRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/blacklist/list', httpQuery, 'GET');
+  const { tenant, name, ...rest } = (query || {}) as any;
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/blacklist/list',
+    {
+      ...httpQuery,
+      ...(tenant ? { tenant } : {}),
+      ...(name ? { name } : {}),
+    },
+    'GET',
+  );
   return {
     blacklistsList: response.data,
     totalCount: response.total_count,
@@ -543,10 +616,12 @@ export const getBlacklistListHttp = async (
 };
 
 export interface CreateBlacklistRequest {
+  name: string;
+  tenant: string;
   blacklist_type: string;
   resource_name: string;
   end_time: number;
-  desc: string;
+  desc?: string;
 }
 
 export const createBlacklist = async (data: CreateBlacklistRequest): Promise<string> => {
@@ -555,10 +630,8 @@ export const createBlacklist = async (data: CreateBlacklistRequest): Promise<str
 };
 
 export interface DeleteBlacklistRequest {
-  blacklist_type: string;
-  resource_name: string;
-  end_time: number;
-  desc: string;
+  tenant: string;
+  name: string;
 }
 
 export const deleteBlacklist = async (data: DeleteBlacklistRequest): Promise<string> => {
@@ -568,6 +641,7 @@ export const deleteBlacklist = async (data: DeleteBlacklistRequest): Promise<str
 
 // -------- Connector APIs --------
 export interface ConnectorRaw {
+  tenant: string;
   connector_name: string;
   connector_type: string;
   config: string;
@@ -581,11 +655,16 @@ export interface ConnectorRaw {
 
 export const getConnectorListHttp = async (
   query?: QueryOption,
+  tenant?: string,
+  connector_name?: string,
 ): Promise<{
   connectorsList: ConnectorRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
+  const { pagination, ...rest } = query || {};
+  const httpQuery = convertPaginationForHttpApi({ pagination, ...rest });
+  if (tenant) httpQuery.tenant = tenant;
+  if (connector_name) httpQuery.connector_name = connector_name;
   const response = await requestApi('/api/mqtt/connector/list', httpQuery, 'GET');
   return {
     connectorsList: response.data,
@@ -593,11 +672,20 @@ export const getConnectorListHttp = async (
   };
 };
 
+export interface FailureStrategy {
+  strategy: 'discard' | 'discard_after_retry' | 'dead_message_queue';
+  retry_total_times?: number;
+  wait_time_ms?: number;
+  topic_name?: string;
+}
+
 export interface CreateConnectorRequest {
+  tenant: string;
   connector_name: string;
   connector_type: string;
   config: string; // JSON string
   topic_name: string;
+  failure_strategy: FailureStrategy;
 }
 
 export const createConnector = async (data: CreateConnectorRequest): Promise<string> => {
@@ -606,6 +694,7 @@ export const createConnector = async (data: CreateConnectorRequest): Promise<str
 };
 
 export interface DeleteConnectorRequest {
+  tenant: string;
   connector_name: string;
 }
 
@@ -615,6 +704,7 @@ export const deleteConnector = async (data: DeleteConnectorRequest): Promise<str
 };
 
 export interface ConnectorDetailRequest {
+  tenant: string;
   connector_name: string;
 }
 
@@ -632,6 +722,7 @@ export const getConnectorDetail = async (data: ConnectorDetailRequest): Promise<
 
 // -------- Schema APIs --------
 export interface SchemaRaw {
+  tenant: string;
   name: string;
   schema_type: string;
   desc: string;
@@ -639,13 +730,22 @@ export interface SchemaRaw {
 }
 
 export const getSchemaListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; name?: string },
 ): Promise<{
   schemasList: SchemaRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query) || {};
-  const response = await requestApi('/api/mqtt/schema/list', httpQuery, 'GET');
+  const { tenant, name, ...rest } = (query || {}) as any;
+  const httpQuery = convertPaginationForHttpApi(rest) || {};
+  const response = await requestApi(
+    '/api/mqtt/schema/list',
+    {
+      ...httpQuery,
+      ...(tenant ? { tenant } : {}),
+      ...(name ? { name } : {}),
+    },
+    'GET',
+  );
   return {
     schemasList: response.data,
     totalCount: response.total_count,
@@ -653,10 +753,11 @@ export const getSchemaListHttp = async (
 };
 
 export interface CreateSchemaRequest {
+  tenant: string;
   schema_name: string;
   schema_type: string;
   schema: string;
-  desc: string;
+  desc?: string;
 }
 
 export const createSchema = async (data: CreateSchemaRequest): Promise<string> => {
@@ -665,6 +766,7 @@ export const createSchema = async (data: CreateSchemaRequest): Promise<string> =
 };
 
 export interface DeleteSchemaRequest {
+  tenant: string;
   schema_name: string;
 }
 
@@ -734,21 +836,29 @@ export const deleteSchemaBind = async (data: DeleteSchemaBindRequest): Promise<s
 
 // -------- Auto Subscribe APIs --------
 export interface AutoSubscribeRaw {
+  name: string;
+  tenant: string;
   topic: string;
   qos: string;
   no_local: boolean;
   retain_as_published: boolean;
   retained_handling: string;
+  desc?: string;
 }
 
 export const getAutoSubscribeListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; name?: string },
 ): Promise<{
   autoSubscribesList: AutoSubscribeRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/auto-subscribe/list', httpQuery, 'GET');
+  const { tenant, name, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/auto-subscribe/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(name ? { name } : {}) },
+    'GET',
+  );
   return {
     autoSubscribesList: response.data,
     totalCount: response.total_count,
@@ -756,11 +866,14 @@ export const getAutoSubscribeListHttp = async (
 };
 
 export interface CreateAutoSubscribeRequest {
+  name: string;
+  tenant: string;
   topic: string;
   qos: number;
   no_local: boolean;
   retain_as_published: boolean;
   retained_handling: number;
+  desc?: string;
 }
 
 export const createAutoSubscribe = async (data: CreateAutoSubscribeRequest): Promise<string> => {
@@ -769,7 +882,8 @@ export const createAutoSubscribe = async (data: CreateAutoSubscribeRequest): Pro
 };
 
 export interface DeleteAutoSubscribeRequest {
-  topic_name: string;
+  tenant: string;
+  name: string;
 }
 
 export const deleteAutoSubscribe = async (data: DeleteAutoSubscribeRequest): Promise<string> => {
@@ -779,6 +893,7 @@ export const deleteAutoSubscribe = async (data: DeleteAutoSubscribeRequest): Pro
 
 // -------- Slow Subscribe APIs --------
 export interface SlowSubscribeRaw {
+  tenant: string;
   client_id: string;
   topic_name: string;
   time_span: number;
@@ -788,13 +903,18 @@ export interface SlowSubscribeRaw {
 }
 
 export const getSlowSubscribeListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   slowSubscribesList: SlowSubscribeRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/slow-subscribe/list', httpQuery, 'GET');
+  const { tenant, client_id, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/slow-subscribe/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(client_id ? { client_id } : {}) },
+    'GET',
+  );
   return {
     slowSubscribesList: response.data,
     totalCount: response.total_count,
@@ -803,20 +923,28 @@ export const getSlowSubscribeListHttp = async (
 
 // -------- Topic Rewrite APIs --------
 export interface TopicRewriteRaw {
+  name: string;
+  tenant: string;
   source_topic: string;
   dest_topic: string;
   regex: string;
   action: string;
+  desc?: string;
 }
 
 export const getTopicRewriteListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; name?: string },
 ): Promise<{
   topicRewritesList: TopicRewriteRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/topic-rewrite/list', httpQuery, 'GET');
+  const { tenant, name, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/topic-rewrite/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(name ? { name } : {}) },
+    'GET',
+  );
   return {
     topicRewritesList: response.data,
     totalCount: response.total_count,
@@ -824,10 +952,13 @@ export const getTopicRewriteListHttp = async (
 };
 
 export interface CreateTopicRewriteRequest {
+  name: string;
+  tenant: string;
   action: string;
   source_topic: string;
   dest_topic: string;
   regex: string;
+  desc?: string;
 }
 
 export const createTopicRewrite = async (data: CreateTopicRewriteRequest): Promise<string> => {
@@ -836,8 +967,8 @@ export const createTopicRewrite = async (data: CreateTopicRewriteRequest): Promi
 };
 
 export interface DeleteTopicRewriteRequest {
-  action: string;
-  source_topic: string;
+  tenant: string;
+  name: string;
 }
 
 export const deleteTopicRewrite = async (data: DeleteTopicRewriteRequest): Promise<string> => {
@@ -869,19 +1000,25 @@ export const getSystemAlarmListHttp = async (
 
 // -------- Connection Jitter (Flapping Detect) APIs --------
 export interface ConnectionJitterRaw {
+  tenant: string;
   client_id: string;
-  before_last_windows_connections: number;
+  before_last_window_connections: number;
   first_request_time: number;
 }
 
 export const getConnectionJitterListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   connectionJittersList: ConnectionJitterRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/flapping_detect/list', httpQuery, 'GET');
+  const { tenant, client_id, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/flapping_detect/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(client_id ? { client_id } : {}) },
+    'GET',
+  );
   return {
     connectionJittersList: response.data,
     totalCount: response.total_count,
@@ -890,23 +1027,23 @@ export const getConnectionJitterListHttp = async (
 
 // -------- Ban Log APIs --------
 export interface BanLogRaw {
-  id: string;
+  tenant: string;
   ban_type: string;
   resource_name: string;
-  reason: string;
-  ban_time: number;
-  expire_time: number;
-  operator: string;
+  ban_source: string;
+  end_time: string;
+  create_time: string;
 }
 
 export const getBanLogListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string },
 ): Promise<{
   banLogsList: BanLogRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/ban-log/list', httpQuery, 'GET');
+  const { tenant, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi('/api/mqtt/ban-log/list', { ...httpQuery, ...(tenant ? { tenant } : {}) }, 'GET');
   return {
     banLogsList: response.data,
     totalCount: response.total_count,
@@ -915,6 +1052,7 @@ export const getBanLogListHttp = async (
 
 // -------- Pub/Sub APIs --------
 export interface SendMessageRequest {
+  tenant: string;
   topic: string;
   payload: string;
   retain: boolean;
@@ -932,6 +1070,7 @@ export interface MessageItem {
 }
 
 export interface ReadMessageRequest {
+  tenant: string;
   topic: string;
   offset: number;
 }
@@ -942,10 +1081,18 @@ export const readMessages = async (data: ReadMessageRequest): Promise<MessageIte
 };
 
 // -------- Configuration APIs --------
+export interface LimitQuota {
+  max_connections_per_node: number;
+  max_connection_rate: number;
+  max_topics: number;
+  max_sessions: number;
+  max_publish_rate: number;
+}
+
 export interface ClusterConfig {
   cluster_name: string;
   broker_id: number;
-  broker_ip: string;
+  broker_ip: string | null;
   roles: string[];
   grpc_port: number;
   http_port: number;
@@ -955,50 +1102,45 @@ export interface ClusterConfig {
     port: number;
   };
   log: {
-    log_config: string;
     log_path: string;
+    log_config: string;
   };
   runtime: {
     runtime_worker_threads: number;
+    server_worker_threads: number;
+    meta_worker_threads: number;
+    broker_worker_threads: number;
+    channels_per_address: number;
     tls_cert: string;
     tls_key: string;
   };
   network: {
     accept_thread_num: number;
     handler_thread_num: number;
-    response_thread_num: number;
     queue_size: number;
-    lock_max_try_mut_times: number;
-    lock_try_mut_sleep_time_ms: number;
   };
-  p_prof: {
+  pprof: {
     enable: boolean;
     port: number;
     frequency: number;
   };
-  message_storage: {
-    storage_type: string;
-    engine_config: any;
-    memory_config: any;
-    minio_config: any;
-    mysql_config: any;
-    rocksdb_config: any;
-    s3_config: any;
+  rocksdb: {
+    data_path: string;
+    max_open_files: number;
   };
   meta_runtime: {
     heartbeat_timeout_ms: number;
     heartbeat_check_time_ms: number;
     raft_write_timeout_sec: number;
-  };
-  rocksdb: {
-    data_path: string;
-    max_open_files: number;
+    offset_raft_group_num: number;
+    data_raft_group_num: number;
   };
   storage_runtime: {
     tcp_port: number;
     max_segment_size: number;
     io_thread_num: number;
     data_path: string[];
+    offset_enable_cache: boolean;
   };
   mqtt_server: {
     tcp_port: number;
@@ -1013,53 +1155,19 @@ export interface ClusterConfig {
     max_time: number;
     default_timeout: number;
   };
-  mqtt_auth_config: {
-    authn_config: {
-      authn_type: string;
-      jwt_config: any;
-      password_based_config: {
-        storage_config: {
-          storage_type: string;
-          placement_config: { journal_addr: string } | null;
-          mysql_config: any;
-          postgres_config: any;
-          redis_config: any;
-          http_config: any;
-        };
-        password_config: {
-          credential_type: string;
-          algorithm: string;
-          salt_position: string;
-          salt_rounds: number | null;
-          mac_fun: string | null;
-          iterations: number | null;
-          dk_length: number | null;
-        };
-      } | null;
-    };
-    authz_config: {
-      storage_config: {
-        storage_type: string;
-        placement_config: { journal_addr: string } | null;
-        mysql_config: any;
-        postgres_config: any;
-        redis_config: any;
-        http_config: any;
-      };
-    };
-  };
   mqtt_runtime: {
     default_user: string;
     default_password: string;
-    max_connection_num: number;
     durable_sessions_enable: boolean;
+    secret_free_login: boolean;
+    is_self_protection_status: boolean;
   };
   mqtt_offline_message: {
     enable: boolean;
     expire_ms: number;
     max_messages_num: number;
   };
-  mqtt_slow_subscribe_config: {
+  mqtt_slow_subscribe: {
     enable: boolean;
     record_time: number;
     delay_type: string;
@@ -1070,19 +1178,15 @@ export interface ClusterConfig {
     max_client_connections: number;
     ban_time: number;
   };
-  mqtt_protocol_config: {
+  mqtt_protocol: {
     max_session_expiry_interval: number;
     default_session_expiry_interval: number;
     topic_alias_max: number;
-    max_qos_flight_message: number;
+    max_qos_flight_message?: number;
     max_packet_size: number;
     receive_max: number;
     max_message_expiry_interval: number;
     client_pkid_persistent: boolean;
-  };
-  mqtt_security: {
-    is_self_protection_status: boolean;
-    secret_free_login: boolean;
   };
   mqtt_schema: {
     enable: boolean;
@@ -1095,10 +1199,23 @@ export interface ClusterConfig {
     enable: boolean;
     os_cpu_high_watermark: number;
     os_memory_high_watermark: number;
+    system_topic_interval_ms: number;
   };
-  storage_offset: {
-    enable_cache: boolean;
+  cluster_limit: {
+    max_network_connection: number;
+    max_network_connection_rate: number;
+    max_admin_http_uri_rate: number;
   };
+  mqtt_limit: {
+    cluster: LimitQuota;
+    tenant: LimitQuota;
+  };
+  llm_client: {
+    platform: string;
+    model: string;
+    token: string | null;
+    base_url: string | null;
+  } | null;
 }
 
 export const getClusterConfig = async (): Promise<ClusterConfig> => {
@@ -1185,5 +1302,60 @@ export interface ClusterStatus {
 
 export const getClusterStatus = async (): Promise<ClusterStatus> => {
   const response = await requestApi('/api/status', undefined, 'GET');
+  return response;
+};
+
+/** Tenant API */
+export interface TenantConfig {
+  max_connections_per_node?: number;
+  max_create_connection_rate_per_second?: number;
+  max_topics?: number;
+  max_sessions?: number;
+  max_publish_rate?: number;
+}
+
+export interface TenantRaw {
+  tenant_name: string;
+  desc: string;
+  config: TenantConfig;
+  create_time: number;
+}
+
+export interface CreateTenantRequest {
+  tenant_name: string;
+  desc?: string;
+  config?: TenantConfig;
+}
+
+export interface UpdateTenantRequest {
+  tenant_name: string;
+  desc?: string;
+  config?: TenantConfig;
+}
+
+export interface DeleteTenantRequest {
+  tenant_name: string;
+}
+
+export const getTenantList = async (query?: QueryOption): Promise<{ tenantList: TenantRaw[]; totalCount: number }> => {
+  const response = await requestApi('/api/tenant/list', query || {}, 'GET');
+  return {
+    tenantList: response.data,
+    totalCount: response.total_count,
+  };
+};
+
+export const createTenant = async (data: CreateTenantRequest): Promise<string> => {
+  const response = await requestApi('/api/tenant/create', data);
+  return response;
+};
+
+export const deleteTenant = async (data: DeleteTenantRequest): Promise<string> => {
+  const response = await requestApi('/api/tenant/delete', data);
+  return response;
+};
+
+export const updateTenant = async (data: UpdateTenantRequest): Promise<string> => {
+  const response = await requestApi('/api/tenant/update', data);
   return response;
 };

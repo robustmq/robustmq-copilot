@@ -18,9 +18,10 @@ import { deleteConnector } from '@/services/mqtt';
 
 interface DeleteConnectorButtonProps {
   connectorName: string;
+  tenant: string;
 }
 
-export function DeleteConnectorButton({ connectorName }: DeleteConnectorButtonProps) {
+export function DeleteConnectorButton({ connectorName, tenant }: DeleteConnectorButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -46,7 +47,7 @@ export function DeleteConnectorButton({ connectorName }: DeleteConnectorButtonPr
   });
 
   const handleDelete = () => {
-    deleteConnectorMutation.mutate({ connector_name: connectorName });
+    deleteConnectorMutation.mutate({ tenant, connector_name: connectorName });
   };
 
   return (

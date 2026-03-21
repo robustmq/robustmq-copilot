@@ -14,12 +14,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useState, useEffect, useRef } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { sendMessage, readMessages, getTopicListHttp, MessageItem } from '@/services/mqtt';
+import { sendMessage, readMessages, getTopicListHttp, getTenantList, MessageItem } from '@/services/mqtt';
 import { toast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 
 const formSchema = z
   .object({
+    tenant: z.string().min(1, { message: 'Tenant is required' }),
     topicMode: z.enum(['existing', 'custom']),
     existingTopic: z.string().optional(),
     customTopic: z.string().optional(),
@@ -28,18 +29,11 @@ const formSchema = z
   })
   .refine(
     data => {
-      if (data.topicMode === 'existing' && !data.existingTopic) {
-        return false;
-      }
-      if (data.topicMode === 'custom' && !data.customTopic) {
-        return false;
-      }
+      if (data.topicMode === 'existing' && !data.existingTopic) return false;
+      if (data.topicMode === 'custom' && !data.customTopic) return false;
       return true;
     },
-    {
-      message: 'Topic is required',
-      path: ['existingTopic'],
-    },
+    { message: 'Topic is required', path: ['existingTopic'] },
   );
 
 type FormData = z.infer<typeof formSchema>;
@@ -48,11 +42,13 @@ export default function PubSub() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [messages, setMessages] = useState<MessageItem[]>([]);
   const [selectedTopic, setSelectedTopic] = useState<string>('');
+  const [selectedReadTenant, setSelectedReadTenant] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      tenant: '',
       topicMode: 'existing',
       existingTopic: '',
       customTopic: '',
@@ -64,25 +60,53 @@ export default function PubSub() {
   const topicMode = form.watch('topicMode');
   const existingTopic = form.watch('existingTopic');
   const customTopic = form.watch('customTopic');
+  const publishTenant = form.watch('tenant');
 
-  // Fetch available topics
-  const { data: topicsData, isLoading: isLoadingTopics } = useQuery({
-    queryKey: ['topicList'],
+  // Fetch tenant list
+  const { data: tenantData } = useQuery({
+    queryKey: ['TenantListForPubSub'],
+    queryFn: () => getTenantList({ pagination: { offset: 0, limit: 200 } }),
+  });
+  const tenants = tenantData?.tenantList ?? [];
+
+  // Fetch topics filtered by publish tenant
+  const { data: publishTopicsData, isLoading: isLoadingPublishTopics } = useQuery({
+    queryKey: ['topicListForPublish', publishTenant],
     queryFn: async () => {
       const response = await getTopicListHttp({
         pagination: { offset: 0, limit: 100 },
         topic_type: 'normal',
+        ...(publishTenant ? { tenant: publishTenant } : {}),
       } as any);
       return response.topicsList;
     },
+    enabled: !!publishTenant,
   });
 
-  // Set first available topic as default
+  // Fetch topics filtered by read tenant
+  const { data: readTopicsData, isLoading: isLoadingReadTopics } = useQuery({
+    queryKey: ['topicListForRead', selectedReadTenant],
+    queryFn: async () => {
+      const response = await getTopicListHttp({
+        pagination: { offset: 0, limit: 100 },
+        topic_type: 'normal',
+        ...(selectedReadTenant ? { tenant: selectedReadTenant } : {}),
+      } as any);
+      return response.topicsList;
+    },
+    enabled: !!selectedReadTenant,
+  });
+
+  // Reset existingTopic when tenant changes
   useEffect(() => {
-    if (topicsData && topicsData.length > 0 && !form.getValues('existingTopic')) {
-      form.setValue('existingTopic', topicsData[0].topic_name);
-    }
-  }, [topicsData, form]);
+    form.setValue('existingTopic', '');
+  }, [publishTenant]);
+
+  // Reset read topic when read tenant changes
+  useEffect(() => {
+    setSelectedTopic('');
+    setMessages([]);
+  }, [selectedReadTenant]);
 
   // Sync selected topic from left panel to right panel
   useEffect(() => {
@@ -117,10 +141,8 @@ export default function PubSub() {
         ),
       });
       form.setValue('content', '');
-      // Set the selected topic to the sent topic to view messages
       setSelectedTopic(variables.topic);
-      // Refresh messages
-      refreshMessages();
+      refetchMessages();
     },
     onError: (error: any) => {
       console.error('Failed to send message:', error);
@@ -132,55 +154,34 @@ export default function PubSub() {
 
   // Fetch messages
   const { data: messagesData, refetch: refetchMessages } = useQuery({
-    queryKey: ['messages', selectedTopic],
+    queryKey: ['messages', selectedReadTenant, selectedTopic],
     queryFn: async () => {
-      if (!selectedTopic) return [];
-      const response = await readMessages({
-        topic: selectedTopic,
-        offset: 0,
-      });
-      return response;
+      if (!selectedTopic || !selectedReadTenant) return [];
+      return readMessages({ tenant: selectedReadTenant, topic: selectedTopic, offset: 0 });
     },
-    enabled: !!selectedTopic,
-    refetchInterval: selectedTopic ? 5000 : false, // Auto refresh every 5 seconds when topic is selected
+    enabled: !!selectedTopic && !!selectedReadTenant,
+    refetchInterval: selectedTopic && selectedReadTenant ? 5000 : false,
   });
 
   useEffect(() => {
-    if (messagesData) {
-      setMessages(messagesData);
-    }
+    if (messagesData) setMessages(messagesData);
   }, [messagesData]);
 
-  // Auto scroll to bottom when messages update
   useEffect(() => {
     if (messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
-  const refreshMessages = () => {
-    refetchMessages();
-  };
-
   const onSubmit = (data: FormData) => {
     setIsSubmitting(true);
     const topic = data.topicMode === 'existing' ? data.existingTopic : data.customTopic;
-
     if (!topic) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Topic is required',
-      });
+      toast({ variant: 'destructive', title: 'Error', description: 'Topic is required' });
       setIsSubmitting(false);
       return;
     }
-
-    sendMutation.mutate({
-      topic,
-      payload: data.content,
-      retain: data.retain,
-    });
+    sendMutation.mutate({ tenant: data.tenant, topic, payload: data.content, retain: data.retain });
   };
 
   return (
@@ -212,6 +213,33 @@ export default function PubSub() {
           <CardContent className="flex-1 overflow-auto p-6 bg-white dark:bg-gray-950">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+
+                {/* Tenant */}
+                <FormField
+                  control={form.control}
+                  name="tenant"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-semibold text-gray-700 dark:text-gray-200">Tenant</FormLabel>
+                      <Select onValueChange={field.onChange} value={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="h-11 border-2 focus:border-blue-500 transition-colors">
+                            <SelectValue placeholder="Select tenant" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {tenants.map(t => (
+                            <SelectItem key={t.tenant_name} value={t.tenant_name}>
+                              {t.tenant_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 {/* Topic Mode Selection */}
                 <FormField
                   control={form.control}
@@ -258,23 +286,25 @@ export default function PubSub() {
                         <Select
                           onValueChange={field.onChange}
                           value={field.value}
-                          disabled={!topicsData || topicsData.length === 0}
+                          disabled={!publishTenant || !publishTopicsData || publishTopicsData.length === 0}
                         >
                           <FormControl>
                             <SelectTrigger className="h-11 border-2 focus:border-blue-500 transition-colors">
                               <SelectValue
                                 placeholder={
-                                  isLoadingTopics
-                                    ? 'Loading...'
-                                    : !topicsData || topicsData.length === 0
-                                      ? 'No topics available'
-                                      : 'Select a topic'
+                                  !publishTenant
+                                    ? 'Select tenant first'
+                                    : isLoadingPublishTopics
+                                      ? 'Loading...'
+                                      : !publishTopicsData || publishTopicsData.length === 0
+                                        ? 'No topics available'
+                                        : 'Select a topic'
                                 }
                               />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {topicsData?.map(topic => (
+                            {publishTopicsData?.map(topic => (
                               <SelectItem key={topic.topic_id} value={topic.topic_name}>
                                 {topic.topic_name}
                               </SelectItem>
@@ -399,20 +429,35 @@ export default function PubSub() {
                   Received Messages
                 </span>
               </div>
-              {/* Topic Selector */}
+              {/* Tenant + Topic Selector */}
               <div className="flex items-center space-x-2">
-                <label className="text-xs font-medium text-gray-600 dark:text-gray-300 whitespace-nowrap">Topic:</label>
-                <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-                  <SelectTrigger className="h-8 w-[200px] text-sm border-2 focus:border-green-500 transition-colors">
-                    <SelectValue placeholder={isLoadingTopics ? 'Loading...' : 'Select topic'} />
+                <Select value={selectedReadTenant} onValueChange={setSelectedReadTenant}>
+                  <SelectTrigger className="h-8 w-[130px] text-sm border-2 focus:border-green-500 transition-colors">
+                    <SelectValue placeholder="Tenant" />
                   </SelectTrigger>
                   <SelectContent>
-                    {topicsData?.map(topic => (
+                    {tenants.map(t => (
+                      <SelectItem key={t.tenant_name} value={t.tenant_name}>
+                        {t.tenant_name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select
+                  value={selectedTopic}
+                  onValueChange={setSelectedTopic}
+                  disabled={!selectedReadTenant}
+                >
+                  <SelectTrigger className="h-8 w-[160px] text-sm border-2 focus:border-green-500 transition-colors">
+                    <SelectValue placeholder={!selectedReadTenant ? 'Select tenant first' : isLoadingReadTopics ? 'Loading...' : 'Select topic'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {readTopicsData?.map(topic => (
                       <SelectItem key={topic.topic_id} value={topic.topic_name}>
                         {topic.topic_name}
                       </SelectItem>
                     ))}
-                    {(!topicsData || topicsData.length === 0) && (
+                    {(!readTopicsData || readTopicsData.length === 0) && selectedReadTenant && (
                       <SelectItem value="__empty__" disabled>
                         No topics available
                       </SelectItem>
@@ -425,7 +470,13 @@ export default function PubSub() {
           <CardContent className="flex-1 p-0 bg-gray-50/50 dark:bg-gray-900/50 overflow-hidden">
             <ScrollArea className="h-[calc(100vh-20rem)] w-full">
               <div className="p-4 space-y-3">
-                {!selectedTopic ? (
+                {!selectedReadTenant ? (
+                  <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
+                    <Inbox className="h-16 w-16 mb-4 text-gray-300 dark:text-gray-700" />
+                    <p className="text-lg font-medium">Select a tenant to get started</p>
+                    <p className="text-sm text-gray-400 mt-1">Choose a tenant from the dropdown above</p>
+                  </div>
+                ) : !selectedTopic ? (
                   <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
                     <Inbox className="h-16 w-16 mb-4 text-gray-300 dark:text-gray-700" />
                     <p className="text-lg font-medium">Select a topic to view messages</p>
@@ -456,7 +507,7 @@ export default function PubSub() {
                           </div>
                           <div className="flex items-center space-x-1.5 text-xs text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md">
                             <Clock className="h-3 w-3" />
-                            <span>{format(new Date(message.timestamp * 1000), 'yyyy-MM-dd HH:mm:ss')}</span>
+                            <span>{format(new Date(message.timestamp), 'yyyy-MM-dd HH:mm:ss')}</span>
                           </div>
                         </div>
 

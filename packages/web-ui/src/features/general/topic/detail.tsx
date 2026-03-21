@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from '@tanstack/react-router';
+import { useParams, useNavigate, useRouterState } from '@tanstack/react-router';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,7 @@ import {
   Settings,
   Activity,
   BarChart3,
+  Building2,
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -52,6 +53,12 @@ export default function TopicDetail() {
   const { topicId } = useParams({ from: '/_authenticated/general/topic/$topicId' });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const routerState = useRouterState();
+  const stateTenant = (routerState.location.state as any)?.tenant as string | undefined;
+  if (stateTenant) {
+    sessionStorage.setItem(`topic_tenant_${topicId}`, stateTenant);
+  }
+  const tenant = stateTenant ?? sessionStorage.getItem(`topic_tenant_${topicId}`) ?? undefined;
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [schemaToDelete, setSchemaToDelete] = useState<string | null>(null);
   const [isSchemaRefreshing, setIsSchemaRefreshing] = useState(false);
@@ -98,10 +105,10 @@ export default function TopicDetail() {
 
   // 调用 topic/detail 接口获取详细信息（topicId 参数实际传的是 topic_name）
   const { data, isLoading, error } = useQuery({
-    queryKey: ['topicDetail', topicId],
+    queryKey: ['topicDetail', topicId, tenant],
     queryFn: async () => {
-      console.log('[Topic Detail] Fetching topic detail for:', topicId);
-      const result = await getTopicDetail(topicId);
+      console.log('[Topic Detail] Fetching topic detail for:', topicId, 'tenant:', tenant);
+      const result = await getTopicDetail(topicId, tenant);
       console.log('[Topic Detail] API Response:', result);
       return result;
     },
@@ -271,6 +278,20 @@ export default function TopicDetail() {
                 <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
                   <div className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
                     <div className="flex-shrink-0 mt-1">
+                      <Building2 className="h-4 w-4 text-purple-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide">
+                        Tenant
+                      </label>
+                      <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
+                        {tenant || topicInfo?.tenant || '-'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                    <div className="flex-shrink-0 mt-1">
                       <Hash className="h-4 w-4 text-purple-500" />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -351,6 +372,20 @@ export default function TopicDetail() {
                       </label>
                       <div className="mt-1 text-sm font-mono text-gray-900 dark:text-gray-100">
                         {formattedCreateTime}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                    <div className="flex-shrink-0 mt-1">
+                      <Building2 className="h-4 w-4 text-purple-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide">
+                        Tenant
+                      </label>
+                      <div className="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        {tenant || '-'}
                       </div>
                     </div>
                   </div>

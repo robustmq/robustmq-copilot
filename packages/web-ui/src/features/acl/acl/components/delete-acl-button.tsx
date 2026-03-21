@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { deleteAcl, DeleteAclRequest, AclRaw } from '@/services/mqtt';
+import { deleteAcl, AclRaw } from '@/services/mqtt';
 
 interface DeleteAclButtonProps {
   acl: AclRaw;
@@ -25,32 +25,19 @@ export function DeleteAclButton({ acl }: DeleteAclButtonProps) {
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: (data: DeleteAclRequest) => deleteAcl(data),
+    mutationFn: () => deleteAcl({ tenant: acl.tenant, name: acl.name }),
     onSuccess: () => {
       toast({
         title: 'Success',
         description: 'ACL rule deleted successfully',
       });
-      queryClient.invalidateQueries({ queryKey: ['QueryAclListData'] });
+      queryClient.refetchQueries({ queryKey: ['QueryAclListData_all'], exact: false });
       setOpen(false);
     },
     onError: (error: any) => {
-      // 错误信息已经在 requestApi 中显示了，这里不需要重复显示
       console.error('Failed to delete ACL rule:', error);
     },
   });
-
-  const handleDelete = () => {
-    const deleteData: DeleteAclRequest = {
-      resource_type: acl.resource_type,
-      resource_name: acl.resource_name,
-      topic: acl.topic,
-      ip: acl.ip,
-      action: acl.action,
-      permission: acl.permission,
-    };
-    deleteMutation.mutate(deleteData);
-  };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -67,27 +54,14 @@ export function DeleteAclButton({ acl }: DeleteAclButtonProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Delete ACL Rule</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this ACL rule? This action cannot be undone.
+            Are you sure you want to delete ACL rule <strong>"{acl.name}"</strong>? This action cannot be undone.
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-md">
               <div className="text-sm space-y-1">
-                <div>
-                  <span className="font-medium">Resource Type:</span> {acl.resource_type}
-                </div>
-                <div>
-                  <span className="font-medium">Resource Name:</span> {acl.resource_name}
-                </div>
-                <div>
-                  <span className="font-medium">Topic:</span> {acl.topic}
-                </div>
-                <div>
-                  <span className="font-medium">IP:</span> {acl.ip}
-                </div>
-                <div>
-                  <span className="font-medium">Action:</span> {acl.action}
-                </div>
-                <div>
-                  <span className="font-medium">Permission:</span> {acl.permission}
-                </div>
+                <div><span className="font-medium">Tenant:</span> {acl.tenant}</div>
+                <div><span className="font-medium">Name:</span> {acl.name}</div>
+                <div><span className="font-medium">Resource Type:</span> {acl.resource_type}</div>
+                <div><span className="font-medium">Action:</span> {acl.action}</div>
+                <div><span className="font-medium">Permission:</span> {acl.permission}</div>
               </div>
             </div>
           </AlertDialogDescription>
@@ -95,7 +69,7 @@ export function DeleteAclButton({ acl }: DeleteAclButtonProps) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
             className="bg-red-600 hover:bg-red-700 text-white"
           >

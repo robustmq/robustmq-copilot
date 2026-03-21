@@ -4,11 +4,18 @@ import { getSubscribeListHttp } from '@/services/mqtt';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { User, Route, Wifi, Shield, Clock, Eye, Copy, Share2 } from 'lucide-react';
+import { User, Route, Wifi, Shield, Clock, Eye, Copy, Share2, Building2 } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { useToast } from '@/hooks/use-toast';
+import { FilterValue } from '@/components/table/filter';
 
-export default function SubscribeList() {
+interface SubscribeListProps {
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
+}
+
+export default function SubscribeList({ leftActions, tenant, onSearch }: SubscribeListProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -21,7 +28,19 @@ export default function SubscribeList() {
       duration: 2000,
     });
   };
+
   const columns: ColumnDef<any>[] = [
+    {
+      id: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <Building2 className="h-4 w-4 text-purple-400" />
+          <span className="text-sm text-gray-600 dark:text-gray-400">{row.original.tenant || '-'}</span>
+        </div>
+      ),
+      size: 140,
+    },
     {
       id: 'client_id',
       accessorKey: 'client_id',
@@ -53,7 +72,6 @@ export default function SubscribeList() {
           </Button>
         </div>
       ),
-      attr: true,
       size: 280,
     },
     {
@@ -84,7 +102,6 @@ export default function SubscribeList() {
           </Button>
         </div>
       ),
-      attr: true,
       size: 280,
     },
     {
@@ -163,18 +180,15 @@ export default function SubscribeList() {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: any[]) => {
-    const filter = searchValue[0];
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const clientIdVal = searchValue.find(f => f.field === 'client_id' || f.field === '')?.valueList?.[0];
     const ret = await getSubscribeListHttp({
       pagination: {
         offset: pageIndex * pageSize,
         limit: pageSize,
       },
-      ...(filter && {
-        filter_field: filter.field,
-        filter_values: filter.valueList,
-        exact_match: filter.exactMatch ? 'true' : 'false',
-      }),
+      ...(tenant ? { tenant } : {}),
+      ...(clientIdVal ? { client_id: clientIdVal } : {}),
     });
     return {
       data: ret.subscriptionsList,
@@ -187,8 +201,11 @@ export default function SubscribeList() {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QuerySubscribeListData"
+        queryKey={`QuerySubscribeListData_${tenant ?? 'all'}`}
         headerClassName="bg-purple-600 text-white"
+        leftActions={leftActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by client ID..."
       />
     </div>
   );

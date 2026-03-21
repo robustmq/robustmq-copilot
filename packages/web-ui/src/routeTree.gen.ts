@@ -16,6 +16,8 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as AuthenticatedSystemTenantRouteImport } from './routes/_authenticated/system/tenant'
+import { Route as AuthenticatedSystemSystemLogRouteImport } from './routes/_authenticated/system/system-log'
 import { Route as AuthenticatedSystemPubSubRouteImport } from './routes/_authenticated/system/pub-sub'
 import { Route as AuthenticatedSystemConfigurationRouteImport } from './routes/_authenticated/system/configuration'
 import { Route as AuthenticatedSystemBanLogRouteImport } from './routes/_authenticated/system/ban-log'
@@ -204,6 +206,18 @@ const AuthenticatedAppsIndexLazyRoute =
   } as any).lazy(() =>
     import('./routes/_authenticated/apps/index.lazy').then((d) => d.Route),
   )
+const AuthenticatedSystemTenantRoute =
+  AuthenticatedSystemTenantRouteImport.update({
+    id: '/system/tenant',
+    path: '/system/tenant',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSystemSystemLogRoute =
+  AuthenticatedSystemSystemLogRouteImport.update({
+    id: '/system/system-log',
+    path: '/system/system-log',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSystemPubSubRoute =
   AuthenticatedSystemPubSubRouteImport.update({
     id: '/system/pub-sub',
@@ -454,6 +468,8 @@ export interface FileRoutesByFullPath {
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
   '/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
+  '/system/system-log': typeof AuthenticatedSystemSystemLogRoute
+  '/system/tenant': typeof AuthenticatedSystemTenantRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute
@@ -497,6 +513,8 @@ export interface FileRoutesByTo {
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
   '/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
+  '/system/system-log': typeof AuthenticatedSystemSystemLogRoute
+  '/system/tenant': typeof AuthenticatedSystemTenantRoute
   '/apps': typeof AuthenticatedAppsIndexLazyRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/system-setting': typeof AuthenticatedSystemSettingIndexLazyRoute
@@ -542,6 +560,8 @@ export interface FileRoutesById {
   '/_authenticated/system/ban-log': typeof AuthenticatedSystemBanLogRoute
   '/_authenticated/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/_authenticated/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
+  '/_authenticated/system/system-log': typeof AuthenticatedSystemSystemLogRoute
+  '/_authenticated/system/tenant': typeof AuthenticatedSystemTenantRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexLazyRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexLazyRoute
   '/_authenticated/system-setting/': typeof AuthenticatedSystemSettingIndexLazyRoute
@@ -587,6 +607,8 @@ export interface FileRouteTypes {
     | '/system/ban-log'
     | '/system/configuration'
     | '/system/pub-sub'
+    | '/system/system-log'
+    | '/system/tenant'
     | '/apps'
     | '/help-center'
     | '/system-setting'
@@ -630,6 +652,8 @@ export interface FileRouteTypes {
     | '/system/ban-log'
     | '/system/configuration'
     | '/system/pub-sub'
+    | '/system/system-log'
+    | '/system/tenant'
     | '/apps'
     | '/help-center'
     | '/system-setting'
@@ -674,6 +698,8 @@ export interface FileRouteTypes {
     | '/_authenticated/system/ban-log'
     | '/_authenticated/system/configuration'
     | '/_authenticated/system/pub-sub'
+    | '/_authenticated/system/system-log'
+    | '/_authenticated/system/tenant'
     | '/_authenticated/apps/'
     | '/_authenticated/help-center/'
     | '/_authenticated/system-setting/'
@@ -828,6 +854,20 @@ declare module '@tanstack/react-router' {
       path: '/apps'
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/system/tenant': {
+      id: '/_authenticated/system/tenant'
+      path: '/system/tenant'
+      fullPath: '/system/tenant'
+      preLoaderRoute: typeof AuthenticatedSystemTenantRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/system/system-log': {
+      id: '/_authenticated/system/system-log'
+      path: '/system/system-log'
+      fullPath: '/system/system-log'
+      preLoaderRoute: typeof AuthenticatedSystemSystemLogRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/system/pub-sub': {
@@ -1021,6 +1061,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSystemBanLogRoute: typeof AuthenticatedSystemBanLogRoute
   AuthenticatedSystemConfigurationRoute: typeof AuthenticatedSystemConfigurationRoute
   AuthenticatedSystemPubSubRoute: typeof AuthenticatedSystemPubSubRoute
+  AuthenticatedSystemSystemLogRoute: typeof AuthenticatedSystemSystemLogRoute
+  AuthenticatedSystemTenantRoute: typeof AuthenticatedSystemTenantRoute
   AuthenticatedAppsIndexLazyRoute: typeof AuthenticatedAppsIndexLazyRoute
   AuthenticatedHelpCenterIndexLazyRoute: typeof AuthenticatedHelpCenterIndexLazyRoute
   AuthenticatedSystemSettingIndexLazyRoute: typeof AuthenticatedSystemSettingIndexLazyRoute
@@ -1054,6 +1096,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSystemBanLogRoute: AuthenticatedSystemBanLogRoute,
   AuthenticatedSystemConfigurationRoute: AuthenticatedSystemConfigurationRoute,
   AuthenticatedSystemPubSubRoute: AuthenticatedSystemPubSubRoute,
+  AuthenticatedSystemSystemLogRoute: AuthenticatedSystemSystemLogRoute,
+  AuthenticatedSystemTenantRoute: AuthenticatedSystemTenantRoute,
   AuthenticatedAppsIndexLazyRoute: AuthenticatedAppsIndexLazyRoute,
   AuthenticatedHelpCenterIndexLazyRoute: AuthenticatedHelpCenterIndexLazyRoute,
   AuthenticatedSystemSettingIndexLazyRoute:

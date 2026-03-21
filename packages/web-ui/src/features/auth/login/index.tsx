@@ -132,19 +132,19 @@ export default function Login() {
                   <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-300 via-purple-200 to-indigo-300 bg-clip-text text-transparent">
                     {APP_CONFIG.NAME}
                   </h1>
-                  <p className="text-sm text-purple-300 font-medium">Cloud-Native & AI-Native Messaging</p>
+                  <p className="text-sm text-purple-300 font-medium">Unified Messaging Infrastructure for AI & IoT</p>
                 </div>
               </div>
 
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold leading-tight">
-                  Next-Generation
+                  Connect AI, IoT & Data
                   <br />
                   <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-                    Message Queue Platform
+                    Through One Messaging Layer
                   </span>
                 </h2>
-                <p className="text-purple-200 text-lg">100% Rust implementation with microsecond latency</p>
+                <p className="text-purple-200 text-lg">One data layer. Every protocol. Built with Rust.</p>
               </div>
             </div>
 
@@ -155,39 +155,39 @@ export default function Login() {
                   <div className="p-2 rounded-lg bg-purple-500/20 backdrop-blur-sm border border-purple-400/30">
                     <Shield className="h-5 w-5 text-purple-300" />
                   </div>
-                  <span className="text-sm font-semibold text-purple-200">Rust Kernel</span>
+                  <span className="text-sm font-semibold text-purple-200">Rust Performance</span>
                 </div>
-                <p className="text-xs text-purple-300/80 pl-11">Zero GC, Memory Safe</p>
+                <p className="text-xs text-purple-300/80 pl-11">Zero GC, microsecond latency</p>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 rounded-lg bg-indigo-500/20 backdrop-blur-sm border border-indigo-400/30">
-                    <Cloud className="h-5 w-5 text-indigo-300" />
+                    <Zap className="h-5 w-5 text-indigo-300" />
                   </div>
-                  <span className="text-sm font-semibold text-indigo-200">Cloud-Native</span>
+                  <span className="text-sm font-semibold text-indigo-200">Unified Protocol</span>
                 </div>
-                <p className="text-xs text-indigo-300/80 pl-11">Serverless Scaling</p>
+                <p className="text-xs text-indigo-300/80 pl-11">MQTT in, Kafka out — one data plane</p>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 rounded-lg bg-blue-500/20 backdrop-blur-sm border border-blue-400/30">
-                    <Zap className="h-5 w-5 text-blue-300" />
+                    <Cpu className="h-5 w-5 text-blue-300" />
                   </div>
-                  <span className="text-sm font-semibold text-blue-200">Multi-Protocol</span>
+                  <span className="text-sm font-semibold text-blue-200">AI-Native</span>
                 </div>
-                <p className="text-xs text-blue-300/80 pl-11">MQTT/Kafka/AMQP</p>
+                <p className="text-xs text-blue-300/80 pl-11">Agent-scale topics & training data acceleration</p>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center space-x-2">
                   <div className="p-2 rounded-lg bg-purple-500/20 backdrop-blur-sm border border-purple-400/30">
-                    <Cpu className="h-5 w-5 text-purple-300" />
+                    <Cloud className="h-5 w-5 text-purple-300" />
                   </div>
-                  <span className="text-sm font-semibold text-purple-200">AI-Native</span>
+                  <span className="text-sm font-semibold text-purple-200">Edge to Cloud</span>
                 </div>
-                <p className="text-xs text-purple-300/80 pl-11">Microsecond Latency</p>
+                <p className="text-xs text-purple-300/80 pl-11">One architecture, IoT to cluster</p>
               </div>
             </div>
 
@@ -198,7 +198,7 @@ export default function Login() {
               onMouseLeave={() => setIsHovering(false)}
             >
               <p className="text-sm text-purple-300/80 italic select-none cursor-default">
-                "Glad to have the opportunity to show you something different"
+                "One data plane. Every protocol. No more bridges."
               </p>
             </div>
           </div>
