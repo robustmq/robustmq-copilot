@@ -102,6 +102,7 @@ export default function SystemAlarmList({ extraActions }: SystemAlarmListProps) 
         queryKey="QuerySystemAlarmListData"
         headerClassName="bg-purple-600 text-white"
         extraActions={extraActions}
+        hideToolBar
       />
     </div>
   );

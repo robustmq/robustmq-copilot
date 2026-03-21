@@ -16,12 +16,13 @@ import {
   Activity,
   Share2,
   MessageSquare,
-  Hash,
+
   CheckCircle2,
   XCircle,
   AlertCircle,
   Tag,
   BarChart3,
+  Building2,
 } from 'lucide-react';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { getMonitorData, getConnectorDetail, type ConnectorRaw } from '@/services/mqtt';
@@ -37,15 +38,6 @@ const CONNECTOR_TYPE_MAP = {
   mysql: 'MySQL',
   mongodb: 'MongoDB',
   file: 'Local File',
-};
-
-// 格式化配置数据
-const formatConfig = (config: string) => {
-  try {
-    return JSON.parse(config);
-  } catch {
-    return {};
-  }
 };
 
 // 获取连接器类型图标
@@ -122,98 +114,6 @@ const getStatusInfo = (status: string) => {
   }
 };
 
-// 获取不同 connector type 的配置字段
-const getConfigFields = (type: string): { label: string; key: string }[] => {
-  const lowerType = type?.toLowerCase() || '';
-  switch (lowerType) {
-    case 'kafka':
-      return [
-        { label: 'Bootstrap Servers', key: 'bootstrap_servers' },
-        { label: 'Topic', key: 'topic' },
-        { label: 'Key', key: 'key' },
-      ];
-    case 'pulsar':
-      return [
-        { label: 'Server', key: 'server' },
-        { label: 'Topic', key: 'topic' },
-        { label: 'Token', key: 'token' },
-      ];
-    case 'rabbitmq':
-      return [
-        { label: 'Server', key: 'server' },
-        { label: 'Port', key: 'port' },
-        { label: 'Username', key: 'username' },
-        { label: 'Password', key: 'password' },
-        { label: 'Virtual Host', key: 'virtual_host' },
-        { label: 'Exchange', key: 'exchange' },
-        { label: 'Routing Key', key: 'routing_key' },
-        { label: 'Delivery Mode', key: 'delivery_mode' },
-        { label: 'Enable TLS', key: 'enable_tls' },
-      ];
-    case 'greptime':
-      return [
-        { label: 'Server Address', key: 'server_addr' },
-        { label: 'Database', key: 'database' },
-        { label: 'User', key: 'user' },
-        { label: 'Password', key: 'password' },
-        { label: 'Precision', key: 'precision' },
-      ];
-    case 'postgres':
-      return [
-        { label: 'Host', key: 'host' },
-        { label: 'Port', key: 'port' },
-        { label: 'Database', key: 'database' },
-        { label: 'Username', key: 'username' },
-        { label: 'Password', key: 'password' },
-        { label: 'Table', key: 'table' },
-        { label: 'Pool Size', key: 'pool_size' },
-        { label: 'Enable Batch Insert', key: 'enable_batch_insert' },
-        { label: 'Enable Upsert', key: 'enable_upsert' },
-        { label: 'Conflict Columns', key: 'conflict_columns' },
-      ];
-    case 'mysql':
-      return [
-        { label: 'Host', key: 'host' },
-        { label: 'Port', key: 'port' },
-        { label: 'Database', key: 'database' },
-        { label: 'Username', key: 'username' },
-        { label: 'Password', key: 'password' },
-        { label: 'Table', key: 'table' },
-        { label: 'Pool Size', key: 'pool_size' },
-        { label: 'Enable Batch Insert', key: 'enable_batch_insert' },
-        { label: 'Enable Upsert', key: 'enable_upsert' },
-        { label: 'Conflict Columns', key: 'conflict_columns' },
-      ];
-    case 'mongodb':
-      return [
-        { label: 'Host', key: 'host' },
-        { label: 'Port', key: 'port' },
-        { label: 'Database', key: 'database' },
-        { label: 'Collection', key: 'collection' },
-        { label: 'Username', key: 'username' },
-        { label: 'Password', key: 'password' },
-        { label: 'Auth Source', key: 'auth_source' },
-        { label: 'Deployment Mode', key: 'deployment_mode' },
-        { label: 'Enable TLS', key: 'enable_tls' },
-        { label: 'Max Pool Size', key: 'max_pool_size' },
-        { label: 'Min Pool Size', key: 'min_pool_size' },
-      ];
-    case 'elasticsearch':
-      return [
-        { label: 'URL', key: 'url' },
-        { label: 'Index', key: 'index' },
-        { label: 'Username', key: 'username' },
-        { label: 'Password', key: 'password' },
-        { label: 'Enable TLS', key: 'enable_tls' },
-        { label: 'API Key', key: 'api_key' },
-        { label: 'Cloud ID', key: 'cloud_id' },
-      ];
-    case 'file':
-      return [{ label: 'Local File Path', key: 'local_file_path' }];
-    default:
-      return [];
-  }
-};
 
 export default function ConnectorDetail() {
   const location = useLocation();
@@ -240,12 +140,13 @@ export default function ConnectorDetail() {
 
   // 获取 Connector Detail 运行时状态
   const { data: connectorDetailData, isLoading: isDetailLoading } = useQuery({
-    queryKey: ['connectorDetail', connectorData?.connector_name],
+    queryKey: ['connectorDetail', connectorData?.tenant, connectorData?.connector_name],
     queryFn: () =>
       getConnectorDetail({
+        tenant: connectorData?.tenant || '',
         connector_name: connectorData?.connector_name || '',
       }),
-    enabled: !!connectorData?.connector_name,
+    enabled: !!connectorData?.connector_name && !!connectorData?.tenant,
     refetchInterval: 5000,
   });
 
@@ -272,8 +173,6 @@ export default function ConnectorDetail() {
   const TypeIcon = getConnectorTypeIcon(connectorData.connector_type || '');
   const statusInfo = getStatusInfo(connectorData.status || '');
   const StatusIcon = statusInfo.icon;
-  const configData = formatConfig(connectorData.config || '{}');
-  const configFields = getConfigFields(connectorData.connector_type || '');
 
   return (
     <CommonLayout>
@@ -339,6 +238,20 @@ export default function ConnectorDetail() {
                       </div>
                     </div>
                   </div>
+
+                  {connectorData.tenant && (
+                    <div className="flex items-start space-x-3 p-3 rounded-lg bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800">
+                      <Building2 className="h-4 w-4 text-teal-500 mt-1 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <label className="text-xs font-semibold text-teal-700 dark:text-teal-400 uppercase tracking-wide">
+                          Tenant
+                        </label>
+                        <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
+                          {connectorData.tenant}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="flex items-start space-x-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                     <TypeIcon className="h-4 w-4 text-blue-500 mt-1 flex-shrink-0" />
@@ -535,73 +448,15 @@ export default function ConnectorDetail() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {(() => {
-                  const fieldsToDisplay =
-                    configFields.length > 0
-                      ? configFields
-                      : Object.keys(configData).map(key => ({
-                          label: key
-                            .split('_')
-                            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                            .join(' '),
-                          key: key,
-                        }));
-
-                  if (fieldsToDisplay.length === 0) {
-                    return (
-                      <div className="text-center py-12 text-muted-foreground">
-                        <Settings className="h-12 w-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                        <p className="text-sm">No configuration data available</p>
-                      </div>
-                    );
-                  }
-
-                  return (
-                    <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                      {fieldsToDisplay.map(field => {
-                        const value = configData[field.key];
-                        const isSensitive =
-                          field.key.toLowerCase().includes('password') || field.key.toLowerCase().includes('token');
-                        const isBooleanField =
-                          field.key.toLowerCase().includes('enable_') || typeof value === 'boolean';
-                        const displayValue = value !== undefined && value !== null
-                          ? isSensitive
-                            ? '••••••••'
-                            : typeof value === 'object'
-                              ? JSON.stringify(value)
-                              : String(value)
-                          : '-';
-
-                        return (
-                          <div
-                            key={field.key}
-                            className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-gray-800/80 transition-colors"
-                          >
-                            <Hash className="h-4 w-4 text-blue-500 mt-1 flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                                {field.label}
-                              </label>
-                              <div className="mt-1">
-                                {isBooleanField && (value === true || value === false || value === 'true' || value === 'false') ? (
-                                  <Badge variant={value === true || value === 'true' ? 'default' : 'secondary'}>
-                                    {value === true || value === 'true' ? 'Enabled' : 'Disabled'}
-                                  </Badge>
-                                ) : isSensitive ? (
-                                  <span className="text-sm text-gray-400 tracking-wider">{displayValue}</span>
-                                ) : (
-                                  <span className="text-sm font-mono break-all text-gray-900 dark:text-gray-100">
-                                    {displayValue}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })()}
+                <pre className="rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 text-sm font-mono text-gray-900 dark:text-gray-100 overflow-auto whitespace-pre-wrap break-all">
+                  {(() => {
+                    try {
+                      return JSON.stringify(JSON.parse(connectorData.config || '{}'), null, 2);
+                    } catch {
+                      return connectorData.config || '-';
+                    }
+                  })()}
+                </pre>
               </CardContent>
             </Card>
           </TabsContent>

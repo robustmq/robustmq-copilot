@@ -1,25 +1,24 @@
 import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
 import { getConnectorListHttp, ConnectorRaw } from '@/services/mqtt';
+import { FilterValue } from '@/components/table/filter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Plug,
-  Settings,
   Database,
   Clock,
-  Server,
   Activity,
   Eye,
   Tag,
   MessageSquare,
   Share2,
   FileText,
+  Building2,
 } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { DeleteConnectorButton } from './components/delete-connector-button';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
-import { format } from 'date-fns';
 import { SortDirection } from '@/services/common/sort';
 
 const CONNECTOR_TYPE_MAP = {
@@ -94,9 +93,12 @@ const getStatusBadgeStyle = (status: string) => {
 
 interface ConnectorListProps {
   extraActions?: React.ReactNode;
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
 }
 
-export default function ConnectorList({ extraActions }: ConnectorListProps) {
+export default function ConnectorList({ extraActions, leftActions, tenant, onSearch }: ConnectorListProps) {
   const navigate = useNavigate();
 
   const columns: ColumnDef<ConnectorRaw>[] = [
@@ -104,14 +106,28 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
       accessorKey: 'connector_name',
       header: ({ column }) => <DataTableColumnHeader column={column} title="Connector Name" />,
       cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900">
+        <div className="flex items-center space-x-2 min-w-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900 shrink-0">
             <Plug className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           </div>
-          <span className="font-medium">{row.original.connector_name}</span>
+          <span className="font-medium truncate" title={row.original.connector_name}>{row.original.connector_name}</span>
         </div>
       ),
       enableSorting: true,
+      size: 200,
+      minSize: 150,
+    },
+    {
+      accessorKey: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-1.5 min-w-0">
+          <Building2 className="h-4 w-4 text-gray-500 shrink-0" />
+          <span className="text-sm truncate" title={row.original.tenant}>{row.original.tenant || '-'}</span>
+        </div>
+      ),
+      size: 120,
+      maxSize: 160,
     },
     {
       accessorKey: 'connector_type',
@@ -126,16 +142,20 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
           </Badge>
         );
       },
+      size: 120,
+      maxSize: 140,
     },
     {
       accessorKey: 'topic_name',
       header: 'Topic Name',
       cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <Tag className="h-4 w-4 text-gray-500" />
-          <span className="font-mono text-sm">{row.original.topic_name || '-'}</span>
+        <div className="flex items-center space-x-1.5 min-w-0">
+          <Tag className="h-4 w-4 text-gray-500 shrink-0" />
+          <span className="font-mono text-sm truncate" title={row.original.topic_name}>{row.original.topic_name || '-'}</span>
         </div>
       ),
+      size: 160,
+      maxSize: 200,
     },
     {
       accessorKey: 'status',
@@ -146,28 +166,8 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
           {row.original.status}
         </Badge>
       ),
-    },
-    {
-      accessorKey: 'broker_id',
-      header: 'Broker ID',
-      cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <Server className="h-4 w-4 text-gray-500" />
-          <span className="font-mono text-sm">{row.original.broker_id || '-'}</span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: 'config',
-      header: 'Configuration',
-      cell: ({ row }) => (
-        <div className="flex items-center space-x-2">
-          <Settings className="h-4 w-4 text-gray-500" />
-          <span className="text-sm text-muted-foreground max-w-32 truncate" title={row.original.config}>
-            {row.original.config || '-'}
-          </span>
-        </div>
-      ),
+      size: 100,
+      maxSize: 120,
     },
     {
       accessorKey: 'create_time',
@@ -175,29 +175,16 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
       cell: ({ row }) => {
         const createTime = row.original.create_time;
         if (!createTime) return '-';
-
-        try {
-          // 尝试解析时间字符串 (格式: "2024-01-01 12:00:00")
-          const formattedTime = createTime.includes('-')
-            ? createTime // 已经是格式化的字符串
-            : format(new Date(parseInt(createTime) * 1000), 'yyyy-MM-dd HH:mm:ss'); // Unix 时间戳
-
-          return (
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-mono">{formattedTime}</span>
-            </div>
-          );
-        } catch {
-          return (
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-mono">{createTime}</span>
-            </div>
-          );
-        }
+        return (
+          <div className="flex items-center space-x-1.5">
+            <Clock className="h-4 w-4 text-gray-500 shrink-0" />
+            <span className="text-sm font-mono">{createTime}</span>
+          </div>
+        );
       },
       enableSorting: true,
+      size: 160,
+      maxSize: 180,
     },
     {
       id: 'actions',
@@ -218,7 +205,7 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
             <Eye className="mr-0.5 h-2.5 w-2.5" />
             Details
           </Button>
-          <DeleteConnectorButton connectorName={row.original.connector_name} />
+          <DeleteConnectorButton connectorName={row.original.connector_name} tenant={row.original.tenant} />
         </div>
       ),
       size: 140,
@@ -227,18 +214,23 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const connectorNameVal = searchValue.find(f => f.field === 'connector_name' || f.field === '')?.valueList?.[0];
     try {
-      const ret = await getConnectorListHttp({
-        pagination: {
-          offset: pageIndex * pageSize,
-          limit: pageSize,
+      const ret = await getConnectorListHttp(
+        {
+          pagination: {
+            offset: pageIndex * pageSize,
+            limit: pageSize,
+          },
+          sort: {
+            orderBy: 'create_time',
+            direction: SortDirection.desc,
+          },
         },
-        sort: {
-          orderBy: 'create_time',
-          direction: SortDirection.desc, // 默认倒序
-        },
-      });
+        tenant,
+        connectorNameVal || undefined,
+      );
       return {
         data: ret.connectorsList || [],
         totalCount: ret.totalCount || 0,
@@ -257,11 +249,14 @@ export default function ConnectorList({ extraActions }: ConnectorListProps) {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QueryConnectorListData"
+        queryKey={`QueryConnectorListData_${tenant ?? 'all'}`}
         defaultPageSize={20}
         defaultSorting={[{ id: 'create_time', desc: true }]}
         headerClassName="bg-purple-600 text-white"
         extraActions={extraActions}
+        leftActions={leftActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by connector name..."
       />
     </div>
   );

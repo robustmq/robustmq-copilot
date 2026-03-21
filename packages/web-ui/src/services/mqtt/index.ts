@@ -641,6 +641,7 @@ export const deleteBlacklist = async (data: DeleteBlacklistRequest): Promise<str
 
 // -------- Connector APIs --------
 export interface ConnectorRaw {
+  tenant: string;
   connector_name: string;
   connector_type: string;
   config: string;
@@ -654,11 +655,16 @@ export interface ConnectorRaw {
 
 export const getConnectorListHttp = async (
   query?: QueryOption,
+  tenant?: string,
+  connector_name?: string,
 ): Promise<{
   connectorsList: ConnectorRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
+  const { pagination, ...rest } = query || {};
+  const httpQuery = convertPaginationForHttpApi({ pagination, ...rest });
+  if (tenant) httpQuery.tenant = tenant;
+  if (connector_name) httpQuery.connector_name = connector_name;
   const response = await requestApi('/api/mqtt/connector/list', httpQuery, 'GET');
   return {
     connectorsList: response.data,
@@ -666,11 +672,20 @@ export const getConnectorListHttp = async (
   };
 };
 
+export interface FailureStrategy {
+  strategy: 'discard' | 'discard_after_retry' | 'dead_message_queue';
+  retry_total_times?: number;
+  wait_time_ms?: number;
+  topic_name?: string;
+}
+
 export interface CreateConnectorRequest {
+  tenant: string;
   connector_name: string;
   connector_type: string;
   config: string; // JSON string
   topic_name: string;
+  failure_strategy: FailureStrategy;
 }
 
 export const createConnector = async (data: CreateConnectorRequest): Promise<string> => {
@@ -679,6 +694,7 @@ export const createConnector = async (data: CreateConnectorRequest): Promise<str
 };
 
 export interface DeleteConnectorRequest {
+  tenant: string;
   connector_name: string;
 }
 
@@ -688,6 +704,7 @@ export const deleteConnector = async (data: DeleteConnectorRequest): Promise<str
 };
 
 export interface ConnectorDetailRequest {
+  tenant: string;
   connector_name: string;
 }
 
@@ -876,6 +893,7 @@ export const deleteAutoSubscribe = async (data: DeleteAutoSubscribeRequest): Pro
 
 // -------- Slow Subscribe APIs --------
 export interface SlowSubscribeRaw {
+  tenant: string;
   client_id: string;
   topic_name: string;
   time_span: number;
@@ -885,13 +903,18 @@ export interface SlowSubscribeRaw {
 }
 
 export const getSlowSubscribeListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   slowSubscribesList: SlowSubscribeRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/slow-subscribe/list', httpQuery, 'GET');
+  const { tenant, client_id, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/slow-subscribe/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(client_id ? { client_id } : {}) },
+    'GET',
+  );
   return {
     slowSubscribesList: response.data,
     totalCount: response.total_count,
@@ -977,19 +1000,25 @@ export const getSystemAlarmListHttp = async (
 
 // -------- Connection Jitter (Flapping Detect) APIs --------
 export interface ConnectionJitterRaw {
+  tenant: string;
   client_id: string;
-  before_last_windows_connections: number;
+  before_last_window_connections: number;
   first_request_time: number;
 }
 
 export const getConnectionJitterListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string; client_id?: string },
 ): Promise<{
   connectionJittersList: ConnectionJitterRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/flapping_detect/list', httpQuery, 'GET');
+  const { tenant, client_id, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi(
+    '/api/mqtt/flapping_detect/list',
+    { ...httpQuery, ...(tenant ? { tenant } : {}), ...(client_id ? { client_id } : {}) },
+    'GET',
+  );
   return {
     connectionJittersList: response.data,
     totalCount: response.total_count,
@@ -998,23 +1027,23 @@ export const getConnectionJitterListHttp = async (
 
 // -------- Ban Log APIs --------
 export interface BanLogRaw {
-  id: string;
+  tenant: string;
   ban_type: string;
   resource_name: string;
-  reason: string;
-  ban_time: number;
-  expire_time: number;
-  operator: string;
+  ban_source: string;
+  end_time: string;
+  create_time: string;
 }
 
 export const getBanLogListHttp = async (
-  query?: QueryOption,
+  query?: QueryOption & { tenant?: string },
 ): Promise<{
   banLogsList: BanLogRaw[];
   totalCount: number;
 }> => {
-  const httpQuery = convertPaginationForHttpApi(query);
-  const response = await requestApi('/api/mqtt/ban-log/list', httpQuery, 'GET');
+  const { tenant, ...rest } = query ?? {};
+  const httpQuery = convertPaginationForHttpApi(rest);
+  const response = await requestApi('/api/mqtt/ban-log/list', { ...httpQuery, ...(tenant ? { tenant } : {}) }, 'GET');
   return {
     banLogsList: response.data,
     totalCount: response.total_count,
