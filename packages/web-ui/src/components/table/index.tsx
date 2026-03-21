@@ -43,9 +43,12 @@ interface DataTableProps<TData, TValue> {
   queryKey: string;
   defaultPageSize?: number;
   defaultSorting?: SortingState;
+  defaultColumnVisibility?: VisibilityState;
   extraActions?: React.ReactNode;
   leftActions?: React.ReactNode;
   headerClassName?: string;
+  onSearch?: () => void;
+  searchPlaceholder?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -55,12 +58,15 @@ export function DataTable<TData, TValue>({
   queryKey,
   defaultPageSize = 20,
   defaultSorting = [],
+  defaultColumnVisibility = {},
   extraActions,
   leftActions,
   headerClassName,
+  onSearch,
+  searchPlaceholder,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(defaultColumnVisibility);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>(defaultSorting);
   const [pagination, setPagination] = React.useState({
@@ -81,6 +87,11 @@ export function DataTable<TData, TValue>({
   const handleRefresh = React.useCallback(() => {
     query.refetch();
   }, [query.refetch]);
+
+  const handleSearch = React.useCallback(() => {
+    onSearch?.();
+    query.refetch();
+  }, [query.refetch, onSearch]);
 
   const table = useReactTable({
     data: query?.data?.data || [],
@@ -130,11 +141,13 @@ export function DataTable<TData, TValue>({
           <DataTableToolbar
             table={table}
             onRefresh={handleRefresh}
+            onSearchClick={handleSearch}
             tagFilters={tagFilters}
             onTagFilterChange={setTagFilters}
             attrFilters={attrFilter}
             extraActions={extraActions}
             leftActions={leftActions}
+            searchPlaceholder={searchPlaceholder}
             isRefreshing={query.isFetching}
           />
           <Separator className="my-2" />

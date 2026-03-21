@@ -27,6 +27,7 @@ import {
   Eye,
   GitFork,
   Tag,
+  Building2,
 } from 'lucide-react';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { useQuery } from '@tanstack/react-query';
@@ -62,6 +63,7 @@ export default function SubscribeDetail() {
 
   const clientId = subscribeData?.client_id || subscribeId;
   const path = subscribeData?.path;
+  const tenant = subscribeData?.tenant;
 
   // 使用 API 获取订阅详情
   const {
@@ -71,9 +73,9 @@ export default function SubscribeDetail() {
     refetch,
     isFetching,
   } = useQuery({
-    queryKey: ['subscribeDetail', clientId, path],
-    queryFn: () => getSubscribeDetail({ client_id: clientId, path: path }),
-    enabled: !!clientId && !!path,
+    queryKey: ['subscribeDetail', clientId, path, tenant],
+    queryFn: () => getSubscribeDetail({ tenant: tenant, client_id: clientId, path: path }),
+    enabled: !!clientId && !!path && !!tenant,
     refetchInterval: 5000,
   });
 
@@ -206,6 +208,19 @@ export default function SubscribeDetail() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                    {/* Tenant */}
+                    <div className="flex items-start space-x-3 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+                      <Building2 className="h-4 w-4 text-purple-500 mt-1 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <label className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide">
+                          Tenant
+                        </label>
+                        <div className="mt-1 font-mono text-sm break-all text-gray-900 dark:text-gray-100">
+                          {tenant || '-'}
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Client ID */}
                     <div className="flex items-start space-x-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
                       <User className="h-4 w-4 text-blue-500 mt-1 flex-shrink-0" />

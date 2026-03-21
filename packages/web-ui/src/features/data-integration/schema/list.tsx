@@ -2,9 +2,10 @@ import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
 import { getSchemaListHttp, SchemaRaw } from '@/services/mqtt';
 import { Badge } from '@/components/ui/badge';
-import { FileCode, FileJson, Database, Code, FileText, MessageSquare } from 'lucide-react';
+import { FileCode, FileJson, Database, Code, FileText, MessageSquare, Building2 } from 'lucide-react';
 import { DeleteSchemaButton } from './components/delete-schema-button';
 import { DetailSchemaButton } from './components/detail-schema-button';
+import { FilterValue } from '@/components/table/filter';
 
 const SCHEMA_TYPE_MAP = {
   json: 'JSON',
@@ -15,40 +16,44 @@ const SCHEMA_TYPE_MAP = {
 
 const getSchemaTypeIcon = (type: string) => {
   switch (type.toLowerCase()) {
-    case 'json':
-      return FileJson;
-    case 'avro':
-      return Database;
-    case 'protobuf':
-      return Code;
-    case 'xml':
-      return FileCode;
-    default:
-      return FileText;
+    case 'json': return FileJson;
+    case 'avro': return Database;
+    case 'protobuf': return Code;
+    case 'xml': return FileCode;
+    default: return FileText;
   }
 };
 
 const getSchemaTypeBadgeStyle = (type: string) => {
   switch (type.toLowerCase()) {
-    case 'json':
-      return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm';
-    case 'avro':
-      return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm';
-    case 'protobuf':
-      return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-sm';
-    case 'xml':
-      return 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm';
-    default:
-      return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-sm';
+    case 'json': return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-sm';
+    case 'avro': return 'bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm';
+    case 'protobuf': return 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-sm';
+    case 'xml': return 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-sm';
+    default: return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white shadow-sm';
   }
 };
 
 interface SchemaListProps {
+  leftActions?: React.ReactNode;
   extraActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
 }
 
-export default function SchemaList({ extraActions }: SchemaListProps) {
+export default function SchemaList({ leftActions, extraActions, tenant, onSearch }: SchemaListProps) {
   const columns: ColumnDef<SchemaRaw>[] = [
+    {
+      id: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <Building2 className="h-4 w-4 text-purple-400" />
+          <span className="text-sm text-gray-600 dark:text-gray-400">{row.original.tenant || '-'}</span>
+        </div>
+      ),
+      size: 130,
+    },
     {
       accessorKey: 'name',
       header: 'Schema Name',
@@ -118,13 +123,13 @@ export default function SchemaList({ extraActions }: SchemaListProps) {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const nameVal = searchValue.find(f => f.field === 'name' || f.field === '')?.valueList?.[0];
     try {
       const ret = await getSchemaListHttp({
-        pagination: {
-          offset: pageIndex * pageSize,
-          limit: pageSize,
-        },
+        pagination: { offset: pageIndex * pageSize, limit: pageSize },
+        ...(tenant ? { tenant } : {}),
+        ...(nameVal ? { name: nameVal } : {}),
       });
       return {
         data: ret.schemasList || [],
@@ -132,10 +137,7 @@ export default function SchemaList({ extraActions }: SchemaListProps) {
       };
     } catch (error) {
       console.error('Failed to fetch schema data:', error);
-      return {
-        data: [],
-        totalCount: 0,
-      };
+      return { data: [], totalCount: 0 };
     }
   };
 
@@ -144,9 +146,12 @@ export default function SchemaList({ extraActions }: SchemaListProps) {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QuerySchemaListData"
+        queryKey={`QuerySchemaListData_${tenant ?? 'all'}`}
         headerClassName="bg-purple-600 text-white"
+        leftActions={leftActions}
         extraActions={extraActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by schema name..."
       />
     </div>
   );

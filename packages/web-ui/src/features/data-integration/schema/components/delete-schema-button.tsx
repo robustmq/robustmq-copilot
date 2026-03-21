@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { deleteSchema, DeleteSchemaRequest, SchemaRaw } from '@/services/mqtt';
+import { deleteSchema, SchemaRaw } from '@/services/mqtt';
 
 interface DeleteSchemaButtonProps {
   schema: SchemaRaw;
@@ -25,27 +25,19 @@ export function DeleteSchemaButton({ schema }: DeleteSchemaButtonProps) {
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: (data: DeleteSchemaRequest) => deleteSchema(data),
+    mutationFn: () => deleteSchema({ tenant: schema.tenant, schema_name: schema.name }),
     onSuccess: () => {
       toast({
         title: 'Success',
         description: 'Schema deleted successfully',
       });
-      queryClient.invalidateQueries({ queryKey: ['QuerySchemaListData'] });
+      queryClient.refetchQueries({ queryKey: ['QuerySchemaListData_all'], exact: false });
       setOpen(false);
     },
     onError: (error: any) => {
-      // 错误信息已经在 requestApi 中显示了，这里不需要重复显示
       console.error('Failed to delete schema:', error);
     },
   });
-
-  const handleDelete = () => {
-    const deleteData: DeleteSchemaRequest = {
-      schema_name: schema.name,
-    };
-    deleteMutation.mutate(deleteData);
-  };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -87,7 +79,7 @@ export function DeleteSchemaButton({ schema }: DeleteSchemaButtonProps) {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
             className="bg-red-600 hover:bg-red-700 text-white"
           >

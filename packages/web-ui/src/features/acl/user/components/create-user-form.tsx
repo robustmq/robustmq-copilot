@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Dialog,
   DialogContent,
@@ -16,9 +16,10 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/hooks/use-toast';
-import { createUser } from '@/services/mqtt';
+import { createUser, getTenantList } from '@/services/mqtt';
 
 const createUserSchema = z.object({
+  tenant: z.string().min(1, 'Tenant is required'),
   username: z.string().min(1, 'Username is required').min(3, 'Username must be at least 3 characters'),
   password: z.string().min(1, 'Password is required').min(6, 'Password must be at least 6 characters'),
   is_superuser: z.boolean(),
@@ -35,9 +36,16 @@ export function CreateUserForm({ open, onOpenChange }: CreateUserFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
 
+  const { data: tenantData } = useQuery({
+    queryKey: ['TenantListForUserCreate'],
+    queryFn: () => getTenantList({ pagination: { offset: 0, limit: 200 } }),
+  });
+  const tenants = tenantData?.tenantList ?? [];
+
   const form = useForm<CreateUserFormData>({
     resolver: zodResolver(createUserSchema),
     defaultValues: {
+      tenant: '',
       username: '',
       password: '',
       is_superuser: false,
@@ -51,7 +59,7 @@ export function CreateUserForm({ open, onOpenChange }: CreateUserFormProps) {
         title: 'Success',
         description: 'User created successfully!',
       });
-      queryClient.invalidateQueries({ queryKey: ['QueryUserListData'] });
+      queryClient.refetchQueries({ queryKey: ['QueryUserListData_all'], exact: false });
       form.reset();
       onOpenChange(false);
     },
@@ -88,6 +96,31 @@ export function CreateUserForm({ open, onOpenChange }: CreateUserFormProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="tenant"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tenant</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select tenant" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {tenants.map((t) => (
+                        <SelectItem key={t.tenant_name} value={t.tenant_name}>
+                          {t.tenant_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="username"

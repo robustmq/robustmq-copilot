@@ -1,5 +1,6 @@
 import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
+import { FilterValue } from '@/components/table/filter';
 import { getUserList } from '@/services/mqtt';
 import { DeleteUserButton } from './components/delete-user-button';
 import { Badge } from '@/components/ui/badge';
@@ -8,9 +9,12 @@ import { format } from 'date-fns';
 
 interface UserListProps {
   extraActions?: React.ReactNode;
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
 }
 
-export default function UserList({ extraActions }: UserListProps) {
+export default function UserList({ extraActions, leftActions, tenant, onSearch }: UserListProps) {
   const columns: ColumnDef<any>[] = [
     {
       id: 'username',
@@ -23,6 +27,13 @@ export default function UserList({ extraActions }: UserListProps) {
           </div>
           <span className="font-medium">{row.original.username}</span>
         </div>
+      ),
+    },
+    {
+      accessorKey: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <span className="text-sm text-gray-600 dark:text-gray-400">{row.original.tenant || '-'}</span>
       ),
     },
     {
@@ -63,7 +74,7 @@ export default function UserList({ extraActions }: UserListProps) {
       header: 'Actions',
       cell: ({ row }) => (
         <div className="flex items-center justify-center">
-          <DeleteUserButton username={row.original.username} isSuperUser={row.original.is_superuser} />
+          <DeleteUserButton tenant={row.original.tenant} username={row.original.username} isSuperUser={row.original.is_superuser} />
         </div>
       ),
       size: 60,
@@ -72,12 +83,16 @@ export default function UserList({ extraActions }: UserListProps) {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const usernameFilter = searchValue.find(f => f.field === 'username' || f.field === '');
+    const username = usernameFilter?.valueList?.[0];
     const ret = await getUserList({
       pagination: {
         offset: pageIndex * pageSize,
         limit: pageSize,
       },
+      ...(tenant ? { tenant } : {}),
+      ...(username ? { user_name: username } : {}),
     });
     return {
       data: ret.usersList,
@@ -90,9 +105,12 @@ export default function UserList({ extraActions }: UserListProps) {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QueryUserListData"
+        queryKey={`QueryUserListData_${tenant ?? 'all'}`}
         extraActions={extraActions}
+        leftActions={leftActions}
         headerClassName="bg-purple-600 text-white"
+        onSearch={onSearch}
+        searchPlaceholder="Search by username..."
       />
     </div>
   );

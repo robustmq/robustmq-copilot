@@ -15,6 +15,7 @@ import {
   FileText,
   Calendar,
   LogOut,
+  Building2,
 } from 'lucide-react';
 import { CommonLayout } from '@/components/layout/common-layout';
 import { format } from 'date-fns';
@@ -157,6 +158,21 @@ export default function SessionDetail() {
                   </label>
                   <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
                     {sessionData.client_id}
+                  </div>
+                </div>
+              </div>
+
+              {/* Tenant */}
+              <div className="flex items-start space-x-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
+                <div className="flex-shrink-0 mt-1">
+                  <Building2 className="h-4 w-4 text-purple-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
+                    Tenant
+                  </label>
+                  <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
+                    {sessionData.tenant || '-'}
                   </div>
                 </div>
               </div>

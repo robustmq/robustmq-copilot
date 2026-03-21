@@ -504,7 +504,7 @@ class ITagSearchBox extends Component<
     const {
       attributes = [],
       hideHelp,
-      tips = 'Separate keywords with "|"; press Enter to separate filter tags',
+      tips = 'Search...',
       attributesSelectTips = 'Select a filter',
       disableAttributesFilter,
       disabled,

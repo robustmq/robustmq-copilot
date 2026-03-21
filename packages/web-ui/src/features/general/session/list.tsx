@@ -1,14 +1,21 @@
 import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
+import { FilterValue } from '@/components/table/filter';
 import { getSessionListHttp } from '@/services/mqtt';
 import { format } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { User, Hash, Timer, MessageSquare, Calendar, LogOut, CheckCircle, XCircle, Eye, Copy } from 'lucide-react';
+import { User, Hash, Timer, MessageSquare, Calendar, LogOut, CheckCircle, XCircle, Eye, Copy, Building2 } from 'lucide-react';
 import { useNavigate } from '@tanstack/react-router';
 import { useToast } from '@/hooks/use-toast';
 
-export default function SessionList() {
+interface SessionListProps {
+  leftActions?: React.ReactNode;
+  tenant?: string;
+  onSearch?: () => void;
+}
+
+export default function SessionList({ leftActions, tenant, onSearch }: SessionListProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -57,6 +64,16 @@ export default function SessionList() {
         </div>
       ),
       size: 280,
+    },
+    {
+      id: 'tenant',
+      header: 'Tenant',
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-2">
+          <Building2 className="h-4 w-4 text-purple-400" />
+          <span className="text-sm text-gray-600 dark:text-gray-400">{row.original.tenant || '-'}</span>
+        </div>
+      ),
     },
     {
       accessorKey: 'connection_id',
@@ -183,14 +200,14 @@ export default function SessionList() {
     },
   ];
 
-  const fetchDataFn = async (pageIndex: number, pageSize: number) => {
+  const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
+    const clientIdVal = searchValue.find(f => f.field === 'client_id' || f.field === '')?.valueList?.[0];
     const ret = await getSessionListHttp({
-      pagination: {
-        offset: pageIndex * pageSize,
-        limit: pageSize,
-      },
+      pagination: { offset: pageIndex * pageSize, limit: pageSize },
       sort_field: 'create_time',
       sort_by: 'desc',
+      ...(tenant ? { tenant } : {}),
+      ...(clientIdVal ? { client_id: clientIdVal } : {}),
     } as any);
     return {
       data: ret.sessionsList,
@@ -203,8 +220,11 @@ export default function SessionList() {
       <DataTable
         columns={columns}
         fetchDataFn={fetchDataFn}
-        queryKey="QuerySessionListData"
+        queryKey={`QuerySessionListData_${tenant ?? 'all'}`}
         headerClassName="bg-purple-600 text-white"
+        leftActions={leftActions}
+        onSearch={onSearch}
+        searchPlaceholder="Search by client ID..."
       />
     </div>
   );

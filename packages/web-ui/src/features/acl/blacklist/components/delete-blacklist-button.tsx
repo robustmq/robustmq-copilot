@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import { deleteBlacklist, DeleteBlacklistRequest, BlacklistRaw } from '@/services/mqtt';
+import { deleteBlacklist, BlacklistRaw } from '@/services/mqtt';
 
 interface DeleteBlacklistButtonProps {
   blacklist: BlacklistRaw;
@@ -25,30 +25,19 @@ export function DeleteBlacklistButton({ blacklist }: DeleteBlacklistButtonProps)
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
-    mutationFn: (data: DeleteBlacklistRequest) => deleteBlacklist(data),
+    mutationFn: () => deleteBlacklist({ tenant: blacklist.tenant, name: blacklist.name }),
     onSuccess: () => {
       toast({
         title: 'Success',
         description: 'Blacklist rule deleted successfully',
       });
-      queryClient.invalidateQueries({ queryKey: ['QueryBlacklistListData'] });
+      queryClient.refetchQueries({ queryKey: ['QueryBlacklistListData_all'], exact: false });
       setOpen(false);
     },
     onError: (error: any) => {
-      // 错误信息已经在 requestApi 中显示了，这里不需要重复显示
       console.error('Failed to delete blacklist rule:', error);
     },
   });
-
-  const handleDelete = () => {
-    const deleteData: DeleteBlacklistRequest = {
-      blacklist_type: blacklist.blacklist_type,
-      resource_name: blacklist.resource_name,
-      end_time: blacklist.end_time,
-      desc: blacklist.desc,
-    };
-    deleteMutation.mutate(deleteData);
-  };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -65,22 +54,13 @@ export function DeleteBlacklistButton({ blacklist }: DeleteBlacklistButtonProps)
         <AlertDialogHeader>
           <AlertDialogTitle>Delete Blacklist Rule</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this blacklist rule? This action cannot be undone.
+            Are you sure you want to delete blacklist rule <strong>"{blacklist.name}"</strong>? This action cannot be undone.
             <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-900 rounded-md">
               <div className="text-sm space-y-1">
-                <div>
-                  <span className="font-medium">Blacklist Type:</span> {blacklist.blacklist_type}
-                </div>
-                <div>
-                  <span className="font-medium">Resource Name:</span> {blacklist.resource_name}
-                </div>
-                <div>
-                  <span className="font-medium">Description:</span> {blacklist.desc || '-'}
-                </div>
-                <div>
-                  <span className="font-medium">End Time:</span>{' '}
-                  {blacklist.end_time ? new Date(blacklist.end_time * 1000).toLocaleString() : '-'}
-                </div>
+                <div><span className="font-medium">Tenant:</span> {blacklist.tenant}</div>
+                <div><span className="font-medium">Name:</span> {blacklist.name}</div>
+                <div><span className="font-medium">Blacklist Type:</span> {blacklist.blacklist_type}</div>
+                <div><span className="font-medium">Resource Name:</span> {blacklist.resource_name}</div>
               </div>
             </div>
           </AlertDialogDescription>
@@ -88,7 +68,7 @@ export function DeleteBlacklistButton({ blacklist }: DeleteBlacklistButtonProps)
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleDelete}
+            onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
             className="bg-red-600 hover:bg-red-700 text-white"
           >
