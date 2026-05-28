@@ -15,12 +15,16 @@ export const clearStoredToken = () => {
 };
 
 // 动态获取 API 基础地址
-// 优先级：runtime config.js > 默认fallback
-const getApiBaseUrl = () => {
-  if (typeof window !== 'undefined' && window.__APP_CONFIG__?.api?.baseUrl) {
-    return window.__APP_CONFIG__.api.baseUrl;
+// 优先级：config.js baseUrl（完整）> config.js port（拼当前页面 hostname）> 默认 fallback
+export const getApiBaseUrl = () => {
+  if (typeof window === 'undefined') return 'http://localhost:58080';
+  const cfg = window.__APP_CONFIG__;
+  if (cfg?.api?.baseUrl) return cfg.api.baseUrl;
+  if (cfg?.api?.port) {
+    const { protocol, hostname } = window.location;
+    return `${protocol}//${hostname}:${cfg.api.port}`;
   }
-  return 'http://localhost:8080';
+  return 'http://localhost:58080';
 };
 
 const requestInstance = axios.create({

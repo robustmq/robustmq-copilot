@@ -1419,11 +1419,7 @@ export interface ClusterStatus {
   start_time: number;
   nodes: string[];
   broker_node_list: BrokerNode[];
-  meta: {
-    offset: RaftState;
-    mqtt: RaftState;
-    meta: RaftState;
-  };
+  meta: Record<string, RaftState>;
 }
 
 export const getClusterStatus = async (): Promise<ClusterStatus> => {

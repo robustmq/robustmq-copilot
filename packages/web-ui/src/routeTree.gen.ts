@@ -23,6 +23,7 @@ import { Route as AuthenticatedSystemConfigurationRouteImport } from './routes/_
 import { Route as AuthenticatedSystemClusterInfoRouteImport } from './routes/_authenticated/system/cluster-info'
 import { Route as AuthenticatedSystemBanLogRouteImport } from './routes/_authenticated/system/ban-log'
 import { Route as AuthenticatedAdvancedSystemAlarmRouteImport } from './routes/_authenticated/advanced/system-alarm'
+import { Route as AuthenticatedSystemMetaServiceStateMachineNameRouteImport } from './routes/_authenticated/system/meta-service/$stateMachineName'
 import { Route as AuthenticatedStorageEngineShardShardNameRouteImport } from './routes/_authenticated/storage-engine/shard/$shardName'
 import { Route as AuthenticatedMq9MailboxMailAddressRouteImport } from './routes/_authenticated/mq9/mailbox/$mailAddress'
 import { Route as AuthenticatedMq9AgentAgentNameRouteImport } from './routes/_authenticated/mq9/agent/$agentName'
@@ -51,6 +52,9 @@ const AuthenticatedHelpCenterIndexLazyRouteImport = createFileRoute(
 )()
 const AuthenticatedAppsIndexLazyRouteImport = createFileRoute(
   '/_authenticated/apps/',
+)()
+const AuthenticatedSystemMetaServiceIndexLazyRouteImport = createFileRoute(
+  '/_authenticated/system/meta-service/',
 )()
 const AuthenticatedStorageEngineShardIndexLazyRouteImport = createFileRoute(
   '/_authenticated/storage-engine/shard/',
@@ -275,6 +279,16 @@ const AuthenticatedAdvancedSystemAlarmRoute =
     path: '/advanced/system-alarm',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSystemMetaServiceIndexLazyRoute =
+  AuthenticatedSystemMetaServiceIndexLazyRouteImport.update({
+    id: '/system/meta-service/',
+    path: '/system/meta-service/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/system/meta-service/index.lazy').then(
+      (d) => d.Route,
+    ),
+  )
 const AuthenticatedStorageEngineShardIndexLazyRoute =
   AuthenticatedStorageEngineShardIndexLazyRouteImport.update({
     id: '/storage-engine/shard/',
@@ -503,6 +517,12 @@ const AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute =
       (d) => d.Route,
     ),
   )
+const AuthenticatedSystemMetaServiceStateMachineNameRoute =
+  AuthenticatedSystemMetaServiceStateMachineNameRouteImport.update({
+    id: '/system/meta-service/$stateMachineName',
+    path: '/system/meta-service/$stateMachineName',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStorageEngineShardShardNameRoute =
   AuthenticatedStorageEngineShardShardNameRouteImport.update({
     id: '/storage-engine/shard/$shardName',
@@ -570,6 +590,7 @@ export interface FileRoutesByFullPath {
   '/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
   '/general/client/$clientId': typeof AuthenticatedGeneralClientClientIdLazyRoute
@@ -593,6 +614,7 @@ export interface FileRoutesByFullPath {
   '/mq9/mailbox': typeof AuthenticatedMq9MailboxIndexLazyRoute
   '/storage-engine/segment': typeof AuthenticatedStorageEngineSegmentIndexLazyRoute
   '/storage-engine/shard': typeof AuthenticatedStorageEngineShardIndexLazyRoute
+  '/system/meta-service': typeof AuthenticatedSystemMetaServiceIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
@@ -624,6 +646,7 @@ export interface FileRoutesByTo {
   '/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
   '/general/client/$clientId': typeof AuthenticatedGeneralClientClientIdLazyRoute
@@ -647,6 +670,7 @@ export interface FileRoutesByTo {
   '/mq9/mailbox': typeof AuthenticatedMq9MailboxIndexLazyRoute
   '/storage-engine/segment': typeof AuthenticatedStorageEngineSegmentIndexLazyRoute
   '/storage-engine/shard': typeof AuthenticatedStorageEngineShardIndexLazyRoute
+  '/system/meta-service': typeof AuthenticatedSystemMetaServiceIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -680,6 +704,7 @@ export interface FileRoutesById {
   '/_authenticated/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/_authenticated/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/_authenticated/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/_authenticated/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/_authenticated/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/_authenticated/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
   '/_authenticated/general/client/$clientId': typeof AuthenticatedGeneralClientClientIdLazyRoute
@@ -703,6 +728,7 @@ export interface FileRoutesById {
   '/_authenticated/mq9/mailbox/': typeof AuthenticatedMq9MailboxIndexLazyRoute
   '/_authenticated/storage-engine/segment/': typeof AuthenticatedStorageEngineSegmentIndexLazyRoute
   '/_authenticated/storage-engine/shard/': typeof AuthenticatedStorageEngineShardIndexLazyRoute
+  '/_authenticated/system/meta-service/': typeof AuthenticatedSystemMetaServiceIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -736,6 +762,7 @@ export interface FileRouteTypes {
     | '/mq9/agent/$agentName'
     | '/mq9/mailbox/$mailAddress'
     | '/storage-engine/shard/$shardName'
+    | '/system/meta-service/$stateMachineName'
     | '/data-integration/connector/$connectorName'
     | '/data-integration/connector/create'
     | '/general/client/$clientId'
@@ -759,6 +786,7 @@ export interface FileRouteTypes {
     | '/mq9/mailbox'
     | '/storage-engine/segment'
     | '/storage-engine/shard'
+    | '/system/meta-service'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -790,6 +818,7 @@ export interface FileRouteTypes {
     | '/mq9/agent/$agentName'
     | '/mq9/mailbox/$mailAddress'
     | '/storage-engine/shard/$shardName'
+    | '/system/meta-service/$stateMachineName'
     | '/data-integration/connector/$connectorName'
     | '/data-integration/connector/create'
     | '/general/client/$clientId'
@@ -813,6 +842,7 @@ export interface FileRouteTypes {
     | '/mq9/mailbox'
     | '/storage-engine/segment'
     | '/storage-engine/shard'
+    | '/system/meta-service'
   id:
     | '__root__'
     | '/_authenticated'
@@ -845,6 +875,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mq9/agent/$agentName'
     | '/_authenticated/mq9/mailbox/$mailAddress'
     | '/_authenticated/storage-engine/shard/$shardName'
+    | '/_authenticated/system/meta-service/$stateMachineName'
     | '/_authenticated/data-integration/connector/$connectorName'
     | '/_authenticated/data-integration/connector/create'
     | '/_authenticated/general/client/$clientId'
@@ -868,6 +899,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mq9/mailbox/'
     | '/_authenticated/storage-engine/segment/'
     | '/_authenticated/storage-engine/shard/'
+    | '/_authenticated/system/meta-service/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1055,6 +1087,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdvancedSystemAlarmRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/system/meta-service/': {
+      id: '/_authenticated/system/meta-service/'
+      path: '/system/meta-service'
+      fullPath: '/system/meta-service'
+      preLoaderRoute: typeof AuthenticatedSystemMetaServiceIndexLazyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/storage-engine/shard/': {
       id: '/_authenticated/storage-engine/shard/'
       path: '/storage-engine/shard'
@@ -1216,6 +1255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/system/meta-service/$stateMachineName': {
+      id: '/_authenticated/system/meta-service/$stateMachineName'
+      path: '/system/meta-service/$stateMachineName'
+      fullPath: '/system/meta-service/$stateMachineName'
+      preLoaderRoute: typeof AuthenticatedSystemMetaServiceStateMachineNameRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/storage-engine/shard/$shardName': {
       id: '/_authenticated/storage-engine/shard/$shardName'
       path: '/storage-engine/shard/$shardName'
@@ -1280,6 +1326,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMq9AgentAgentNameRoute: typeof AuthenticatedMq9AgentAgentNameRoute
   AuthenticatedMq9MailboxMailAddressRoute: typeof AuthenticatedMq9MailboxMailAddressRoute
   AuthenticatedStorageEngineShardShardNameRoute: typeof AuthenticatedStorageEngineShardShardNameRoute
+  AuthenticatedSystemMetaServiceStateMachineNameRoute: typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute: typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   AuthenticatedDataIntegrationConnectorCreateLazyRoute: typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
   AuthenticatedGeneralClientClientIdLazyRoute: typeof AuthenticatedGeneralClientClientIdLazyRoute
@@ -1303,6 +1350,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMq9MailboxIndexLazyRoute: typeof AuthenticatedMq9MailboxIndexLazyRoute
   AuthenticatedStorageEngineSegmentIndexLazyRoute: typeof AuthenticatedStorageEngineSegmentIndexLazyRoute
   AuthenticatedStorageEngineShardIndexLazyRoute: typeof AuthenticatedStorageEngineShardIndexLazyRoute
+  AuthenticatedSystemMetaServiceIndexLazyRoute: typeof AuthenticatedSystemMetaServiceIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -1329,6 +1377,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMq9MailboxMailAddressRoute,
   AuthenticatedStorageEngineShardShardNameRoute:
     AuthenticatedStorageEngineShardShardNameRoute,
+  AuthenticatedSystemMetaServiceStateMachineNameRoute:
+    AuthenticatedSystemMetaServiceStateMachineNameRoute,
   AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute:
     AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute,
   AuthenticatedDataIntegrationConnectorCreateLazyRoute:
@@ -1373,6 +1423,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedStorageEngineSegmentIndexLazyRoute,
   AuthenticatedStorageEngineShardIndexLazyRoute:
     AuthenticatedStorageEngineShardIndexLazyRoute,
+  AuthenticatedSystemMetaServiceIndexLazyRoute:
+    AuthenticatedSystemMetaServiceIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

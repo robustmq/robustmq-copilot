@@ -16,7 +16,9 @@ const config = {
   port: defaultConfig.port,
 
   api: {
+    // ROBUSTMQ_API_URL takes precedence (full URL), then ROBUSTMQ_API_PORT (port only)
     baseUrl: process.env.ROBUSTMQ_API_URL || defaultConfig.api.baseUrl,
+    port: process.env.ROBUSTMQ_API_PORT ? Number(process.env.ROBUSTMQ_API_PORT) : null,
   },
 
   // 导出默认配置供参考

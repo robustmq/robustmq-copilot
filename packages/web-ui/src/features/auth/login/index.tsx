@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { setStoredToken } from '@/utils/requestApi';
+import { setStoredToken, getApiBaseUrl } from '@/utils/requestApi';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -73,13 +73,6 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
     setLoginError('');
-
-    const getApiBaseUrl = () => {
-      if (typeof window !== 'undefined' && window.__APP_CONFIG__?.api?.baseUrl) {
-        return window.__APP_CONFIG__.api.baseUrl;
-      }
-      return 'http://localhost:8080';
-    };
 
     try {
       const res = await axios.post(`${getApiBaseUrl()}/api/v1/login`, {

@@ -29,12 +29,20 @@ pnpm install
 pnpm ui:dev        # http://localhost:4000
 ```
 
-By default connects to the RobustMQ admin API at `http://localhost:8080`. Make sure RobustMQ backend is running first — see [RobustMQ Quick Start](https://robustmq.com/QuickGuide/Overview.html).
+By default connects to the RobustMQ admin API at `http://localhost:58080`. Make sure RobustMQ backend is running first — see [RobustMQ Quick Start](https://robustmq.com/QuickGuide/Overview.html).
 
 ### Connect to a different backend
 
+Specify only the port — the UI will use the current page's hostname automatically:
+
 ```bash
-ROBUSTMQ_API_URL=http://192.168.1.100:8080 pnpm ui:dev
+ROBUSTMQ_API_PORT=58080 pnpm ui:dev
+```
+
+Or specify a full URL to override both host and port:
+
+```bash
+ROBUSTMQ_API_URL=http://192.168.1.100:58080 pnpm ui:dev
 ```
 
 ### Commands

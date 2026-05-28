@@ -24,7 +24,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -39,83 +38,6 @@ function formatTimestamp(ts: number | string | undefined): string {
   }
 }
 
-function RaftStateSummaryCard({
-  name,
-  raftState,
-  color,
-}: {
-  name: string;
-  raftState?: RaftState;
-  color: 'orange' | 'cyan' | 'indigo';
-}) {
-  if (!raftState) return null;
-  const colorMap = {
-    orange: {
-      bg: 'bg-orange-50 dark:bg-orange-950',
-      border: 'border-orange-200 dark:border-orange-800',
-      label: 'text-orange-700 dark:text-orange-400',
-      value: 'text-orange-900 dark:text-orange-100',
-      badge: 'bg-orange-100 text-orange-700 border-orange-200 dark:bg-orange-900/50 dark:text-orange-300 dark:border-orange-700',
-    },
-    cyan: {
-      bg: 'bg-cyan-50 dark:bg-cyan-950',
-      border: 'border-cyan-200 dark:border-cyan-800',
-      label: 'text-cyan-700 dark:text-cyan-400',
-      value: 'text-cyan-900 dark:text-cyan-100',
-      badge: 'bg-cyan-100 text-cyan-700 border-cyan-200 dark:bg-cyan-900/50 dark:text-cyan-300 dark:border-cyan-700',
-    },
-    indigo: {
-      bg: 'bg-indigo-50 dark:bg-indigo-950',
-      border: 'border-indigo-200 dark:border-indigo-800',
-      label: 'text-indigo-700 dark:text-indigo-400',
-      value: 'text-indigo-900 dark:text-indigo-100',
-      badge: 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-300 dark:border-indigo-700',
-    },
-  };
-  const c = colorMap[color];
-  const isOk = raftState.running_state && 'Ok' in raftState.running_state;
-
-  return (
-    <div className={`p-4 rounded-lg ${c.bg} border ${c.border} space-y-3`}>
-      <div className="flex items-center justify-between">
-        <span className={`text-sm font-bold ${c.label} uppercase tracking-wide`}>{name}</span>
-        <div className="flex items-center gap-2">
-          {isOk ? (
-            <Badge className="bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-700">
-              <CheckCircle2 className="h-3 w-3 mr-1" />
-              OK
-            </Badge>
-          ) : (
-            <Badge className="bg-red-100 text-red-700 border-red-200 dark:bg-red-900/50 dark:text-red-300 dark:border-red-700">
-              <AlertCircle className="h-3 w-3 mr-1" />
-              Error
-            </Badge>
-          )}
-          <Badge className={c.badge}>{raftState.state}</Badge>
-        </div>
-      </div>
-      <div className="grid grid-cols-4 gap-3">
-        <div>
-          <div className={`text-xs ${c.label} font-medium`}>Leader</div>
-          <div className={`text-lg font-bold ${c.value}`}>{raftState.current_leader ?? '-'}</div>
-        </div>
-        <div>
-          <div className={`text-xs ${c.label} font-medium`}>Term</div>
-          <div className={`text-lg font-bold ${c.value}`}>{raftState.current_term ?? '-'}</div>
-        </div>
-        <div>
-          <div className={`text-xs ${c.label} font-medium`}>Last Log</div>
-          <div className={`text-lg font-bold ${c.value}`}>{raftState.last_log_index ?? '-'}</div>
-        </div>
-        <div>
-          <div className={`text-xs ${c.label} font-medium`}>Quorum Ack (ms)</div>
-          <div className={`text-lg font-bold ${c.value}`}>{raftState.millis_since_quorum_ack ?? '-'}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function RaftStateDetailPanel({ name, raftState }: { name: string; raftState?: RaftState }) {
   if (!raftState) return null;
   const isOk = raftState.running_state && 'Ok' in raftState.running_state;
@@ -123,7 +45,7 @@ function RaftStateDetailPanel({ name, raftState }: { name: string; raftState?: R
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">{name} State Machine</h3>
+        <h3 className="text-base font-bold text-gray-900 dark:text-gray-100">{name}</h3>
         <div className="flex items-center gap-2">
           {isOk ? (
             <Badge className="bg-green-100 text-green-700 border-green-200 dark:bg-green-900 dark:text-green-300">
@@ -226,10 +148,7 @@ function RaftStateDetailPanel({ name, raftState }: { name: string; raftState?: R
               { label: 'Snapshot', data: raftState.snapshot },
               { label: 'Purged', data: raftState.purged },
             ].map((item) => (
-              <div
-                key={item.label}
-                className="p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
-              >
+              <div key={item.label} className="p-2 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
                 <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">{item.label}</div>
                 <div className="text-sm font-medium">Index: {item.data?.index ?? '-'}</div>
                 {item.data?.leader_id && (
@@ -317,7 +236,6 @@ function RaftStateDetailPanel({ name, raftState }: { name: string; raftState?: R
 }
 
 export default function ClusterInfo() {
-  const [metaDetailSheetOpen, setMetaDetailSheetOpen] = useState(false);
   const [brokerDetailSheetOpen, setBrokerDetailSheetOpen] = useState(false);
   const [selectedBrokerNode, setSelectedBrokerNode] = useState<any>(null);
   const { t } = useTranslation('dashboard');
@@ -328,20 +246,22 @@ export default function ClusterInfo() {
     refetchInterval: 5000,
   });
 
-  const metaNodes = clusterData?.meta?.meta?.membership_config?.membership?.nodes;
-  const metaNodeCount = metaNodes ? Object.keys(metaNodes).length : 0;
+  const metaNodes = clusterData?.meta
+    ? Object.values(clusterData.meta).flatMap(rs =>
+        rs.membership_config?.membership?.nodes
+          ? Object.entries(rs.membership_config.membership.nodes)
+          : []
+      )
+    : [];
+  const uniqueMetaNodeCount = new Set(metaNodes.map(([id]) => id)).size;
 
   return (
     <CommonLayout>
-      <div className="mb-4 flex items-center justify-between space-y-2">
-        <div className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
-            <Server className="h-4 w-4 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-purple-600">{t('cluster_info')}</h1>
-          </div>
+      <div className="mb-4 flex items-center space-x-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
+          <Server className="h-4 w-4 text-white" />
         </div>
+        <h1 className="text-xl font-bold tracking-tight text-purple-600">{t('cluster_info')}</h1>
       </div>
 
       <div className="space-y-4">
@@ -365,51 +285,44 @@ export default function ClusterInfo() {
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                   <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-950 border border-purple-200 dark:border-purple-800">
-                    <label className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide block mb-2 text-left">
+                    <label className="text-xs font-semibold text-purple-700 dark:text-purple-400 uppercase tracking-wide block mb-2">
                       {t('cluster_name')}
                     </label>
                     <div className="text-base font-bold text-purple-900 dark:text-purple-100 text-center">
                       {clusterData?.cluster_name || '-'}
                     </div>
                   </div>
-
                   <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
-                    <label className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wide block mb-3 text-left">
+                    <label className="text-xs font-semibold text-blue-700 dark:text-blue-400 uppercase tracking-wide block mb-3">
                       Nodes
                     </label>
                     <div className="flex items-center justify-between gap-3">
                       <div className="text-center flex-1">
                         <div className="text-xs text-blue-600 dark:text-blue-400 mb-1">Total</div>
-                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">
-                          {clusterData?.nodes?.length || 0}
-                        </div>
+                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">{clusterData?.nodes?.length || 0}</div>
                       </div>
-                      <div className="h-8 w-px bg-blue-300 dark:bg-blue-700"></div>
+                      <div className="h-8 w-px bg-blue-300 dark:bg-blue-700" />
                       <div className="text-center flex-1">
                         <div className="text-xs text-blue-600 dark:text-blue-400 mb-1">Meta</div>
-                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">{metaNodeCount}</div>
+                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">{uniqueMetaNodeCount}</div>
                       </div>
-                      <div className="h-8 w-px bg-blue-300 dark:bg-blue-700"></div>
+                      <div className="h-8 w-px bg-blue-300 dark:bg-blue-700" />
                       <div className="text-center flex-1">
                         <div className="text-xs text-blue-600 dark:text-blue-400 mb-1">Broker</div>
-                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">
-                          {clusterData?.broker_node_list?.length || 0}
-                        </div>
+                        <div className="text-lg font-bold text-blue-900 dark:text-blue-100">{clusterData?.broker_node_list?.length || 0}</div>
                       </div>
                     </div>
                   </div>
-
                   <div className="p-4 rounded-lg bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800">
-                    <label className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide block mb-2 text-left">
+                    <label className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase tracking-wide block mb-2">
                       Version
                     </label>
                     <div className="text-base font-bold text-orange-900 dark:text-orange-100 text-center">
                       {clusterData?.version || '-'}
                     </div>
                   </div>
-
                   <div className="p-4 rounded-lg bg-cyan-50 dark:bg-cyan-950 border border-cyan-200 dark:border-cyan-800">
-                    <label className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wide block mb-2 text-left">
+                    <label className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 uppercase tracking-wide block mb-2">
                       Start Time
                     </label>
                     <div className="text-sm font-bold text-cyan-900 dark:text-cyan-100 text-center">
@@ -440,65 +353,7 @@ export default function ClusterInfo() {
               </CardContent>
             </Card>
 
-            {/* Meta Information */}
-            <Card className="border-l-4 border-orange-500">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Server className="h-5 w-5 text-orange-600" />
-                    <span>Meta Information</span>
-                    <Badge variant="outline" className="ml-2 text-xs">
-                      3 State Machines
-                    </Badge>
-                  </div>
-                  <Button variant="outline" size="sm" onClick={() => setMetaDetailSheetOpen(true)} className="text-xs">
-                    <Eye className="h-3 w-3 mr-1" />
-                    Details
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <RaftStateSummaryCard name="Offset" raftState={clusterData?.meta?.offset} color="orange" />
-                <RaftStateSummaryCard name="MQTT" raftState={clusterData?.meta?.mqtt} color="cyan" />
-                <RaftStateSummaryCard name="Meta" raftState={clusterData?.meta?.meta} color="indigo" />
-
-                {metaNodes && Object.keys(metaNodes).length > 0 && (
-                  <div className="mt-4">
-                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center space-x-2">
-                      <Network className="h-4 w-4 text-orange-600" />
-                      <span>Meta Nodes</span>
-                    </h3>
-                    <div className="rounded-md border">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead className="font-bold">Node ID</TableHead>
-                            <TableHead className="font-bold">RPC Address</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {Object.entries(metaNodes).map(([nodeId, nodeData]) => (
-                            <TableRow key={nodeId}>
-                              <TableCell className="font-medium">
-                                <div className="flex items-center space-x-2">
-                                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900">
-                                    <Server className="h-3 w-3 text-orange-600 dark:text-orange-400" />
-                                  </div>
-                                  <span className="font-mono text-orange-600 dark:text-orange-400">{nodeId}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell className="font-mono text-sm">{nodeData?.rpc_addr || '-'}</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Broker Nodes Table */}
+            {/* Broker Nodes */}
             <Card className="border-l-4 border-blue-500">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
@@ -537,18 +392,12 @@ export default function ClusterInfo() {
                               {node.roles && node.roles.length > 0 ? (
                                 <div className="flex flex-wrap gap-1">
                                   {node.roles.map((role, idx) => (
-                                    <Badge
-                                      key={idx}
-                                      variant="outline"
-                                      className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
-                                    >
+                                    <Badge key={idx} variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800">
                                       {role}
                                     </Badge>
                                   ))}
                                 </div>
-                              ) : (
-                                '-'
-                              )}
+                              ) : '-'}
                             </TableCell>
                             <TableCell className="text-sm">{formatTimestamp(node.start_time)}</TableCell>
                             <TableCell>
@@ -578,47 +427,6 @@ export default function ClusterInfo() {
         )}
       </div>
 
-      {/* Meta Detail Sheet */}
-      <Sheet open={metaDetailSheetOpen} onOpenChange={setMetaDetailSheetOpen}>
-        <SheetContent className="w-[750px] sm:max-w-[750px]">
-          <SheetHeader>
-            <SheetTitle>Meta Information Detail</SheetTitle>
-            <SheetDescription>Three Raft state machines: Offset, MQTT, Meta</SheetDescription>
-          </SheetHeader>
-          {clusterData?.meta ? (
-            <ScrollArea className="h-[calc(100vh-120px)] mt-4 pr-4">
-              <Tabs defaultValue="offset" className="space-y-4">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="offset" className="text-xs">
-                    <Database className="h-3 w-3 mr-1" />
-                    Offset
-                  </TabsTrigger>
-                  <TabsTrigger value="mqtt" className="text-xs">
-                    <Wifi className="h-3 w-3 mr-1" />
-                    MQTT
-                  </TabsTrigger>
-                  <TabsTrigger value="meta" className="text-xs">
-                    <Server className="h-3 w-3 mr-1" />
-                    Meta
-                  </TabsTrigger>
-                </TabsList>
-                <TabsContent value="offset">
-                  <RaftStateDetailPanel name="Offset" raftState={clusterData.meta.offset} />
-                </TabsContent>
-                <TabsContent value="mqtt">
-                  <RaftStateDetailPanel name="MQTT" raftState={clusterData.meta.mqtt} />
-                </TabsContent>
-                <TabsContent value="meta">
-                  <RaftStateDetailPanel name="Meta" raftState={clusterData.meta.meta} />
-                </TabsContent>
-              </Tabs>
-            </ScrollArea>
-          ) : (
-            <div className="mt-6 text-center py-8 text-gray-500 dark:text-gray-400">No metadata available</div>
-          )}
-        </SheetContent>
-      </Sheet>
-
       {/* Broker Node Detail Sheet */}
       <Sheet open={brokerDetailSheetOpen} onOpenChange={setBrokerDetailSheetOpen}>
         <SheetContent className="w-[600px] sm:max-w-[600px]">
@@ -640,15 +448,11 @@ export default function ClusterInfo() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Node ID</label>
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">
-                          {selectedBrokerNode.node_id ?? '-'}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">{selectedBrokerNode.node_id ?? '-'}</div>
                       </div>
                       <div>
                         <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Node IP</label>
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">
-                          {selectedBrokerNode.node_ip || '-'}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">{selectedBrokerNode.node_ip || '-'}</div>
                       </div>
                     </div>
                     {selectedBrokerNode.roles && selectedBrokerNode.roles.length > 0 && (
@@ -656,10 +460,7 @@ export default function ClusterInfo() {
                         <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Roles</label>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {selectedBrokerNode.roles.map((role: string, idx: number) => (
-                            <Badge
-                              key={idx}
-                              className="bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-800"
-                            >
+                            <Badge key={idx} className="bg-purple-100 text-purple-700 border-purple-200 dark:bg-purple-900 dark:text-purple-300 dark:border-purple-800">
                               {role}
                             </Badge>
                           ))}
@@ -694,27 +495,32 @@ export default function ClusterInfo() {
                   </CardContent>
                 </Card>
 
-                {selectedBrokerNode.extend?.mqtt && (
+                {selectedBrokerNode.extend && Object.keys(selectedBrokerNode.extend).length > 0 && (
                   <Card className="border-l-4 border-cyan-500">
                     <CardHeader>
                       <CardTitle className="text-base flex items-center space-x-2">
                         <Wifi className="h-5 w-5 text-cyan-600" />
-                        <span>MQTT Addresses</span>
+                        <span>Protocol Addresses</span>
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                      {Object.entries(selectedBrokerNode.extend.mqtt).map(([key, value]: [string, any]) =>
-                        value ? (
-                          <div key={key}>
-                            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
-                              {key.replace(/_/g, ' ')}
-                            </label>
-                            <div className="text-sm font-mono font-medium text-gray-900 dark:text-gray-100 mt-1 bg-gray-50 dark:bg-gray-900 p-2 rounded">
-                              {value}
-                            </div>
+                    <CardContent className="space-y-4">
+                      {Object.entries(selectedBrokerNode.extend).map(([protocol, addrs]: [string, any]) => (
+                        <div key={protocol}>
+                          <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">{protocol}</div>
+                          <div className="space-y-1">
+                            {Object.entries(addrs).map(([key, value]: [string, any]) =>
+                              value ? (
+                                <div key={key} className="flex items-center justify-between">
+                                  <label className="text-xs text-gray-500 dark:text-gray-400">{key.replace(/_/g, ' ')}</label>
+                                  <div className="text-xs font-mono text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 px-2 py-1 rounded">
+                                    {value}
+                                  </div>
+                                </div>
+                              ) : null
+                            )}
                           </div>
-                        ) : null,
-                      )}
+                        </div>
+                      ))}
                     </CardContent>
                   </Card>
                 )}
@@ -729,10 +535,7 @@ export default function ClusterInfo() {
                     </CardHeader>
                     <CardContent className="space-y-2">
                       {selectedBrokerNode.storage_fold.map((path: string, idx: number) => (
-                        <div
-                          key={idx}
-                          className="flex items-center space-x-2 p-2 rounded bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800"
-                        >
+                        <div key={idx} className="flex items-center space-x-2 p-2 rounded bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800">
                           <Folder className="h-4 w-4 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
                           <span className="text-sm font-mono text-yellow-700 dark:text-yellow-300">{path}</span>
                         </div>
@@ -748,19 +551,15 @@ export default function ClusterInfo() {
                       <span>Time</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Start Time</label>
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">
-                          {formatTimestamp(selectedBrokerNode.start_time)}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">{formatTimestamp(selectedBrokerNode.start_time)}</div>
                       </div>
                       <div>
                         <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Register Time</label>
-                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">
-                          {formatTimestamp(selectedBrokerNode.register_time)}
-                        </div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100 mt-1">{formatTimestamp(selectedBrokerNode.register_time)}</div>
                       </div>
                     </div>
                   </CardContent>

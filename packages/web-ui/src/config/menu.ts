@@ -154,6 +154,11 @@ export const sidebarData: SidebarData = {
           url: '/system/cluster-info',
           icon: Server,
         },
+        {
+          title: 'meta_service',
+          url: '/system/meta-service',
+          icon: Database,
+        },
       ],
     },
   ],

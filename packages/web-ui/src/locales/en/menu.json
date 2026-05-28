@@ -21,11 +21,12 @@
   "tenant": "Tenant",
   "pub_sub": "Pub Sub",
   "system_log": "System Log",
-  "configuration": "Configuration",
+  "configuration": "Cluster Config",
   "mq9": "MQ9",
   "mailbox": "Mailbox",
   "agent": "Agent",
   "storage_engine": "Storage Engine",
   "shard": "Shard",
-  "cluster_info": "Cluster Info"
+  "cluster_info": "Cluster Info",
+  "meta_service": "Meta Service"
 }
