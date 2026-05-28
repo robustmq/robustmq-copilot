@@ -30,6 +30,9 @@ import { Route as AuthenticatedGeneralTopicTopicIdRouteImport } from './routes/_
 import { Route as AuthenticatedGeneralSubscribeSubscribeIdRouteImport } from './routes/_authenticated/general/subscribe/$subscribeId'
 import { Route as AuthenticatedGeneralSessionSessionIdRouteImport } from './routes/_authenticated/general/session/$sessionId'
 
+const AuthenticatedOverviewLazyRouteImport = createFileRoute(
+  '/_authenticated/overview',
+)()
 const errors503LazyRouteImport = createFileRoute('/(errors)/503')()
 const errors500LazyRouteImport = createFileRoute('/(errors)/500')()
 const errors404LazyRouteImport = createFileRoute('/(errors)/404')()
@@ -121,6 +124,14 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOverviewLazyRoute =
+  AuthenticatedOverviewLazyRouteImport.update({
+    id: '/overview',
+    path: '/overview',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any).lazy(() =>
+    import('./routes/_authenticated/overview.lazy').then((d) => d.Route),
+  )
 const errors503LazyRoute = errors503LazyRouteImport
   .update({
     id: '/(errors)/503',
@@ -541,6 +552,7 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
+  '/overview': typeof AuthenticatedOverviewLazyRoute
   '/': typeof AuthenticatedIndexRoute
   '/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
@@ -594,6 +606,7 @@ export interface FileRoutesByTo {
   '/404': typeof errors404LazyRoute
   '/500': typeof errors500LazyRoute
   '/503': typeof errors503LazyRoute
+  '/overview': typeof AuthenticatedOverviewLazyRoute
   '/': typeof AuthenticatedIndexRoute
   '/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
@@ -649,6 +662,7 @@ export interface FileRoutesById {
   '/(errors)/404': typeof errors404LazyRoute
   '/(errors)/500': typeof errors500LazyRoute
   '/(errors)/503': typeof errors503LazyRoute
+  '/_authenticated/overview': typeof AuthenticatedOverviewLazyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/_authenticated/system/ban-log': typeof AuthenticatedSystemBanLogRoute
@@ -704,6 +718,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/overview'
     | '/'
     | '/advanced/system-alarm'
     | '/system/ban-log'
@@ -757,6 +772,7 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
+    | '/overview'
     | '/'
     | '/advanced/system-alarm'
     | '/system/ban-log'
@@ -811,6 +827,7 @@ export interface FileRouteTypes {
     | '/(errors)/404'
     | '/(errors)/500'
     | '/(errors)/503'
+    | '/_authenticated/overview'
     | '/_authenticated/'
     | '/_authenticated/advanced/system-alarm'
     | '/_authenticated/system/ban-log'
@@ -882,6 +899,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/overview': {
+      id: '/_authenticated/overview'
+      path: '/overview'
+      fullPath: '/overview'
+      preLoaderRoute: typeof AuthenticatedOverviewLazyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/(errors)/503': {
@@ -1238,6 +1262,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedOverviewLazyRoute: typeof AuthenticatedOverviewLazyRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAdvancedSystemAlarmRoute: typeof AuthenticatedAdvancedSystemAlarmRoute
   AuthenticatedSystemBanLogRoute: typeof AuthenticatedSystemBanLogRoute
@@ -1281,6 +1306,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedOverviewLazyRoute: AuthenticatedOverviewLazyRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAdvancedSystemAlarmRoute: AuthenticatedAdvancedSystemAlarmRoute,
   AuthenticatedSystemBanLogRoute: AuthenticatedSystemBanLogRoute,

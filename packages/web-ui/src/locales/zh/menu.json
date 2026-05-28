@@ -1,5 +1,6 @@
 {
   "overview": "概览",
+  "global_overview": "概览",
   "general": "常规",
   "mqtt": "MQTT",
   "client": "客户端",

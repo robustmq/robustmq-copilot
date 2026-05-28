@@ -32,6 +32,11 @@ export const sidebarData: SidebarData = {
     {
       items: [
         {
+          title: 'global_overview',
+          url: '/overview',
+          icon: LayoutDashboard,
+        },
+        {
           title: 'tenant',
           url: '/system/tenant',
           icon: Building2,

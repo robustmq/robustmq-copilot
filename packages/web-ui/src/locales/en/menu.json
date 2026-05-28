@@ -1,5 +1,6 @@
 {
   "overview": "Overview",
+  "global_overview": "Overview",
   "general": "General",
   "mqtt": "MQTT",
   "client": "Client",

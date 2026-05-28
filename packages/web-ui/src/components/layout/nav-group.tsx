@@ -30,24 +30,37 @@ export function NavGroup({ title, items }: NavGroup) {
   const href = useLocation({ select: location => location.href });
   const { t } = useTranslation('menu');
 
+  const menuItems = (
+    <SidebarMenu>
+      {items.map(item => {
+        const key = `${item.title}-${item.url}`;
+
+        if (!item.items) return <SidebarMenuLink key={key} item={item} href={href} />;
+
+        if (state === 'collapsed') return <SidebarMenuCollapsedDropdown key={key} item={item} href={href} />;
+
+        return <SidebarMenuCollapsible key={key} item={item} href={href} />;
+      })}
+    </SidebarMenu>
+  );
+
+  if (!title) {
+    return <SidebarGroup className="px-2">{menuItems}</SidebarGroup>;
+  }
+
   return (
     <SidebarGroup className="px-2">
-      {!!title && (
-        <SidebarGroupLabel className="text-purple-600 font-semibold text-xs uppercase tracking-wider mb-2 px-2 py-1 bg-purple-50 dark:bg-purple-950 dark:text-purple-400 rounded-md">
-          {t(title)}
-        </SidebarGroupLabel>
-      )}
-      <SidebarMenu>
-        {items.map(item => {
-          const key = `${item.title}-${item.url}`;
-
-          if (!item.items) return <SidebarMenuLink key={key} item={item} href={href} />;
-
-          if (state === 'collapsed') return <SidebarMenuCollapsedDropdown key={key} item={item} href={href} />;
-
-          return <SidebarMenuCollapsible key={key} item={item} href={href} />;
-        })}
-      </SidebarMenu>
+      <Collapsible defaultOpen className="group/nav-group">
+        <CollapsibleTrigger asChild>
+          <SidebarGroupLabel className="w-full flex items-center justify-between cursor-pointer text-purple-600 font-semibold text-xs uppercase tracking-wider mb-2 px-2 py-1 bg-purple-50 hover:bg-purple-100 dark:bg-purple-950 dark:text-purple-400 dark:hover:bg-purple-900 rounded-md transition-colors duration-150 select-none">
+            <span>{t(title)}</span>
+            <ChevronRight className="h-3 w-3 shrink-0 transition-transform duration-200 group-data-[state=open]/nav-group:rotate-90" />
+          </SidebarGroupLabel>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          {menuItems}
+        </CollapsibleContent>
+      </Collapsible>
     </SidebarGroup>
   );
 }
