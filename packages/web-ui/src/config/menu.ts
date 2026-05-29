@@ -19,7 +19,6 @@ import {
   Mail,
   Bot,
   HardDrive,
-  Server,
 } from 'lucide-react';
 
 export const sidebarData: SidebarData = {
@@ -145,19 +144,14 @@ export const sidebarData: SidebarData = {
       title: 'system',
       items: [
         {
-          title: 'configuration',
-          url: '/system/configuration',
-          icon: Settings,
-        },
-        {
-          title: 'cluster_info',
-          url: '/system/cluster-info',
-          icon: Server,
-        },
-        {
           title: 'meta_service',
           url: '/system/meta-service',
           icon: Database,
+        },
+        {
+          title: 'configuration',
+          url: '/system/configuration',
+          icon: Settings,
         },
       ],
     },

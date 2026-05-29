@@ -2,7 +2,7 @@ import { DataTable } from '@/components/table';
 import { ColumnDef } from '@tanstack/react-table';
 import { getShardList, ShardRaw } from '@/services/mqtt';
 import { FilterValue } from '@/components/table/filter';
-import { Clock, GitFork, HardDrive, Eye, MessageSquare } from 'lucide-react';
+import { Clock, GitFork, HardDrive, Eye, MessageSquare, Tag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { format } from 'date-fns';
@@ -15,6 +15,20 @@ export default function ShardList() {
   const navigate = useNavigate();
 
   const columns: ColumnDef<ShardRaw>[] = [
+    {
+      accessorKey: 'topic_name',
+      header: ({ column }) => <DataTableColumnHeader column={column} title={t('topic_name')} />,
+      cell: ({ row }) => (
+        <div className="flex items-center space-x-1.5 min-w-0">
+          <Tag className="h-4 w-4 text-indigo-500 shrink-0" />
+          <span className="text-sm truncate" title={row.original.topic_name || ''}>
+            {row.original.topic_name || '-'}
+          </span>
+        </div>
+      ),
+      size: 180,
+      minSize: 120,
+    },
     {
       accessorKey: 'shard_name',
       header: ({ column }) => <DataTableColumnHeader column={column} title={t('shard_name')} />,
@@ -162,11 +176,13 @@ export default function ShardList() {
   ];
 
   const fetchDataFn = async (pageIndex: number, pageSize: number, searchValue: FilterValue[]) => {
-    const shardNameVal = searchValue.find(f => f.field === 'shard_name' || f.field === '')?.valueList?.[0];
+    const shardNameVal = searchValue.find(f => f.field === 'shard_name')?.valueList?.[0];
+    const topicNameVal = searchValue.find(f => f.field === 'topic_name' || f.field === '')?.valueList?.[0];
     try {
       const ret = await getShardList({
         pagination: { offset: pageIndex * pageSize, limit: pageSize },
         ...(shardNameVal ? { shard_name: shardNameVal } : {}),
+        ...(topicNameVal ? { topic_name: topicNameVal } : {}),
       });
       return {
         data: ret.shardList || [],

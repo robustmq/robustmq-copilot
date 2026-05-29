@@ -57,13 +57,17 @@ UNTRACKED_FILES=$(git -C "$PROJECT_ROOT" ls-files --others --exclude-standard \
   2>/dev/null | grep -v 'node_modules' || true)
 
 # 4. Files deleted locally that exist on origin → remove on remote
-_DELETED_RAW=$(git -C "$PROJECT_ROOT" diff --name-only --diff-filter=D \
+# Case A: committed deletions (diff between origin and HEAD)
+_DELETED_COMMITTED=$(git -C "$PROJECT_ROOT" diff --name-only --diff-filter=D \
   "origin/${LOCAL_BRANCH}" HEAD 2>/dev/null || true)
-# Keep only files that are truly gone from disk
+# Case B: workdir deletions not yet staged/committed (git ls-files --deleted)
+_DELETED_WORKDIR=$(git -C "$PROJECT_ROOT" ls-files --deleted 2>/dev/null || true)
+
+# Merge both, keep only files truly gone from disk
 DELETED_FILES=""
 while IFS= read -r f; do
   [[ -n "$f" && ! -e "$PROJECT_ROOT/$f" ]] && DELETED_FILES="${DELETED_FILES}${f}"$'\n'
-done <<< "$_DELETED_RAW"
+done <<< "$(printf '%s\n%s' "$_DELETED_COMMITTED" "$_DELETED_WORKDIR" | sort -u)"
 DELETED_FILES="${DELETED_FILES%$'\n'}"
 
 # Combine, deduplicate, always include root-level project files, exclude archives & node_modules
@@ -112,17 +116,23 @@ fi
 
 # ── Remote: pull → extract → commit → push ────────────────────────────────────
 info "Syncing remote ..."
+# Base64-encode the deleted file list to safely pass multi-line value over SSH env
+DELETED_LIST_B64=$(printf '%s' "${DELETED_FILES}" | base64 | tr -d '\n')
+
 ssh "${REMOTE_HOST}" \
   REMOTE_DIR="${REMOTE_DIR}" \
   LOCAL_BRANCH="${LOCAL_BRANCH}" \
   ARCHIVE_NAME="${ARCHIVE_NAME}" \
   SKIP_ARCHIVE="${SKIP_ARCHIVE}" \
-  DELETED_LIST="${DELETED_FILES}" \
+  DELETED_LIST_B64="${DELETED_LIST_B64}" \
   'bash -s' <<'REMOTE_SCRIPT'
 set -euo pipefail
 
 info()  { echo "[INFO]  $*"; }
 error() { echo "[ERROR] $*" >&2; }
+
+# Decode the base64-encoded deleted file list
+DELETED_LIST=$(printf '%s' "${DELETED_LIST_B64}" | base64 -d 2>/dev/null || true)
 
 cd "${REMOTE_DIR}"
 
@@ -202,7 +212,7 @@ REMOTE_SCRIPT
 info "Remote sync complete."
 
 # ── Local commit: stage exactly the packaged files ────────────────────────────
-if [[ "${SKIP_ARCHIVE}" -eq 0 && -n "$ALL_FILES" ]]; then
+if [[ "${SKIP_ARCHIVE}" -eq 0 && -n "$ALL_FILES" ]] || [[ -n "$DELETED_FILES" ]]; then
   info "Committing packaged files locally ..."
   while IFS= read -r f; do
     [[ -n "$f" ]] && git -C "$PROJECT_ROOT" add -- "$f" 2>/dev/null || true
@@ -210,7 +220,7 @@ if [[ "${SKIP_ARCHIVE}" -eq 0 && -n "$ALL_FILES" ]]; then
 
   if [[ -n "$DELETED_FILES" ]]; then
     while IFS= read -r f; do
-      [[ -n "$f" ]] && git -C "$PROJECT_ROOT" rm --cached -- "$f" 2>/dev/null || true
+      [[ -n "$f" ]] && git -C "$PROJECT_ROOT" rm --cached --force -- "$f" 2>/dev/null || true
     done <<< "$DELETED_FILES"
   fi
 

@@ -6,10 +6,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useNavigate } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
 
 export default function MetaService() {
-  const { t } = useTranslation('dashboard');
   const navigate = useNavigate();
 
   const { data: clusterData, isLoading } = useQuery({
@@ -34,49 +32,42 @@ export default function MetaService() {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <RefreshCw className="h-8 w-8 mx-auto text-purple-600 dark:text-purple-400 mb-2 animate-spin" />
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t('loading_cluster_status')}</p>
-          </div>
+          <RefreshCw className="h-8 w-8 mx-auto text-purple-600 dark:text-purple-400 animate-spin" />
         </div>
       ) : (
         <div className="rounded-md border">
           <Table>
-            <TableHeader className="bg-purple-600 text-white">
+            <TableHeader className="bg-purple-600">
               <TableRow className="border-0">
                 <TableHead className="text-white font-semibold">Name</TableHead>
-                <TableHead className="text-white font-semibold">State</TableHead>
+                <TableHead className="text-white font-semibold">Membership Configs</TableHead>
                 <TableHead className="text-white font-semibold">Status</TableHead>
-                <TableHead className="text-white font-semibold">Node ID</TableHead>
-                <TableHead className="text-white font-semibold">Leader</TableHead>
-                <TableHead className="text-white font-semibold">Term</TableHead>
+                <TableHead className="text-white font-semibold">Current Leader</TableHead>
+                <TableHead className="text-white font-semibold">Current Term</TableHead>
                 <TableHead className="text-white font-semibold">Last Log Index</TableHead>
-                <TableHead className="text-white font-semibold">Quorum Ack (ms)</TableHead>
+                <TableHead className="text-white font-semibold">Last Quorum Ack (ms)</TableHead>
                 <TableHead className="text-white font-semibold">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {metaEntries.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="h-24 text-center text-gray-400">
+                  <TableCell colSpan={8} className="h-24 text-center text-gray-400">
                     No meta service data available
                   </TableCell>
                 </TableRow>
               ) : (
                 metaEntries.map(([key, rs]) => {
                   const isOk = rs.running_state && 'Ok' in rs.running_state;
+                  const configs = rs.membership_config?.membership?.configs ?? [];
+                  const configStr = configs
+                    .map((group: number[]) => `[${group.join(', ')}]`)
+                    .join(' / ');
+
                   return (
                     <TableRow key={key} className="hover:bg-muted/50">
-                      <TableCell className="font-mono font-medium">{key}</TableCell>
-                      <TableCell>
-                        <Badge className={
-                          rs.state === 'Leader'
-                            ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300'
-                            : 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300'
-                        }>
-                          {rs.state}
-                        </Badge>
-                      </TableCell>
+                      <TableCell className="font-mono font-medium text-sm">{key}</TableCell>
+                      <TableCell className="font-mono text-sm">{configStr || '-'}</TableCell>
                       <TableCell>
                         {isOk ? (
                           <Badge className="bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">
@@ -88,15 +79,16 @@ export default function MetaService() {
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell className="font-mono text-sm">{rs.id ?? '-'}</TableCell>
                       <TableCell className="font-mono text-sm">{rs.current_leader ?? '-'}</TableCell>
                       <TableCell className="font-mono text-sm">{rs.current_term ?? '-'}</TableCell>
                       <TableCell className="font-mono text-sm">{rs.last_log_index ?? '-'}</TableCell>
-                      <TableCell className="font-mono text-sm">{rs.millis_since_quorum_ack ?? '-'}</TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {rs.millis_since_quorum_ack != null ? rs.millis_since_quorum_ack : '-'}
+                      </TableCell>
                       <TableCell>
                         <Button
                           size="sm"
-                          className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 px-1.5 py-0.5 h-6 text-[11px]"
+                          className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600 shadow-md px-1.5 py-0.5 h-6 text-[11px]"
                           onClick={() =>
                             navigate({
                               to: '/system/meta-service/$stateMachineName',

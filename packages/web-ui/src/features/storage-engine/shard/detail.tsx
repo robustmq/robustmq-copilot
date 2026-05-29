@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Info, HardDrive, Layers, Clock, Database, GitFork, Hash } from 'lucide-react';
+import { ArrowLeft, Info, HardDrive, Layers, Clock, Database, GitFork, Hash, Tag } from 'lucide-react';
 import { getShardList, ShardRaw } from '@/services/mqtt';
 import { format } from 'date-fns';
 import { CommonLayout } from '@/components/layout/common-layout';
@@ -168,6 +168,20 @@ export default function ShardDetail() {
                       </label>
                       <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
                         {engineShard?.shard_uid || '-'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3 p-3 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800">
+                    <div className="flex-shrink-0 mt-1">
+                      <Tag className="h-4 w-4 text-indigo-500" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <label className="text-xs font-semibold text-indigo-700 dark:text-indigo-400 uppercase tracking-wide">
+                        {t('topic_name')}
+                      </label>
+                      <div className="mt-1 text-sm font-mono break-all text-gray-900 dark:text-gray-100">
+                        {shard.topic_name || '-'}
                       </div>
                     </div>
                   </div>

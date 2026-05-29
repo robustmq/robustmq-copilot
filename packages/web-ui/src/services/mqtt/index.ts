@@ -1035,6 +1035,7 @@ export interface EngineShardConfig {
 export interface EngineShard {
   shard_uid: string;
   shard_name: string;
+  topic_name: string;
   start_segment_seq: number;
   active_segment_seq: number;
   last_segment_seq: number;
@@ -1046,6 +1047,7 @@ export interface EngineShard {
 
 export interface ShardRaw {
   shard_name: string;
+  topic_name: string;
   config: {
     replica_num: number;
     storage_type: string;
@@ -1061,16 +1063,18 @@ export interface ShardRaw {
 export const getShardList = async (params: {
   pagination: { offset: number; limit: number };
   shard_name?: string;
+  topic_name?: string;
 }): Promise<{
   shardList: ShardRaw[];
   totalCount: number;
 }> => {
-  const { pagination, shard_name } = params;
+  const { pagination, shard_name, topic_name } = params;
   const page = Math.floor(pagination.offset / pagination.limit) + 1;
   const response = await requestApi('/api/storage-engine/shard/list', {
     limit: pagination.limit,
     page,
     ...(shard_name ? { shard_name } : {}),
+    ...(topic_name ? { topic_name } : {}),
   });
   const rawList: Array<{ shard_info: ShardRaw }> = response.data || [];
   return {
@@ -1224,6 +1228,8 @@ export interface ClusterConfig {
   roles: string[];
   grpc_port: number;
   http_port: number;
+  data_path?: string;
+  meta_addrs?: Record<string, string>;
   log: {
     log_path: string;
     log_config: string;
@@ -1336,6 +1342,31 @@ export interface ClusterConfig {
     cluster: LimitQuota;
     tenant: LimitQuota;
   };
+  kafka_runtime?: {
+    tcp_port: number;
+  };
+  amqp_runtime?: {
+    tcp_port: number;
+  };
+  nats_runtime?: {
+    tcp_port: number;
+    tls_port: number;
+    ws_port: number;
+    wss_port: number;
+    max_payload: number;
+    auth_required: boolean;
+    ping_interval: number;
+    ping_max: number;
+    ping_send_chunk: number;
+    core_shard_num: number;
+    push_thread_num: number;
+    push_queue_thread_num: number;
+    mq9_mailbox_default_ttl: number;
+  };
+  delay_task?: {
+    delay_task_queue_num: number;
+    delay_task_handler_concurrency: number;
+  };
   llm_client: {
     platform?: string | null;
     model?: string | null;
@@ -1344,8 +1375,11 @@ export interface ClusterConfig {
   } | null;
 }
 
-export const getClusterConfig = async (): Promise<ClusterConfig> => {
-  const response = await requestApi('/api/cluster/config/get', undefined, 'GET');
+export const getClusterConfig = async (brokerId?: number): Promise<ClusterConfig> => {
+  const url = brokerId != null
+    ? `/api/cluster/config/get?broker_id=${brokerId}`
+    : '/api/cluster/config/get';
+  const response = await requestApi(url, undefined, 'GET');
   return response;
 };
 
@@ -1365,6 +1399,7 @@ export interface BrokerNode {
   node_id: number;
   node_ip: string;
   grpc_addr: string;
+  http_addr?: string;
   engine_addr?: string;
   start_time: number;
   register_time: number;

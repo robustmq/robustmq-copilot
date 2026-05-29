@@ -20,10 +20,10 @@ import { Route as AuthenticatedSystemTenantRouteImport } from './routes/_authent
 import { Route as AuthenticatedSystemSystemLogRouteImport } from './routes/_authenticated/system/system-log'
 import { Route as AuthenticatedSystemPubSubRouteImport } from './routes/_authenticated/system/pub-sub'
 import { Route as AuthenticatedSystemConfigurationRouteImport } from './routes/_authenticated/system/configuration'
-import { Route as AuthenticatedSystemClusterInfoRouteImport } from './routes/_authenticated/system/cluster-info'
 import { Route as AuthenticatedSystemBanLogRouteImport } from './routes/_authenticated/system/ban-log'
 import { Route as AuthenticatedAdvancedSystemAlarmRouteImport } from './routes/_authenticated/advanced/system-alarm'
 import { Route as AuthenticatedSystemMetaServiceStateMachineNameRouteImport } from './routes/_authenticated/system/meta-service/$stateMachineName'
+import { Route as AuthenticatedSystemConfigurationBrokerIdRouteImport } from './routes/_authenticated/system/configuration_.$brokerId'
 import { Route as AuthenticatedStorageEngineShardShardNameRouteImport } from './routes/_authenticated/storage-engine/shard/$shardName'
 import { Route as AuthenticatedMq9MailboxMailAddressRouteImport } from './routes/_authenticated/mq9/mailbox/$mailAddress'
 import { Route as AuthenticatedMq9AgentAgentNameRouteImport } from './routes/_authenticated/mq9/agent/$agentName'
@@ -259,12 +259,6 @@ const AuthenticatedSystemConfigurationRoute =
   AuthenticatedSystemConfigurationRouteImport.update({
     id: '/system/configuration',
     path: '/system/configuration',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
-const AuthenticatedSystemClusterInfoRoute =
-  AuthenticatedSystemClusterInfoRouteImport.update({
-    id: '/system/cluster-info',
-    path: '/system/cluster-info',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSystemBanLogRoute =
@@ -523,6 +517,12 @@ const AuthenticatedSystemMetaServiceStateMachineNameRoute =
     path: '/system/meta-service/$stateMachineName',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSystemConfigurationBrokerIdRoute =
+  AuthenticatedSystemConfigurationBrokerIdRouteImport.update({
+    id: '/system/configuration_/$brokerId',
+    path: '/system/configuration/$brokerId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStorageEngineShardShardNameRoute =
   AuthenticatedStorageEngineShardShardNameRouteImport.update({
     id: '/storage-engine/shard/$shardName',
@@ -576,7 +576,6 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
-  '/system/cluster-info': typeof AuthenticatedSystemClusterInfoRoute
   '/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
   '/system/system-log': typeof AuthenticatedSystemSystemLogRoute
@@ -590,6 +589,7 @@ export interface FileRoutesByFullPath {
   '/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/system/configuration/$brokerId': typeof AuthenticatedSystemConfigurationBrokerIdRoute
   '/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
@@ -632,7 +632,6 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/system/ban-log': typeof AuthenticatedSystemBanLogRoute
-  '/system/cluster-info': typeof AuthenticatedSystemClusterInfoRoute
   '/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
   '/system/system-log': typeof AuthenticatedSystemSystemLogRoute
@@ -646,6 +645,7 @@ export interface FileRoutesByTo {
   '/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/system/configuration/$brokerId': typeof AuthenticatedSystemConfigurationBrokerIdRoute
   '/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
@@ -690,7 +690,6 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/advanced/system-alarm': typeof AuthenticatedAdvancedSystemAlarmRoute
   '/_authenticated/system/ban-log': typeof AuthenticatedSystemBanLogRoute
-  '/_authenticated/system/cluster-info': typeof AuthenticatedSystemClusterInfoRoute
   '/_authenticated/system/configuration': typeof AuthenticatedSystemConfigurationRoute
   '/_authenticated/system/pub-sub': typeof AuthenticatedSystemPubSubRoute
   '/_authenticated/system/system-log': typeof AuthenticatedSystemSystemLogRoute
@@ -704,6 +703,7 @@ export interface FileRoutesById {
   '/_authenticated/mq9/agent/$agentName': typeof AuthenticatedMq9AgentAgentNameRoute
   '/_authenticated/mq9/mailbox/$mailAddress': typeof AuthenticatedMq9MailboxMailAddressRoute
   '/_authenticated/storage-engine/shard/$shardName': typeof AuthenticatedStorageEngineShardShardNameRoute
+  '/_authenticated/system/configuration_/$brokerId': typeof AuthenticatedSystemConfigurationBrokerIdRoute
   '/_authenticated/system/meta-service/$stateMachineName': typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   '/_authenticated/data-integration/connector/$connectorName': typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   '/_authenticated/data-integration/connector/create': typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
@@ -748,7 +748,6 @@ export interface FileRouteTypes {
     | '/'
     | '/advanced/system-alarm'
     | '/system/ban-log'
-    | '/system/cluster-info'
     | '/system/configuration'
     | '/system/pub-sub'
     | '/system/system-log'
@@ -762,6 +761,7 @@ export interface FileRouteTypes {
     | '/mq9/agent/$agentName'
     | '/mq9/mailbox/$mailAddress'
     | '/storage-engine/shard/$shardName'
+    | '/system/configuration/$brokerId'
     | '/system/meta-service/$stateMachineName'
     | '/data-integration/connector/$connectorName'
     | '/data-integration/connector/create'
@@ -804,7 +804,6 @@ export interface FileRouteTypes {
     | '/'
     | '/advanced/system-alarm'
     | '/system/ban-log'
-    | '/system/cluster-info'
     | '/system/configuration'
     | '/system/pub-sub'
     | '/system/system-log'
@@ -818,6 +817,7 @@ export interface FileRouteTypes {
     | '/mq9/agent/$agentName'
     | '/mq9/mailbox/$mailAddress'
     | '/storage-engine/shard/$shardName'
+    | '/system/configuration/$brokerId'
     | '/system/meta-service/$stateMachineName'
     | '/data-integration/connector/$connectorName'
     | '/data-integration/connector/create'
@@ -861,7 +861,6 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/_authenticated/advanced/system-alarm'
     | '/_authenticated/system/ban-log'
-    | '/_authenticated/system/cluster-info'
     | '/_authenticated/system/configuration'
     | '/_authenticated/system/pub-sub'
     | '/_authenticated/system/system-log'
@@ -875,6 +874,7 @@ export interface FileRouteTypes {
     | '/_authenticated/mq9/agent/$agentName'
     | '/_authenticated/mq9/mailbox/$mailAddress'
     | '/_authenticated/storage-engine/shard/$shardName'
+    | '/_authenticated/system/configuration_/$brokerId'
     | '/_authenticated/system/meta-service/$stateMachineName'
     | '/_authenticated/data-integration/connector/$connectorName'
     | '/_authenticated/data-integration/connector/create'
@@ -1066,13 +1066,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSystemConfigurationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/system/cluster-info': {
-      id: '/_authenticated/system/cluster-info'
-      path: '/system/cluster-info'
-      fullPath: '/system/cluster-info'
-      preLoaderRoute: typeof AuthenticatedSystemClusterInfoRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/system/ban-log': {
       id: '/_authenticated/system/ban-log'
       path: '/system/ban-log'
@@ -1262,6 +1255,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSystemMetaServiceStateMachineNameRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/system/configuration_/$brokerId': {
+      id: '/_authenticated/system/configuration_/$brokerId'
+      path: '/system/configuration/$brokerId'
+      fullPath: '/system/configuration/$brokerId'
+      preLoaderRoute: typeof AuthenticatedSystemConfigurationBrokerIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/storage-engine/shard/$shardName': {
       id: '/_authenticated/storage-engine/shard/$shardName'
       path: '/storage-engine/shard/$shardName'
@@ -1312,7 +1312,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedAdvancedSystemAlarmRoute: typeof AuthenticatedAdvancedSystemAlarmRoute
   AuthenticatedSystemBanLogRoute: typeof AuthenticatedSystemBanLogRoute
-  AuthenticatedSystemClusterInfoRoute: typeof AuthenticatedSystemClusterInfoRoute
   AuthenticatedSystemConfigurationRoute: typeof AuthenticatedSystemConfigurationRoute
   AuthenticatedSystemPubSubRoute: typeof AuthenticatedSystemPubSubRoute
   AuthenticatedSystemSystemLogRoute: typeof AuthenticatedSystemSystemLogRoute
@@ -1326,6 +1325,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMq9AgentAgentNameRoute: typeof AuthenticatedMq9AgentAgentNameRoute
   AuthenticatedMq9MailboxMailAddressRoute: typeof AuthenticatedMq9MailboxMailAddressRoute
   AuthenticatedStorageEngineShardShardNameRoute: typeof AuthenticatedStorageEngineShardShardNameRoute
+  AuthenticatedSystemConfigurationBrokerIdRoute: typeof AuthenticatedSystemConfigurationBrokerIdRoute
   AuthenticatedSystemMetaServiceStateMachineNameRoute: typeof AuthenticatedSystemMetaServiceStateMachineNameRoute
   AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute: typeof AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute
   AuthenticatedDataIntegrationConnectorCreateLazyRoute: typeof AuthenticatedDataIntegrationConnectorCreateLazyRoute
@@ -1358,7 +1358,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedAdvancedSystemAlarmRoute: AuthenticatedAdvancedSystemAlarmRoute,
   AuthenticatedSystemBanLogRoute: AuthenticatedSystemBanLogRoute,
-  AuthenticatedSystemClusterInfoRoute: AuthenticatedSystemClusterInfoRoute,
   AuthenticatedSystemConfigurationRoute: AuthenticatedSystemConfigurationRoute,
   AuthenticatedSystemPubSubRoute: AuthenticatedSystemPubSubRoute,
   AuthenticatedSystemSystemLogRoute: AuthenticatedSystemSystemLogRoute,
@@ -1377,6 +1376,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMq9MailboxMailAddressRoute,
   AuthenticatedStorageEngineShardShardNameRoute:
     AuthenticatedStorageEngineShardShardNameRoute,
+  AuthenticatedSystemConfigurationBrokerIdRoute:
+    AuthenticatedSystemConfigurationBrokerIdRoute,
   AuthenticatedSystemMetaServiceStateMachineNameRoute:
     AuthenticatedSystemMetaServiceStateMachineNameRoute,
   AuthenticatedDataIntegrationConnectorConnectorNameLazyRoute:

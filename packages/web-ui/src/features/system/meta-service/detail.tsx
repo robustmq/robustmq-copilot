@@ -1,6 +1,7 @@
 import { CommonLayout } from '@/components/layout/common-layout';
 import { useParams, useNavigate, useRouterState } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import {
   ArrowLeft,
   Database,
@@ -10,12 +11,77 @@ import {
   AlertCircle,
   FileText,
   Layers,
+  Crown,
+  ChevronRight,
+  ChevronDown,
 } from 'lucide-react';
 import { getClusterStatus, type RaftState } from '@/services/mqtt';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTranslation } from 'react-i18next';
+
+// ─── Collapsible JSON renderer ────────────────────────────────────────────────
+
+function JsonNode({ value }: { value: unknown }) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  if (value === null) return <span className="text-gray-400">null</span>;
+  if (value === undefined) return <span className="text-gray-400">undefined</span>;
+  if (typeof value === 'boolean') return <span className="text-purple-500 dark:text-purple-400">{value ? 'true' : 'false'}</span>;
+  if (typeof value === 'number') return <span className="text-blue-600 dark:text-blue-400">{value}</span>;
+  if (typeof value === 'string') return <span className="text-green-600 dark:text-green-400">"{value}"</span>;
+
+  if (Array.isArray(value)) {
+    if (value.length === 0) return <span className="text-gray-500">[]</span>;
+    return (
+      <span>
+        <button onClick={() => setCollapsed(c => !c)} className="inline-flex items-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+          {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          <span className="ml-0.5 text-gray-500">[{value.length}]</span>
+        </button>
+        {!collapsed && (
+          <span>
+            {value.map((item, i) => (
+              <div key={i} style={{ paddingLeft: '1.25rem' }}>
+                <span className="text-gray-400 select-none">{i}: </span>
+                <JsonNode value={item} />
+                {i < value.length - 1 && <span className="text-gray-400">,</span>}
+              </div>
+            ))}
+          </span>
+        )}
+      </span>
+    );
+  }
+
+  if (typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>);
+    if (entries.length === 0) return <span className="text-gray-500">{'{}'}</span>;
+    return (
+      <span>
+        <button onClick={() => setCollapsed(c => !c)} className="inline-flex items-center text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none">
+          {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          <span className="ml-0.5 text-gray-500">{'{'}…{'}'} {entries.length} keys</span>
+        </button>
+        {!collapsed && (
+          <span>
+            {entries.map(([k, v], i) => (
+              <div key={k} style={{ paddingLeft: '1.25rem' }}>
+                <span className="text-rose-500 dark:text-rose-400">"{k}"</span>
+                <span className="text-gray-500">: </span>
+                <JsonNode value={v} />
+                {i < entries.length - 1 && <span className="text-gray-400">,</span>}
+              </div>
+            ))}
+          </span>
+        )}
+      </span>
+    );
+  }
+
+  return <span>{String(value)}</span>;
+}
 
 export default function MetaServiceDetail() {
   const { t } = useTranslation('dashboard');
@@ -94,13 +160,6 @@ export default function MetaServiceDetail() {
                 <AlertCircle className="h-3 w-3 mr-1" />Error
               </Badge>
             )}
-            <Badge className={
-              raftState.state === 'Leader'
-                ? 'bg-green-100 text-green-700 border-green-200 dark:bg-green-900/50 dark:text-green-300'
-                : 'bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300'
-            }>
-              {raftState.state}
-            </Badge>
           </div>
         </div>
       </div>
@@ -206,50 +265,101 @@ export default function MetaServiceDetail() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {Object.entries(raftState.membership_config.membership.nodes).map(([nodeId, nodeData]) => (
-                    <div key={nodeId} className="flex items-center justify-between p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 text-white text-xs font-bold">
-                          {nodeId}
+                  {Object.entries(raftState.membership_config.membership.nodes).map(([nodeId, nodeData]) => {
+                    const isLeader = String(raftState.current_leader) === nodeId;
+                    return (
+                      <div key={nodeId} className={`flex items-center justify-between p-3 rounded-lg border ${
+                        isLeader
+                          ? 'bg-green-50 dark:bg-green-900/20 border-green-400 dark:border-green-600 shadow-sm'
+                          : 'bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800'
+                      }`}>
+                        <div className="flex items-center space-x-3">
+                          <div className={`flex h-6 w-6 items-center justify-center rounded-full text-white text-xs font-bold ${
+                            isLeader ? 'bg-green-500' : 'bg-blue-400'
+                          }`}>
+                            {nodeId}
+                          </div>
+                          <span className={`text-sm font-medium ${
+                            isLeader ? 'text-green-700 dark:text-green-300' : 'text-blue-700 dark:text-blue-300'
+                          }`}>
+                            Node {nodeId}
+                          </span>
+                          {isLeader ? (
+                            <Badge className="bg-green-500 text-white border-green-600 dark:bg-green-500 text-xs font-bold px-2 py-0.5 flex items-center gap-1">
+                              <Crown className="h-3 w-3" />Leader
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-gray-100 text-gray-500 border-gray-300 dark:bg-gray-800 dark:text-gray-400 text-xs">
+                              Follower
+                            </Badge>
+                          )}
                         </div>
-                        <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Node {nodeId}</span>
+                        <span className={`text-sm font-mono ${
+                          isLeader ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'
+                        }`}>
+                          {nodeData?.rpc_addr || '-'}
+                        </span>
                       </div>
-                      <span className="text-sm font-mono text-blue-600 dark:text-blue-400">{nodeData?.rpc_addr || '-'}</span>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>
           )}
 
         {/* Replication */}
-        {raftState.replication && Object.keys(raftState.replication).length > 0 && (
-          <Card className="border-l-4 border-orange-500">
-            <CardHeader className="pb-2">
-              <CardTitle className="flex items-center space-x-2">
-                <Database className="h-5 w-5 text-orange-600" />
-                <span>Replication</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+        <Card className="border-l-4 border-orange-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center space-x-2">
+              <Database className="h-5 w-5 text-orange-600" />
+              <span>Replication</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {!raftState.replication || Object.keys(raftState.replication).length === 0 ? (
+              <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">
+                No replication data — only available on the Leader node.
+              </p>
+            ) : (
               <div className="space-y-2">
-                {Object.entries(raftState.replication).map(([nodeId, rep]) => (
-                  <div key={nodeId} className="flex items-center justify-between p-3 rounded-lg bg-orange-50 dark:bg-orange-950 border border-orange-200 dark:border-orange-800">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 text-white text-xs font-bold">
-                        {nodeId}
+                {Object.entries(raftState.replication).map(([nodeId, rep]) => {
+                  const isLeader = String(raftState.current_leader) === nodeId;
+                  return (
+                    <div key={nodeId} className={`flex items-center justify-between p-3 rounded-lg border ${
+                      isLeader
+                        ? 'bg-green-50 dark:bg-green-900/20 border-green-400 dark:border-green-600 shadow-sm'
+                        : 'bg-orange-50 dark:bg-orange-950 border-orange-200 dark:border-orange-800'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`flex h-6 w-6 items-center justify-center rounded-full text-white text-xs font-bold ${
+                          isLeader ? 'bg-green-500' : 'bg-orange-400'
+                        }`}>
+                          {nodeId}
+                        </div>
+                        <span className={`text-sm font-medium ${
+                          isLeader ? 'text-green-700 dark:text-green-300' : 'text-orange-700 dark:text-orange-300'
+                        }`}>
+                          Node {nodeId}
+                        </span>
+                        <Badge className={isLeader
+                          ? 'bg-amber-100 text-amber-700 border-amber-300 dark:bg-amber-900/40 dark:text-amber-300 text-xs'
+                          : 'bg-orange-100 text-orange-600 border-orange-200 dark:bg-orange-900/40 dark:text-orange-300 text-xs'
+                        }>
+                          {isLeader ? 'Leader' : 'Follower'}
+                        </Badge>
                       </div>
-                      <span className="text-sm font-medium text-orange-700 dark:text-orange-300">Node {nodeId}</span>
+                      <span className={`text-sm font-mono ${
+                        isLeader ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'
+                      }`}>
+                        Index: {rep?.index ?? '-'} &nbsp;|&nbsp; Term: {rep?.leader_id?.term ?? '-'}
+                      </span>
                     </div>
-                    <span className="text-sm font-mono text-orange-600 dark:text-orange-400">
-                      Index: {rep?.index ?? '-'} &nbsp;|&nbsp; Term: {rep?.leader_id?.term ?? '-'}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            )}
+          </CardContent>
+        </Card>
 
         {/* Raw JSON */}
         <Card className="border-l-4 border-gray-400">
@@ -257,9 +367,9 @@ export default function MetaServiceDetail() {
             <CardTitle className="text-sm text-gray-600 dark:text-gray-400">Raw JSON</CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-auto max-h-96 text-xs font-mono">
-              {JSON.stringify(raftState, null, 2)}
-            </pre>
+            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 overflow-auto max-h-[600px] text-xs font-mono leading-5">
+              <JsonNode value={raftState} />
+            </div>
           </CardContent>
         </Card>
       </div>

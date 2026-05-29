@@ -53,16 +53,12 @@ export default function Dashboard() {
       quicConnectionNum: 0,
       subscribeNum: 0,
       exclusiveSubscribeNum: 0,
-      shareSubscribeLeaderNum: 0,
-      shareSubscribeResubNum: 0,
       exclusiveSubscribeThreadNum: 0,
-      shareSubscribeLeaderThreadNum: 0,
-      shareSubscribeFollowerThreadNum: 0,
+      shareSubscribeGroupNum: 0,
+      shareSubscribeNum: 0,
+      shareSubscribeThreadNum: 0,
       connectorNum: 0,
       connectorThreadNum: 0,
-      shareGroupNum: 0,
-      shareSubNum: 0,
-      shareSubThreadNum: 0,
     },
     refetchInterval: 5000,
   });
@@ -130,7 +126,7 @@ export default function Dashboard() {
                     <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{t('groups')}</span>
                   </div>
                   <div className="text-lg font-black bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
-                    {statusData.shareGroupNum}
+                    {statusData.shareSubscribeGroupNum}
                   </div>
                 </div>
                 <div className="flex items-center justify-between p-2 rounded-lg hover:bg-green-100/50 dark:hover:bg-green-900/20 transition-colors duration-200">
@@ -141,7 +137,7 @@ export default function Dashboard() {
                     <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{t('subscriptions')}</span>
                   </div>
                   <div className="text-lg font-black bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
-                    {statusData.shareSubNum}
+                    {statusData.shareSubscribeNum}
                   </div>
                 </div>
               </div>
@@ -153,7 +149,7 @@ export default function Dashboard() {
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('threads')}</span>
                 </div>
                 <div className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-400 dark:to-emerald-400 bg-clip-text text-transparent">
-                  {statusData.shareSubThreadNum}
+                  {statusData.shareSubscribeThreadNum}
                 </div>
               </div>
             </CardContent>
