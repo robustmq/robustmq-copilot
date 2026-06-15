@@ -1,4 +1,5 @@
 import { useParams, useNavigate, useRouterState } from '@tanstack/react-router';
+import { decodeRouteId } from '@/utils/routeParam';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -34,13 +35,9 @@ import {
   Box,
   Eye,
   Server,
-  Settings,
-  Activity,
   BarChart3,
   Building2,
 } from 'lucide-react';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { getTopicDetail, getMonitorData, getSchemaBindList, deleteSchemaBind } from '@/services/mqtt';
 import { format } from 'date-fns';
 import { CommonLayout } from '@/components/layout/common-layout';
@@ -52,7 +49,8 @@ import { useTranslation } from 'react-i18next';
 
 export default function TopicDetail() {
   const { t } = useTranslation();
-  const { topicId } = useParams({ from: '/_authenticated/general/topic/$topicId' });
+  const { topicId: rawTopicId } = useParams({ from: '/_authenticated/general/topic/$topicId' });
+  const topicId = decodeRouteId(rawTopicId);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const routerState = useRouterState();
@@ -65,8 +63,6 @@ export default function TopicDetail() {
   const [schemaToDelete, setSchemaToDelete] = useState<string | null>(null);
   const [isSchemaRefreshing, setIsSchemaRefreshing] = useState(false);
   const [isSubscriptionRefreshing, setIsSubscriptionRefreshing] = useState(false);
-  const [partitionSheetOpen, setPartitionSheetOpen] = useState(false);
-  const [selectedPartition, setSelectedPartition] = useState<{ id: string; shard: any } | null>(null);
 
   // 删除 schema 绑定的 mutation
   const deleteBindMutation = useMutation({
@@ -542,8 +538,10 @@ export default function TopicDetail() {
                                 size="sm"
                                 className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-600 hover:to-blue-600 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 px-1.5 py-0.5 h-6 text-[11px]"
                                 onClick={() => {
-                                  setSelectedPartition({ id: partitionId, shard });
-                                  setPartitionSheetOpen(true);
+                                  navigate({
+                                    to: '/storage-engine/shard/$shardName',
+                                    params: { shardName: shard.shard_name },
+                                  });
                                 }}
                               >
                                 <Eye className="mr-0.5 h-2.5 w-2.5" />
@@ -785,175 +783,6 @@ export default function TopicDetail() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-
-      {/* Partition Detail Sheet */}
-      <Sheet open={partitionSheetOpen} onOpenChange={setPartitionSheetOpen}>
-        <SheetContent className="sm:max-w-[480px] p-0">
-          <SheetHeader className="px-6 pt-6 pb-4 border-b bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30">
-            <SheetTitle className="flex items-center space-x-2">
-              <Box className="h-5 w-5 text-teal-600" />
-              <span>{t('partition')} {selectedPartition?.id} {t('details')}</span>
-            </SheetTitle>
-            <SheetDescription>{t('partition_storage_info')}</SheetDescription>
-          </SheetHeader>
-
-          {selectedPartition && (
-            <ScrollArea className="h-[calc(100vh-120px)]">
-              <div className="px-6 py-4 space-y-5">
-                {/* Status Overview */}
-                <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border">
-                  <div className="flex items-center space-x-2">
-                    <Activity className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('status')}</span>
-                  </div>
-                  <Badge
-                    variant={selectedPartition.shard.status === 'Run' ? 'default' : 'secondary'}
-                    className={
-                      selectedPartition.shard.status === 'Run'
-                        ? 'bg-green-500 text-white shadow-sm'
-                        : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-                    }
-                  >
-                    <span
-                      className={`mr-1.5 inline-block h-2 w-2 rounded-full ${selectedPartition.shard.status === 'Run' ? 'bg-green-200 animate-pulse' : 'bg-red-400'}`}
-                    />
-                    {selectedPartition.shard.status}
-                  </Badge>
-                </div>
-
-                {/* Shard Information */}
-                <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center">
-                    <Server className="h-3.5 w-3.5 mr-1.5" />
-                    {t('shard_information')}
-                  </h4>
-                  <div className="space-y-2.5">
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{t('shard_uid')}</span>
-                      <span className="font-mono text-xs text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                        {selectedPartition.shard.shard_uid}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{t('shard_name')}</span>
-                      <span className="font-mono text-xs text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                        {selectedPartition.shard.shard_name}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{t('created_at')}</span>
-                      <span className="text-sm text-gray-900 dark:text-gray-100">
-                        {selectedPartition.shard.create_time
-                          ? format(new Date(selectedPartition.shard.create_time * 1000), 'yyyy-MM-dd HH:mm:ss')
-                          : '-'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t dark:border-gray-700" />
-
-                {/* Segment Information */}
-                <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center">
-                    <Layers className="h-3.5 w-3.5 mr-1.5" />
-                    {t('segment_information')}
-                  </h4>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border">
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Start</div>
-                      <div className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                        {selectedPartition.shard.start_segment_seq}
-                      </div>
-                    </div>
-                    <div className="text-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
-                      <div className="text-xs text-green-600 dark:text-green-400 mb-1">Active</div>
-                      <div className="text-lg font-semibold text-green-700 dark:text-green-300">
-                        {selectedPartition.shard.active_segment_seq}
-                      </div>
-                    </div>
-                    <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                      <div className="text-xs text-blue-600 dark:text-blue-400 mb-1">Last</div>
-                      <div className="text-lg font-semibold text-blue-700 dark:text-blue-300">
-                        {selectedPartition.shard.last_segment_seq}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t dark:border-gray-700" />
-
-                {/* Configuration */}
-                <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 flex items-center">
-                    <Settings className="h-3.5 w-3.5 mr-1.5" />
-                    {t('configuration')}
-                  </h4>
-                  <div className="space-y-2.5">
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                        <Database className="h-3.5 w-3.5 mr-1.5" />
-                        {t('storage_type')}
-                      </span>
-                      <Badge
-                        variant="outline"
-                        className="bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950 dark:text-teal-300"
-                      >
-                        {selectedPartition.shard.config.storage_type}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                        <GitFork className="h-3.5 w-3.5 mr-1.5" />
-                        {t('replicas')}
-                      </span>
-                      <Badge variant="secondary" className="font-mono">
-                        {selectedPartition.shard.config.replica_num}
-                      </Badge>
-                    </div>
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                        <Clock className="h-3.5 w-3.5 mr-1.5" />
-                        {t('retention')}
-                      </span>
-                      <div className="text-right">
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {selectedPartition.shard.config.retention_sec >= 86400
-                            ? `${Math.floor(selectedPartition.shard.config.retention_sec / 86400)} ${t('days')}`
-                            : selectedPartition.shard.config.retention_sec >= 3600
-                              ? `${Math.floor(selectedPartition.shard.config.retention_sec / 3600)} ${t('hours')}`
-                              : `${selectedPartition.shard.config.retention_sec} ${t('seconds')}`}
-                        </span>
-                        <span className="block text-xs text-gray-400">
-                          {selectedPartition.shard.config.retention_sec.toLocaleString()}s
-                        </span>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between py-2 px-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                      <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                        <HardDrive className="h-3.5 w-3.5 mr-1.5" />
-                        {t('max_segment_size')}
-                      </span>
-                      <div className="text-right">
-                        <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {selectedPartition.shard.config.max_segment_size >= 1073741824
-                            ? `${(selectedPartition.shard.config.max_segment_size / 1073741824).toFixed(1)} GB`
-                            : selectedPartition.shard.config.max_segment_size >= 1048576
-                              ? `${(selectedPartition.shard.config.max_segment_size / 1048576).toFixed(0)} MB`
-                              : `${(selectedPartition.shard.config.max_segment_size / 1024).toFixed(0)} KB`}
-                        </span>
-                        <span className="block text-xs text-gray-400">
-                          {selectedPartition.shard.config.max_segment_size.toLocaleString()} bytes
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </ScrollArea>
-          )}
-        </SheetContent>
-      </Sheet>
     </CommonLayout>
   );
 }

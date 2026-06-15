@@ -1108,6 +1108,56 @@ export const getSegmentList = async (shardName: string): Promise<SegmentRaw[]> =
   return response.segment_list || [];
 };
 
+export interface SegmentFollowerProgress {
+  node_id: number;
+  leo: number;
+  last_caught_up_ts: number;
+  lag: number;
+}
+
+export interface SegmentFetchInfo {
+  leader_node_id: number;
+  current_leader_epoch: number;
+  max_bytes: number;
+  fetcher_index: number;
+  thread_running: boolean;
+}
+
+export interface SegmentReplicaState {
+  node_id: number;
+  replica_seq: number;
+  fold: string;
+  is_leader: boolean;
+  in_isr: boolean;
+  role: string;
+  leader_epoch: number;
+  segment_epoch: number;
+  leo: number;
+  high_watermark: number;
+  log_start_offset: number;
+  follower_progress: SegmentFollowerProgress[];
+  fetch: SegmentFetchInfo | null;
+  available: boolean;
+  error: string | null;
+}
+
+export interface SegmentDetail {
+  segment: SegmentRaw['segment'] & { segment_epoch?: number };
+  segment_meta: Record<string, any> | null;
+  replicas: SegmentReplicaState[];
+}
+
+export const getSegmentDetail = async (
+  shardName: string,
+  segmentSeq: number,
+): Promise<SegmentDetail | null> => {
+  const response = await requestApi('/api/storage-engine/segment/detail', {
+    shard_name: shardName,
+    segment_seq: segmentSeq,
+  });
+  return response ?? null;
+};
+
 // -------- System Alarm APIs --------
 export interface SystemAlarmRaw {
   name: string;
@@ -1191,7 +1241,7 @@ export interface SendMessageRequest {
 }
 
 export const sendMessage = async (data: SendMessageRequest): Promise<{ offsets: number[] }> => {
-  const response = await requestApi('/api/mqtt/message/send', data);
+  const response = await requestApi('/api/cluster/message/send', data);
   return response;
 };
 
@@ -1208,7 +1258,7 @@ export interface ReadMessageRequest {
 }
 
 export const readMessages = async (data: ReadMessageRequest): Promise<MessageItem[]> => {
-  const response = await requestApi('/api/mqtt/message/read', data);
+  const response = await requestApi('/api/cluster/message/read', data);
   return response.messages || [];
 };
 
