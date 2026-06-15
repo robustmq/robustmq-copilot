@@ -12,8 +12,9 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ChevronRight, ChevronDown, HardDrive, Server } from 'lucide-react';
+import { ChevronRight, ChevronDown, HardDrive, Server, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import SegmentDetailSheet from '@/features/storage-engine/segment/detail-sheet';
 
 interface SegmentListProps {
   shardName: string;
@@ -107,6 +108,7 @@ function ExpandedSegmentDetail({ row }: { row: Row<SegmentRaw> }) {
 
 export default function SegmentList({ shardName }: SegmentListProps) {
   const { t } = useTranslation();
+  const [detailSeq, setDetailSeq] = React.useState<number | null>(null);
 
   const { data: segmentList, isFetching } = useQuery({
     queryKey: [`QuerySegmentListData_${shardName}`],
@@ -218,6 +220,26 @@ export default function SegmentList({ shardName }: SegmentListProps) {
       size: 90,
       maxSize: 120,
     },
+    {
+      id: 'detail',
+      header: t('details'),
+      cell: ({ row }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-7 gap-1 text-purple-600 hover:text-purple-700"
+          onClick={(e) => {
+            e.stopPropagation();
+            setDetailSeq(row.original.segment?.segment_seq ?? null);
+          }}
+        >
+          <Eye className="h-3.5 w-3.5" />
+          {t('details')}
+        </Button>
+      ),
+      size: 90,
+      maxSize: 110,
+    },
   ];
 
   const table = useReactTable({
@@ -286,6 +308,15 @@ export default function SegmentList({ shardName }: SegmentListProps) {
           </TableBody>
         </Table>
       </div>
+
+      <SegmentDetailSheet
+        shardName={shardName}
+        segmentSeq={detailSeq}
+        open={detailSeq !== null}
+        onOpenChange={(o) => {
+          if (!o) setDetailSeq(null);
+        }}
+      />
     </div>
   );
 }

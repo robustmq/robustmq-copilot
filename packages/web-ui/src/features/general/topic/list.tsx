@@ -33,6 +33,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { encodeRouteId } from '@/utils/routeParam';
 
 interface TopicListProps {
   leftActions?: React.ReactNode;
@@ -50,14 +51,19 @@ export default function TopicList({ leftActions, tenant, topicType, onSearch }: 
 
   const [messageSheetOpen, setMessageSheetOpen] = useState(false);
   const [selectedTopicForMessages, setSelectedTopicForMessages] = useState<string>('');
+  const [selectedTenantForMessages, setSelectedTenantForMessages] = useState<string>('');
   const [messageOffset, setMessageOffset] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { data: messagesData, isLoading: isLoadingMessages } = useQuery({
-    queryKey: ['topicMessages', selectedTopicForMessages, messageOffset],
+    queryKey: ['topicMessages', selectedTenantForMessages, selectedTopicForMessages, messageOffset],
     queryFn: async () => {
       if (!selectedTopicForMessages) return [];
-      const response = await readMessages({ topic: selectedTopicForMessages, offset: messageOffset });
+      const response = await readMessages({
+        tenant: selectedTenantForMessages,
+        topic: selectedTopicForMessages,
+        offset: messageOffset,
+      });
       return response.slice(0, 10);
     },
     enabled: !!selectedTopicForMessages && messageSheetOpen,
@@ -69,8 +75,9 @@ export default function TopicList({ leftActions, tenant, topicType, onSearch }: 
     }
   }, [messagesData, messageOffset]);
 
-  const handleViewMessages = (topicName: string) => {
+  const handleViewMessages = (topicName: string, topicTenant?: string) => {
     setSelectedTopicForMessages(topicName);
+    setSelectedTenantForMessages(topicTenant ?? tenant ?? '');
     setMessageOffset(0);
     setMessageSheetOpen(true);
   };
@@ -262,7 +269,7 @@ export default function TopicList({ leftActions, tenant, topicType, onSearch }: 
             onClick={() => {
               navigate({
                 to: '/general/topic/$topicId',
-                params: { topicId: row.original.topic_name },
+                params: { topicId: encodeRouteId(row.original.topic_name) },
                 state: { tenant: row.original.tenant },
               });
             }}
@@ -275,7 +282,7 @@ export default function TopicList({ leftActions, tenant, topicType, onSearch }: 
             className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium hover:from-green-600 hover:to-emerald-600 shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-200 px-1.5 py-0.5 h-6 text-[11px]"
             onClick={e => {
               e.stopPropagation();
-              handleViewMessages(row.original.topic_name);
+              handleViewMessages(row.original.topic_name, row.original.tenant);
             }}
           >
             <MessageSquare className="mr-0.5 h-2.5 w-2.5" />

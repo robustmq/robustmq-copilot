@@ -176,6 +176,7 @@
   "mailbox_detail": "邮箱详情",
   "agent_detail": "Agent 详情",
   "shard_detail": "分片详情",
+  "segment_detail": "段详情",
   "offset": "偏移量",
   "start_offset": "起始偏移量",
   "end_offset": "结束偏移量",

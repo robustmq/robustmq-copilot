@@ -176,6 +176,7 @@
   "mailbox_detail": "Mailbox Detail",
   "agent_detail": "Agent Detail",
   "shard_detail": "Shard Detail",
+  "segment_detail": "Segment Detail",
   "offset": "Offset",
   "start_offset": "Start Offset",
   "end_offset": "End Offset",
